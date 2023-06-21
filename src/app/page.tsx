@@ -1,7 +1,7 @@
-import { AssetCollectionHeader } from "./components/assetComponents/assetCollectionHeader";
+import { StartPageLayout } from "./components/startPageLayout";
 
 export default function Home() {
-  return (
-    <AssetCollectionHeader></AssetCollectionHeader>
+  return (   
+    <StartPageLayout></StartPageLayout>
   )
 }

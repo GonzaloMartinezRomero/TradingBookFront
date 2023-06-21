@@ -6,7 +6,7 @@ interface Props{
     onClose: any    
 }
 
-export function AddInvestModal({ onClose }:Props) {
+export function NewInvestModal({ onClose }:Props) {
   return (
     createPortal(
       <>
@@ -38,8 +38,18 @@ export function AddInvestModal({ onClose }:Props) {
                   <option value="2">USD</option>
                   <option value="3">BUSD</option>
                 </select>
-              </div>
+              </div>            
             </div>
+            <div className="form-group row mt-3">
+                <div className="col-4">
+                  <label className="row">Stop Loss</label>
+                  <input type="number" className="form-control row" placeholder="Stop" />
+                </div>
+                <div className="col-4">
+                  <label className="row">Sell Limit</label>
+                  <input type="number" className="form-control row" placeholder="Limit" />
+                  </div>
+              </div>
           </div>
           <div className="m-4">
             <h3 className="mb-4">Invest</h3>
@@ -68,7 +78,7 @@ export function AddInvestModal({ onClose }:Props) {
               <button className="btn btn-warning" style={{ "width": "130px", "height": "50px" }} onClick={onClose}>Close</button>
             </div>
             <div className="form-group col-6">
-              <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }}>Save</button>
+              <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }}>Add</button>
             </div>
           </div>
         </div>
