@@ -3,6 +3,7 @@ import { useState } from "react";
 import { NewInvestModal } from "../modals/newInvestModal";
 import { NewAssetModal } from "../modals/newAssetModal";
 import { InvestCollection } from "./investCollection";
+import Toggle from 'react-bootstrap-toggle';
 
 export function InvestCollectionHeader(){
 
@@ -15,6 +16,7 @@ return(
     {openNewInvestModal && <NewInvestModal onClose={()=>setOpenNewInvestModal(false)}/>}
     {openNewAssetModal && <NewAssetModal onClose={()=>setOpenNewAssetModal(false)}/>}    
     <h2>Invest Collection</h2>
+    <div className="row" style={{"border":"1px solid black"}}></div>
         <div className="row mt-3 mb-3">
             <div className="col-1 ">          
                 <button type="button" className="btn btn-success" onClick={()=>setOpenNewInvestModal(true)}>
@@ -29,17 +31,15 @@ return(
                 </button>  
             </div>                   
             <div className="col-2">
-                <div className="form-check m-2 ms-4">
-                    <input className="form-check-input" type="checkbox"/>
-                    <label className="form-check-label">Hide Transactions Closed</label>
-                </div>
+                <Toggle                
+                    on={<h2>Hide Closed Operation</h2>}
+                    off={<h2>Show All Operations</h2>}                    
+                    offstyle="warning"/>
             </div>
-        </div>
-        <div className="row">
             <div className="col-2">                
                 <input type="search" className="form-control" placeholder="Search assset..."/>                
             </div>
-        </div>
+        </div>        
         <div className="row">
             <div className="col mt-1">
                 <InvestCollection></InvestCollection>

@@ -1,14 +1,14 @@
 export function NavigationPanel(){
-    return (<>
-       <nav className="navbar navbar-dark bg-light">
-          <div className="container-fluid justify-content-start">
-            <div className="row m-1">
-              <img src="/navbar_icon.jpg" width="50" height="50" className="col-12"/>             
+    return (<>       
+          <div className="container-fluid" style={{"backgroundColor":"rgb(193, 197, 175)"}}>
+            <div className="row ms-1">
+              <div className="col-1 mt-2">
+                <img src="/navbar_icon.png" width="150" height="65" />             
+              </div>
+              <div className="col-7 mt-3">
+                <h1>Trading Book</h1>
+              </div>
             </div>
-            <div className="row">
-              <h1 className="col-12">Trading Book</h1>  
-            </div>
-          </div>
-        </nav>
+          </div>       
     </>);
 }

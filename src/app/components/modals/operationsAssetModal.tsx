@@ -25,10 +25,16 @@ export function OperationsAssetModal({ onClose }:Props) {
             </div>
 
             <div className="col-6">
-              <label className="row">Price</label>
+              <label className="row">Fee</label>
               <input type="Fee" className="form-control row" placeholder="Fee" />
             </div>
 
+          </div>
+          <div className="form-group row ms-3 mt-2">
+            <div className="col-6 ">
+              <label className="row">Price</label>
+              <input type="text" className="form-control row" placeholder="Price" />
+            </div>
           </div>
           <div className="form-group row mt-3">
             <div className="form-group col-6">
@@ -39,7 +45,7 @@ export function OperationsAssetModal({ onClose }:Props) {
             </div>
           </div>
 
-          <h3 className="mt-3">Market Limit</h3>
+          <h3 className="mt-4">Market Limit</h3>
           <div className="form-group row ms-3">
             <div className="col-6">
               <label className="row">Stop Loss</label>

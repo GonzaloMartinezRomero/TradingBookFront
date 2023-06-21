@@ -1,5 +1,9 @@
 import { useState } from "react";
 import { OperationsAssetModal } from "../modals/operationsAssetModal";
+import { MarketOperation, MarketOperationType } from "../util/marketOperation";
+import { PercentageIndicator } from "../util/percentageIndicator";
+import { TransactionState } from "../util/transactionState";
+import { MonetaryAmount } from "../util/monetaryAmount";
 
 export function InvestCollection(){
 
@@ -16,7 +20,7 @@ export function InvestCollection(){
                 <th colSpan={2} className="text-center" style={{"borderRight":"1px solid black"}}>ASSET STATE</th>      
                 <th colSpan={8} className="text-center">RETURN</th>         
             </tr>
-            <tr className="text-center table-secondary table-group-divider">
+            <tr className="text-center table-secondary table-group-divider" style={{"fontStyle":"oblique"}}>
                 <th>Name</th>
                 <th>Price</th>
                 <th>Currency</th>
@@ -42,7 +46,7 @@ export function InvestCollection(){
                 <td >
                     <span className="media-body">BTC-EUR</span>
                 </td>
-                <td>26.568,25</td>
+                <td><MonetaryAmount amount={15.259}/> </td>
                 <td>EUR</td>
                 <td style={{"borderRight":"1px solid black"}}>10/05/2020</td>
                 <td>100</td>
@@ -57,15 +61,15 @@ export function InvestCollection(){
                 </td>               
                 <td style={{"borderLeft":"1px solid black"}}>24.259,65</td>                
                 <td>
-                    <span>
-                        <img src="/arrowDown.png" width="15" height="15"/>                        
-                        <span className="text-danger ps-1">8.68%</span>
-                    </span>
+                  
+
+                <PercentageIndicator amount={-15.2356}/>
+
+
                 </td>
                 <td style={{"borderLeft":"1px solid black"}}>24.258,77</td>
                 <td> 
-                    <img src="/arrowDown.png" width="15" height="15"/>                        
-                    <span className="text-danger ps-1">5.15%</span>
+                   <PercentageIndicator amount={15.2356}/>
                 </td>
                 <td>13/02/2022</td>
                 <td >0.05</td>
@@ -84,7 +88,7 @@ export function InvestCollection(){
                     <span className="bi bi-file-earmark-lock" style={{"fontSize":"25px"}} title="SELLED"></span>
                 </td>
                 <td>          
-                <div className="p-2 bg-danger text-white">SELL</div>          
+                    <MarketOperation operation={MarketOperationType.BUY}/>    
                 </td>
                 <td>                
                 <button className="btn btn-warning" onClick={()=>setOpenOperationsAssetModal(true)}><i className="bi bi-box-arrow-up-right"></i></button>
@@ -177,7 +181,9 @@ export function InvestCollection(){
                     5.25
                 </td>
                 <td style={{"borderLeft":"1px solid black"}}>
-                  <span className="bi bi-file-earmark-lock" style={{"fontSize":"25px"}} title="SELLED"></span>
+                  
+                <TransactionState isSelled={false}/>
+
                 </td>
                 <td>          
                 <div className="p-2 bg-secondary text-white">HOLD</div>                   
