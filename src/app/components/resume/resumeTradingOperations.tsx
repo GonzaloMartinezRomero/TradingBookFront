@@ -10,12 +10,12 @@ return(
             <div className="col-3">
                 <table className="mt-3" style={{"width":"100%"}}>
                 <thead>
-                <tr className="table-secondary table-group-divider" style={{"fontStyle":"oblique"}}>
+                <tr className=" " style={{"fontStyle":"oblique"}}>
                     <th>Deposit €</th>                
                     <th>Total Earned €</th>                                      
                 </tr>
                 </thead>
-                <tbody>
+                <tbody className="table-secondary table-group-divider">
                     <tr>
                         <td>
                             450
@@ -28,7 +28,7 @@ return(
                 </table>
             </div>            
             <div className="col-1 mb-3 align-self-end">
-                <input type="text" className="form-control" placeholder="Amount €"/>                            
+                <input type="text" className="form-control" placeholder="Amount €" style={{"height":"40px"}}/>                            
             </div>
             <div className="col-2 mb-3 align-self-end">            
                 <button type="button" className="btn btn-success">
