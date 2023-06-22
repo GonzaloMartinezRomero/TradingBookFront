@@ -12,7 +12,7 @@ export function InvestCollection(){
     return(
     <>
      {openOperationsAssetModal && <OperationsAssetModal onClose={()=>setOpenOperationsAssetModal(false)}/>}    
-     <table className="table table-striped mt-3">
+     <table className="mt-1" style={{"width":"100%"}}>
         <thead>
             <tr className="table-success">
                 <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>ASSET INFORMATION</th>                
@@ -42,7 +42,7 @@ export function InvestCollection(){
             </tr>
         </thead>
         <tbody className="text-center">
-            <tr>
+            <tr style={{"backgroundColor":"rgb(237, 222, 233)"}}>
                 <td >
                     <span className="media-body">BTC-EUR</span>
                 </td>

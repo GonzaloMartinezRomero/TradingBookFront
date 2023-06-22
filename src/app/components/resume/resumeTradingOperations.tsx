@@ -8,9 +8,9 @@ return(
         </div>
         <div className="row">
             <div className="col-3">
-                <table className="table mt-3">
+                <table className="mt-3" style={{"width":"100%"}}>
                 <thead>
-                <tr className="table-success">
+                <tr className="table-secondary table-group-divider" style={{"fontStyle":"oblique"}}>
                     <th>Deposit €</th>                
                     <th>Total Earned €</th>                                      
                 </tr>

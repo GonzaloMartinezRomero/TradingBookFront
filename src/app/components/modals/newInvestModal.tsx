@@ -11,7 +11,12 @@ export function NewInvestModal({ onClose }:Props) {
     createPortal(
       <>
         <div className="add-invest-modal">
-          <h1 className="m-1">New Invest</h1>
+        <div className="d-flex flex-row-reverse">
+          <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
+            <i className="bi-x"/>
+          </button>
+          </div>
+          <h1>New Invest</h1>
           <div className="m-4">
             <h3 className="mb-4">Asset</h3>
             <div className="form-group row">
@@ -73,11 +78,8 @@ export function NewInvestModal({ onClose }:Props) {
               </div>
             </div>
           </div>
-          <div className="form-group row mt-5">
-            <div className="form-group col-6 ">
-              <button className="btn btn-warning" style={{ "width": "130px", "height": "50px" }} onClick={onClose}>Close</button>
-            </div>
-            <div className="form-group col-6">
+          <div className="form-group row mt-2">            
+            <div className="form-group col-12">
               <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }}>Add</button>
             </div>
           </div>
