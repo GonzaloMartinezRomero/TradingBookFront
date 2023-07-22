@@ -1,6 +1,6 @@
 "use client";
 
-import { InvestCollectionHeader } from "./invest/investCollectionHeader";
+import { StockCollection } from "./stock/stockCollection";
 import { ResumeTradingOperations } from "./resume/resumeTradingOperations";
 
 export function StartPageLayout(){
@@ -9,8 +9,8 @@ return(
     <>        
         <div className="container-fluid">
             <ResumeTradingOperations></ResumeTradingOperations>
-            <div className="mt-2"></div>
-            <InvestCollectionHeader></InvestCollectionHeader>
+            <div className="mt-3"></div>
+            <StockCollection></StockCollection>
         </div>
     </>
 );}

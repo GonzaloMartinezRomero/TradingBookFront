@@ -6,7 +6,7 @@ interface Props{
     onClose: any    
 }
 
-export function NewAssetModal({ onClose }:Props) {
+export function NewCurrencyModal({ onClose }:Props) {
   return (
     createPortal(
       <>
@@ -16,7 +16,7 @@ export function NewAssetModal({ onClose }:Props) {
             <i className="bi-x"/>
           </button>
           </div>
-          <h2>Asset</h2>
+          <h2>Currency</h2>
           <div className="form-group row ms-4">
             <div className="col-10">
               <label className="row">Name</label>

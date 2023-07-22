@@ -8,3 +8,11 @@
 - Invest operation
 - Show closed transactions
 - Filter asset
+
+## Alerts
+- Change names for StopLoss and TakeProfit
+- Send alert to mobile
+
+## Strategy Analysis
+-  
+- Bart Simpson y Bart Simpson inverted
