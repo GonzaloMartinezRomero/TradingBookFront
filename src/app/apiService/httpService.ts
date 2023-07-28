@@ -1,3 +1,4 @@
+import { Amount } from "./model/amount.model";
 import { Currency } from "./model/currency.model";
 import { MarketLimit } from "./model/marketLimit.model";
 import { NewStock } from "./model/newStock.model";
@@ -14,6 +15,33 @@ export async function getCurrencies(){
     return value;
 }
 
+export async function deleteCurrency(id:number){
+ 
+    const response = await fetch(`https://localhost:7267/Currency/${id}`,{
+        method:'DELETE',        
+        headers:{
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+
+    return response.status;
+}
+
+export async function addCurrency(currency: Currency){
+
+    const response = await fetch(`https://localhost:7267/Currency`,{
+        method:'POST',
+        body: JSON.stringify(currency),
+        headers:{
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+
+    const value:Currency = await response.json();
+
+    return value;
+}
+
 export async function getStockReferences(){
 
     const response = await fetch("https://localhost:7267/StockReference");
@@ -21,6 +49,18 @@ export async function getStockReferences(){
     const value:StockReference[] = await response.json();
 
     return value;
+}
+
+export async function deleteStock(stockId:number){
+
+    const response = await fetch(`https://localhost:7267/Stock/${stockId}`,{
+        method:'DELETE',        
+        headers:{
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+
+    return response.status;
 }
 
 export async function addStockReference(stockReference: StockReference){
@@ -79,6 +119,38 @@ export async function getStockById(id:number){
     const response = await fetch(`https://localhost:7267/Stock/${id}`);
 
     const value:Stock = await response.json();
+
+    return value;
+}
+
+export async function getDeposit(){
+
+    const response = await fetch(`https://localhost:7267/Deposit/TotalDeposit`);
+
+    const value:Amount = await response.json();
+
+    return value;
+}
+
+export async function addAmountToDeposit(amount:number){
+    
+    const response = await fetch(`https://localhost:7267/Deposit/AddDeposit?amount=${amount}`,{
+        method:'POST',        
+        headers:{
+            'Content-type': 'application/json; charset=UTF-8'
+        }
+    });
+
+    const value:any = response.status;
+
+    return value;
+}
+
+export async function getStockTotalEurEarned(){
+
+    const response = await fetch(`https://localhost:7267/Stock/TotalEurEarned`);
+
+    const value:Amount = await response.json();
 
     return value;
 }

@@ -2,20 +2,26 @@ import { useEffect, useState } from "react";
 import { NewStockModal } from "../modals/newStockModal";
 import { StockReferenceModal } from "../modals/stockReferenceModal";
 import { Switch } from '@nextui-org/react';
-import { getStocks } from "@/app/apiService/httpService";
+import { deleteStock, getStocks } from "@/app/apiService/httpService";
 import { Stock } from "@/app/apiService/model/stock.model";
 import { OperationsStockModal } from "../modals/operationsStockModal";
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { PercentageIndicator } from "../util/percentageIndicator";
 import { MarketOperation } from "../util/marketOperation";
 import { TransactionState } from "../util/transactionState";
+import { YesNoMessageModal } from "../modals/yesNoMessageModal";
+import { CurrencyModal } from "../modals/currencyModal";
+
+interface Props{
+    onPropagateChanges?:any
+}
 
 interface StockOperationModalProps{
     isOpen:boolean;
     stockId:number;
 }
 
-export function StockCollection(){
+export function StockCollection({onPropagateChanges}:Props){
 
     const [showClosedStocks, setShowClosedStocks] = useState(false);
 
@@ -25,15 +31,33 @@ export function StockCollection(){
     const [openOperationsStockModal, setOpenOperationsStockModal] = useState<StockOperationModalProps>({isOpen:false,stockId:0});
     const [stockCollection, setStockCollection] = useState<Stock[]>();        
 
+    const [openYesNoMessageModal, setOpenYesNoMessageModal] = useState<StockOperationModalProps>({isOpen:false,stockId:0});
+
+    const [openNewCurrencyModal, setOpenNewCurrencyModal] = useState(false);    
+
     useEffect(()=>
     {
         updateStocks();
     },[]);
 
     function updateStocks(){
-        getStocks().then(value=>setStockCollection(value));
+        getStocks().then(value=>{
+
+            setStockCollection(value);
+
+            if(onPropagateChanges !== undefined){                                                                   
+                onPropagateChanges();
+            }
+        });
     }
     
+    function deleteSelectedStock(stockId:number){
+
+        deleteStock(stockId).then(x=>{
+            updateStocks();
+        });
+    }
+
 return(
     <>        
     {openStockModal && <NewStockModal onClose={()=>setOpenNewStockModal(false)} 
@@ -44,21 +68,36 @@ return(
 
     {openNewStockReferenceModal && <StockReferenceModal onClose={()=>setOpenNewStockReferenceModal(false)}/>}      
 
+    {openYesNoMessageModal.isOpen && <YesNoMessageModal msg="Do you want remove this stock?" 
+                                                        onYesResponse={()=>{
+                                                            deleteSelectedStock(openYesNoMessageModal.stockId);
+                                                            setOpenYesNoMessageModal({isOpen:false,stockId:0})
+                                                        }} 
+                                                        onNoResponse={()=>{setOpenYesNoMessageModal({isOpen:false,stockId:0})}}/>}
+
+    {openNewCurrencyModal && <CurrencyModal onClose={()=>setOpenNewCurrencyModal(false)}/>}    
+
     <h2>Stocks</h2>
     <div className="row" style={{"border":"1px solid black"}}></div>
         <div className="row mt-3 mb-3 ">
             <div className="col-1">          
-                <button type="button" className="btn btn-success" onClick={()=>setOpenNewStockModal(true)}>
-                    <span className="me-1">New Stock</span>
+                <button type="button" className="btn btn-success" style={{"width":"120px"}} onClick={()=>setOpenNewStockModal(true)}>
+                    <span className="me-1">Stock</span>
                     <i className="bi bi-plus-circle"></i>
                 </button>  
             </div>        
             <div className="col-1 ">          
-                <button type="button" className="btn btn-success" onClick={()=>setOpenNewStockReferenceModal(true)}>
-                    <span className="me-1">New Stock Reference</span>
+                <button type="button" className="btn btn-success" style={{"width":"120px"}} onClick={()=>setOpenNewStockReferenceModal(true)}>
+                    <span className="me-1">Stock Ref</span>
                     <i className="bi bi-plus-circle"></i>
                 </button>  
             </div>   
+            <div className="col-1">          
+                <button type="button" className="btn btn-success" style={{"width":"120px"}} onClick={()=>setOpenNewCurrencyModal(true)}>
+                    <span className="me-1">Currency</span>
+                    <i className="bi bi-plus-circle"></i>
+                </button>  
+            </div>         
             <div className="col-1" style={{"width":"80px"}}>
                 <Switch checked={false} size={"lg"} about="" className="mt-1" onChange={(ev)=>{setShowClosedStocks(!showClosedStocks)}}/>                                                                                     
             </div>                                    
@@ -72,7 +111,7 @@ return(
                                                                onClose={()=>setOpenOperationsStockModal({isOpen:false,stockId:0})}
                                                                onStockUpdateAndClose={()=>{
                                                                 setOpenOperationsStockModal({isOpen:false,stockId:0});
-                                                                updateStocks();
+                                                                updateStocks();                                                           
                                                             }}/>}
                 <table className="mt-1" style={{"width":"100%"}}>
                     <thead>
@@ -96,8 +135,9 @@ return(
                             <th style={{"borderLeft":"1px solid black"}}>Price</th>
                             <th>%</th>                
                             <th>Sell Date</th>                
-                            <th>Fee</th>
                             <th>Return</th>
+                            <th>Fee</th>                            
+                            <th>AmountWithFee</th>
                             <th>Earn</th>                
                             <th>Diff-Amount</th>  
                         </tr>
@@ -141,29 +181,32 @@ return(
                                                 <MarketOperation operation={value.recomendedAction}/>    
                                             </td>
                                             <td style={{"borderLeft":"1px solid black"}}>
-                                                {value.returnStockPrice}
+                                                {value.isSelled && value.returnStockPrice}
                                             </td>
                                             <td> 
-                                                <PercentageIndicator amount={value.returnStockDiffPricePercentaje}/>
+                                                {value.isSelled && <PercentageIndicator amount={value.returnStockDiffPricePercentaje}/>}
                                             </td>
                                             <td>
-                                                {value.sellDate}
+                                                {value.isSelled && value.sellDate}
                                             </td>
                                             <td>
-                                                {value.returnFee}
+                                                {value.isSelled && value.returnAmount}                                                
                                             </td>
                                             <td>
-                                                {value.returnAmount}
+                                                {value.isSelled && value.returnFee}
                                             </td>
                                             <td>
-                                                {value.returnEarn}
+                                                {value.isSelled && value.returnAmountWithFee}
                                             </td>
                                             <td>
-                                                <PercentageIndicator amount={value.returnDiffAmount}/>
+                                                {value.isSelled && value.returnEarn}
+                                            </td>
+                                            <td>
+                                                {value.isSelled && <PercentageIndicator amount={value.returnDiffAmount}/>}
                                             </td>
                                             <td>
                                                 <TransactionState isSelled={value.isSelled}/>
-                                            </td>
+                                            </td>                                          
                                             <td>                
                                                 <button className="btn btn-warning" 
                                                         onClick={()=>{
@@ -172,6 +215,11 @@ return(
                                                     <i className="bi bi-box-arrow-up-right"></i>
                                                 </button>
                                             </td>
+                                            <td>
+                                                <button className="btn btn-danger" onClick={()=>{setOpenYesNoMessageModal({isOpen:true,stockId:value.id})}}>
+                                                    <i className="bi bi-trash"></i>
+                                                </button>
+                                            </td>                                            
                                         </tr>  
                                         </>
                                     );

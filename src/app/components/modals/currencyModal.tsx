@@ -1,5 +1,5 @@
-import { addStockReference, deleteStockReference, getStockReferences } from "@/app/apiService/httpService";
-import { StockReference } from "@/app/apiService/model/stockReference.model";
+import { addCurrency, deleteCurrency, getCurrencies } from "@/app/apiService/httpService";
+import { Currency } from "@/app/apiService/model/currency.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
@@ -7,59 +7,59 @@ interface Props{
     onClose: any    
 }
 
-export function StockReferenceModal({ onClose }:Props) {
+export function CurrencyModal({ onClose }:Props) {
+  
+  const [currencyCollection,setCurrencyCollection] = useState<Currency[]>();
 
-  const [stockReferenceCollection, setStockReferenceCollection] = useState<StockReference[]>();
   const inputName = useRef<HTMLInputElement>(null);
   const inputCode = useRef<HTMLInputElement>(null);
 
-  function saveStockReference(){
+  const name = inputName.current?.value as string;
+  const code = inputCode.current?.value as string;
+
+  useEffect(()=>{
+    loadCurrencies();
+  },[]);
+
+
+  function deleteCurrencyById(id:number){
+    
+    deleteCurrency(id).then(x=>{
+      if(x == 200){
+
+        const currencyCollectionAux: Currency[] = [];
+
+        currencyCollection?.forEach(value=>{
+          if(value.id !== id)
+          currencyCollectionAux.push(value);
+        })
+
+        setCurrencyCollection(currencyCollectionAux);
+
+      }else{
+
+      }
+    });
+  }
+  
+  function addNewCurrency(){
 
     const name = inputName.current?.value as string;
     const code = inputCode.current?.value as string;
 
-    const stockRef:StockReference = {
+    const currency:Currency = {
       id:0,
       code:code,
       name:name
     };
 
-    addStockReference(stockRef).then(value=>
-    {      
-      const stockCollectionAux: StockReference[] = [];
-      stockReferenceCollection?.forEach(value=>stockCollectionAux.push(value));
-      stockCollectionAux?.push(value);
-
-      setStockReferenceCollection(stockCollectionAux);
-    });
+    addCurrency(currency).then(x=>{loadCurrencies();});
   }
 
-  function deleteStockRef(id:number){
-
-    deleteStockReference(id).then(value => {
-
-      if(value == 200){
-
-        const stockCollectionAux: StockReference[] = [];
-
-        stockReferenceCollection?.forEach(x=>
-          {
-            if(x.id !== id)
-              stockCollectionAux.push(x);
-          });
-  
-          setStockReferenceCollection(stockCollectionAux);  
-      }else{
-        //Lanzar algun msg de error.....
-      }
-      
-    });
+  function loadCurrencies(){
+    getCurrencies().then(value=>setCurrencyCollection(value));
   }
 
-  useEffect(()=>{
-    getStockReferences().then(value=>setStockReferenceCollection(value));
-  },[]);
-  
   return (
     createPortal(
       <>
@@ -69,7 +69,7 @@ export function StockReferenceModal({ onClose }:Props) {
             <i className="bi-x"/>
           </button>
           </div>
-          <h2>Stock Reference</h2>
+          <h2>Currency</h2>
           <div className="form-group row ms-4">
             <div className="col-10">
               <label className="row">Name</label>
@@ -81,15 +81,10 @@ export function StockReferenceModal({ onClose }:Props) {
               <label className="row">Code</label>
               <input type="text" className="row form-control" placeholder="Code" ref={inputCode} />              
             </div>
-          </div>
-         
+          </div>         
           <div className="form-group row mt-2 mb-2">                        
             <div className="form-group col-12">
-              <button className="btn btn-success" 
-                      style={{"width":"100px","height":"40px"}}
-                      onClick={()=>{saveStockReference();}}>                
-                Add
-                </button>
+              <button className="btn btn-success" style={{"width":"100px","height":"40px"}} onClick={()=>{addNewCurrency()}}>Add</button>
             </div>
           </div>
           <div className="m-1" style={{"maxHeight":"200px","overflowY":"auto"}}>                                  
@@ -103,20 +98,21 @@ export function StockReferenceModal({ onClose }:Props) {
               </thead>
               <tbody style={{"opacity":"0.9"}}>
                 {
-                  stockReferenceCollection?.map((value,index)=>{
-                      return (
-                        <tr>
-                          <td>
-                           <span>{value.name}</span>
-                          </td>
-                          <td>
+                  currencyCollection?.map((value,index)=>{
+
+                        return (
+                          <tr>
+                            <td>
+                            <span>{value.name}</span>
+                            </td>
+                            <td>
                             <span>{value.code}</span>
-                          </td>
-                          <td>
-                            <button className="btn btn-danger"  onClick={()=>{deleteStockRef(value.id)}} ><i className="bi bi-trash3"></i></button>
-                          </td>
-                        </tr>
-                      );
+                            </td>
+                            <td>
+                            <button className="btn btn-danger" 
+                              onClick={()=>{deleteCurrencyById(value.id)}}><i className="bi bi-trash3"></i></button>
+                            </td>
+                          </tr>);
                   })
                 }
               </tbody>

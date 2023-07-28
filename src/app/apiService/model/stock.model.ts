@@ -23,4 +23,5 @@ export interface Stock{
     returnAmount: number;
     returnEarn: number;
     returnDiffAmount: number;
+    returnAmountWithFee: number;
 }
