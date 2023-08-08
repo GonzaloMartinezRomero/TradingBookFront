@@ -1,4 +1,4 @@
-import { getStockById, sellStock, updateMarketLimit } from "@/app/apiService/httpService";
+import { getStockById, sellStock, updateStockMarketLimit } from "@/app/apiService/httpService";
 import { MarketLimit } from "@/app/apiService/model/marketLimit.model";
 import { SellStock } from "@/app/apiService/model/sellStock.model";
 import { Stock } from "@/app/apiService/model/stock.model";
@@ -57,12 +57,13 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
 
     const marketLimitValues: MarketLimit=
     {
+      cryptoCurrencyId:0,
       stockId: marketLimitInput.stockId as number,
       sellLimit: marketLimitInput.sellLimit as number,
       stopLoss: marketLimitInput.stopLoss as number
     };
 
-    updateMarketLimit(marketLimitValues).then(value=>onStockUpdateAndClose());
+    updateStockMarketLimit(marketLimitValues).then(value=>onStockUpdateAndClose());
   }
 
   return (
@@ -110,16 +111,17 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
           <div className="form-group row ms-3">
             <div className="col-6">
               <label className="row">Stop Loss</label>
-              <input type="text" className="form-control row" placeholder="Stop" defaultValue={stock?.stopLoss} ref={inputStopLoss}/>
+              <input type="text" className="form-control row" placeholder="Stop" defaultValue={stock?.stopLoss} ref={inputStopLoss} disabled={stock?.isSelled}/>
             </div>
             <div className="col-6">
               <label className="row">Sell Limit</label>
-              <input type="text" className="form-control row" placeholder="Limit" defaultValue={stock?.sellLimit} ref={inputSellLimit}/>
+              <input type="text" className="form-control row" placeholder="Limit" defaultValue={stock?.sellLimit} ref={inputSellLimit} disabled={stock?.isSelled}/>
             </div>
           </div>
           <div className="form-group row mt-4">
             <div className="form-group col-12">
               <button className="btn btn-success" 
+                      disabled={stock?.isSelled}
                       style={{ "width": "100px", "height": "40px" }}
                       onClick={()=>setMarketLimit(
                         {

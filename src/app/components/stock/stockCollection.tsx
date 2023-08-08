@@ -1,16 +1,16 @@
 import { useEffect, useState } from "react";
-import { NewStockModal } from "../modals/newStockModal";
-import { StockReferenceModal } from "../modals/stockReferenceModal";
+import { NewStockModal } from "./modal/newStockModal";
+import { StockReferenceModal } from "./modal/stockReferenceModal";
 import { Switch } from '@nextui-org/react';
 import { deleteStock, getStocks } from "@/app/apiService/httpService";
 import { Stock } from "@/app/apiService/model/stock.model";
-import { OperationsStockModal } from "../modals/operationsStockModal";
+import { OperationsStockModal } from "./modal/operationsStockModal";
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { PercentageIndicator } from "../util/percentageIndicator";
 import { MarketOperation } from "../util/marketOperation";
 import { TransactionState } from "../util/transactionState";
-import { YesNoMessageModal } from "../modals/yesNoMessageModal";
-import { CurrencyModal } from "../modals/currencyModal";
+import { YesNoMessageModal } from "../sharedModal/yesNoMessageModal";
+import { CurrencyModal } from "./modal/currencyModal";
 
 interface Props{
     onPropagateChanges?:any
@@ -23,7 +23,7 @@ interface StockOperationModalProps{
 
 export function StockCollection({onPropagateChanges}:Props){
 
-    const [showClosedStocks, setShowClosedStocks] = useState(false);
+    const [showClosedStocks, setShowClosedStocks] = useState(true);
 
     const [openNewStockReferenceModal, setOpenNewStockReferenceModal] = useState(false);
     const [openStockModal, setOpenNewStockModal] = useState(false);
@@ -31,7 +31,7 @@ export function StockCollection({onPropagateChanges}:Props){
     const [openOperationsStockModal, setOpenOperationsStockModal] = useState<StockOperationModalProps>({isOpen:false,stockId:0});
     const [stockCollection, setStockCollection] = useState<Stock[]>();        
 
-    const [openYesNoMessageModal, setOpenYesNoMessageModal] = useState<StockOperationModalProps>({isOpen:false,stockId:0});
+    const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<StockOperationModalProps>({isOpen:false,stockId:0});
 
     const [openNewCurrencyModal, setOpenNewCurrencyModal] = useState(false);    
 
@@ -42,12 +42,15 @@ export function StockCollection({onPropagateChanges}:Props){
 
     function updateStocks(){
         getStocks().then(value=>{
-
             setStockCollection(value);
 
             if(onPropagateChanges !== undefined){                                                                   
                 onPropagateChanges();
             }
+        }).catch((err)=>{
+
+            console.log("---- ERROR -----");
+            console.log(err);
         });
     }
     
@@ -56,8 +59,7 @@ export function StockCollection({onPropagateChanges}:Props){
         deleteStock(stockId).then(x=>{
             updateStocks();
         });
-    }
-
+    }    
 return(
     <>        
     {openStockModal && <NewStockModal onClose={()=>setOpenNewStockModal(false)} 
@@ -68,14 +70,21 @@ return(
 
     {openNewStockReferenceModal && <StockReferenceModal onClose={()=>setOpenNewStockReferenceModal(false)}/>}      
 
-    {openYesNoMessageModal.isOpen && <YesNoMessageModal msg="Do you want remove this stock?" 
+    {openDeleteConfirmationModal.isOpen && <YesNoMessageModal msg="Do you want remove this stock?" 
                                                         onYesResponse={()=>{
-                                                            deleteSelectedStock(openYesNoMessageModal.stockId);
-                                                            setOpenYesNoMessageModal({isOpen:false,stockId:0})
+                                                            deleteSelectedStock(openDeleteConfirmationModal.stockId);
+                                                            setOpenDeleteConfirmationModal({isOpen:false,stockId:0})
                                                         }} 
-                                                        onNoResponse={()=>{setOpenYesNoMessageModal({isOpen:false,stockId:0})}}/>}
+                                                        onNoResponse={()=>{setOpenDeleteConfirmationModal({isOpen:false,stockId:0})}}/>}
 
     {openNewCurrencyModal && <CurrencyModal onClose={()=>setOpenNewCurrencyModal(false)}/>}    
+
+    {openOperationsStockModal.isOpen && <OperationsStockModal stockId={openOperationsStockModal.stockId} 
+                                                               onClose={()=>setOpenOperationsStockModal({isOpen:false,stockId:0})}
+                                                               onStockUpdateAndClose={()=>{
+                                                                setOpenOperationsStockModal({isOpen:false,stockId:0});
+                                                                updateStocks();                                                           
+                                                            }}/>}
 
     <h2>Stocks</h2>
     <div className="row" style={{"border":"1px solid black"}}></div>
@@ -99,26 +108,20 @@ return(
                 </button>  
             </div>         
             <div className="col-1" style={{"width":"80px"}}>
-                <Switch checked={false} size={"lg"} about="" className="mt-1" onChange={(ev)=>{setShowClosedStocks(!showClosedStocks)}}/>                                                                                     
+                <Switch checked={true} size={"lg"} about="" className="mt-1" onChange={(ev)=>{setShowClosedStocks(!showClosedStocks)}}/>                                                                                     
             </div>                                    
             <div className="col-1">
                 <p>Show Closed Stocks</p>
             </div>            
         </div>        
         <div className="row">
-            <div className="col mt-1">
-            {openOperationsStockModal.isOpen && <OperationsStockModal stockId={openOperationsStockModal.stockId} 
-                                                               onClose={()=>setOpenOperationsStockModal({isOpen:false,stockId:0})}
-                                                               onStockUpdateAndClose={()=>{
-                                                                setOpenOperationsStockModal({isOpen:false,stockId:0});
-                                                                updateStocks();                                                           
-                                                            }}/>}
+            <div className="col mt-1">        
                 <table className="mt-1" style={{"width":"100%"}}>
                     <thead>
                         <tr className="table-success">
-                            <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>STOCK INFORMATION</th>                
+                            <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>INFORMATION</th>                
                             <th colSpan={3} className="text-center" style={{"borderRight":"1px solid black"}}>INVEST</th>                      
-                            <th colSpan={3} className="text-center" style={{"borderRight":"1px solid black"}}>STOCK STATE</th>      
+                            <th colSpan={3} className="text-center" style={{"borderRight":"1px solid black"}}>CURRENT STATE</th>      
                             <th colSpan={7} className="text-center">RETURN</th>         
                         </tr>
                         <tr className="text-center table-secondary table-group-divider" style={{"fontStyle":"oblique"}}>
@@ -143,8 +146,7 @@ return(
                         </tr>
                     </thead>
                     <tbody className="text-center">          
-                            {
-                            stockCollection?.map((value,index)=>{
+                            {stockCollection!==undefined && stockCollection?.map((value,index)=>{
                                 if(showClosedStocks || !value.isSelled)
                                 {
                                     return (  
@@ -172,13 +174,13 @@ return(
                                                 {value.deposit}
                                             </td>               
                                             <td style={{"borderLeft":"1px solid black"}}>
-                                                {value.currentPrice}
+                                                {!value.isSelled && value.currentPrice}
                                             </td>
                                             <td>
-                                                <PercentageIndicator amount={value.percentajeDiff}/>
+                                                {!value.isSelled && <PercentageIndicator amount={value.percentajeDiff}/>}
                                             </td>
                                             <td>          
-                                                <MarketOperation operation={value.recomendedAction}/>    
+                                                {!value.isSelled && <MarketOperation operation={value.recomendedAction}/>}
                                             </td>
                                             <td style={{"borderLeft":"1px solid black"}}>
                                                 {value.isSelled && value.returnStockPrice}
@@ -216,7 +218,7 @@ return(
                                                 </button>
                                             </td>
                                             <td>
-                                                <button className="btn btn-danger" onClick={()=>{setOpenYesNoMessageModal({isOpen:true,stockId:value.id})}}>
+                                                <button className="btn btn-danger" onClick={()=>{setOpenDeleteConfirmationModal({isOpen:true,stockId:value.id})}}>
                                                     <i className="bi bi-trash"></i>
                                                 </button>
                                             </td>                                            

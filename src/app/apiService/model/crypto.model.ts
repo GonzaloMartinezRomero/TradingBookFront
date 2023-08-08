@@ -1,0 +1,28 @@
+import { Currency } from "./currency.model";
+import { StockReference } from "./stockReference.model";
+
+export interface CryptoCurrency{
+    id: number,
+    cryptoCurrencyFrom: string,
+    cryptoCurrencyTo: string,
+    amountInvest: number,
+    feeInvest: number,
+    cryptoPrice: number,
+    buyDate: string,
+    deposit:number
+    exchangedAmount: number,
+    currentPrice: number,
+    currentDiffPercentage: number,
+    recomendedAction: string,
+    isSelled: boolean,
+    returnPrice: number,
+    returnDiffPricePercentage: number,
+    sellDate: string,
+    returnAmount: number,
+    returnFee: number,
+    returnAmountWithFee: number,
+    returnEarn: number,
+    returnDiffAmountEarnedPercentage: number,
+    stopLoss: number,
+    sellLimit: number
+}

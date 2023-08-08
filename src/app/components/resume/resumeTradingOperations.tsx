@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
-import { CurrencyModal } from "../modals/currencyModal";
-import { addAmountToDeposit, getDeposit, getStockTotalEurEarned } from "@/app/apiService/httpService";
+import { CurrencyModal } from "../stock/modal/currencyModal";
+import { addAmountToDeposit, getCryptoTotalEurEarned, getDeposit, getStockTotalEurEarned } from "@/app/apiService/httpService";
 
 interface Props{
     onUpdateComponent?:any
@@ -10,7 +10,7 @@ export function ResumeTradingOperations({onUpdateComponent}:Props){
 
     const [deposit,setDeposit] = useState<number>(0);
     const [stockEarn,setStockEarn] = useState<number>(0);
-    const [exchangeEarn,setExchangeEarn] = useState<number>(0);
+    const [cryptoEarn,setCryptoEarn] = useState<number>(0);
 
     const inputAmountValue = useRef<HTMLInputElement>(null);
 
@@ -18,6 +18,7 @@ useEffect(()=>{
 
     loadTotalDeposit();
     loadStockEarnedAmount();
+    loadCryptoEarnedAmount();
 
 },[onUpdateComponent, ]);    
 
@@ -29,15 +30,22 @@ function loadStockEarnedAmount(){
     getStockTotalEurEarned().then(value=>setStockEarn(value.amount));
 }
 
+function loadCryptoEarnedAmount(){
+    getCryptoTotalEurEarned().then(value=>setCryptoEarn(value.amount));
+}
+
 function addToDeposit(){
 
     const amountToAdd:number = inputAmountValue.current?.value as unknown as number;
     addAmountToDeposit(amountToAdd).then(value=>{loadTotalDeposit()});
 }
 
-function fixTo2Decimal(amount:number){
+function fixTo2Decimal(amount:number | undefined){
 
-    return amount.toFixed(2).toString();
+    if(amount)
+        return amount.toFixed(2).toString();
+    else
+    return 0;
 }
 
 return(
@@ -65,10 +73,10 @@ return(
                             {fixTo2Decimal(stockEarn)}€
                         </td>
                         <td>
-                            {fixTo2Decimal(exchangeEarn)}€
+                            {fixTo2Decimal(cryptoEarn)}€
                         </td>
                         <td>
-                            {fixTo2Decimal(stockEarn + exchangeEarn)}€
+                            {fixTo2Decimal(stockEarn + cryptoEarn)}€
                         </td>
                     </tr>
                 </tbody>            
