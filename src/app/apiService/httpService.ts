@@ -318,3 +318,30 @@ export async function updateCryptoMarketLimit(marketLimit:MarketLimit){
 
     return value;
 }
+
+export async function checkIfCryptoRefIsAvailable(code:string){
+
+    const response = await fetch(`https://localhost:7267/CryptoCurrencyReference/CheckIfReferenceExists?referenceCode=${code}`);
+
+    const value:boolean = await response.json();
+
+    return value;
+}
+
+export async function checkIfStockCodeIsAvailable(code:string){
+
+    const response = await fetch(`https://localhost:7267/StockReference/CheckIfStockExists?referenceCode=${code}`);
+
+    const value:boolean = await response.json();
+
+    return value;
+}
+
+export async function checkIfCurrencyCodeIsAvailable(code:string){
+
+    const response = await fetch(`https://localhost:7267/Currency/CheckIfCurrencyCodeExists?currencyCode=${code}`);
+
+    const value:boolean = await response.json();
+
+    return value;
+}

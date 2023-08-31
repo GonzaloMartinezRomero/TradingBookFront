@@ -1,4 +1,4 @@
-import { addStockReference, deleteStockReference, getStockReferences } from "@/app/apiService/httpService";
+import { addStockReference, checkIfStockCodeIsAvailable, deleteStockReference, getStockReferences } from "@/app/apiService/httpService";
 import { StockReference } from "@/app/apiService/model/stockReference.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -10,6 +10,7 @@ interface Props{
 export function StockReferenceModal({ onClose }:Props) {
 
   const [stockReferenceCollection, setStockReferenceCollection] = useState<StockReference[]>();
+  const [isStockCodeAvailable,setIsStockCodeAvailable] = useState<boolean | undefined>(undefined);
   const inputName = useRef<HTMLInputElement>(null);
   const inputCode = useRef<HTMLInputElement>(null);
 
@@ -59,6 +60,14 @@ export function StockReferenceModal({ onClose }:Props) {
   useEffect(()=>{
     getStockReferences().then(value=>setStockReferenceCollection(value));
   },[]);
+
+  function checkIfCodeIsAvailable(){
+    const code = inputCode.current?.value as string;
+
+    checkIfStockCodeIsAvailable(code).then(response=>{      
+      setIsStockCodeAvailable(response);
+    });
+  }
   
   return (
     createPortal(
@@ -82,8 +91,17 @@ export function StockReferenceModal({ onClose }:Props) {
               <input type="text" className="row form-control" placeholder="Code" ref={inputCode} />              
             </div>
           </div>
-         
-          <div className="form-group row mt-2 mb-2">                        
+          <div className="form-group row mt-3 ms-1">
+            <div className="col-5">
+              <button className="btn btn-info row" onClick={()=>checkIfCodeIsAvailable()}>Check Availability</button>             
+            </div>          
+            <div className="col-5">
+              {isStockCodeAvailable === undefined &&  <span className="row bi bi-question-square" style={{"fontSize":"35px"}} title="No Checked"/>}
+              {isStockCodeAvailable == true && <span className="row bi bi-file-earmark-check" style={{"fontSize":"35px"}} title="Available"/>}
+              {isStockCodeAvailable == false &&  <span className="row bi bi-file-earmark-x" style={{"fontSize":"35px"}} title="No Available"/>}             
+            </div>
+          </div>         
+          <div className="form-group row mt-3 mb-3">                        
             <div className="form-group col-12">
               <button className="btn btn-success" 
                       style={{"width":"100px","height":"40px"}}

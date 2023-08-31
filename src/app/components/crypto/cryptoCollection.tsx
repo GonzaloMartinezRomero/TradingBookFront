@@ -10,6 +10,7 @@ import { NewCryptoModal } from "./modal/newCrypto.modal";
 import { YesNoMessageModal } from "../sharedModal/yesNoMessageModal";
 import { CryptoReferenceModal } from "./modal/cryptoReference.modal";
 import { OperationCryptoModal } from "./modal/operationsCrypto.modal";
+import { CurrencyModal } from "../stock/modal/currencyModal";
 
 interface OperationModalProps{
     isOpen:boolean;
@@ -28,6 +29,7 @@ const [openCryptoModal, setOpenNewCryptoModal] = useState(false);
 const [openDeleteModal, setOpenDeleteModal] = useState<OperationModalProps>({isOpen:false,cryptoId:0});
 const [openCryptoRefModal, setOpenCryptoRefModal] = useState(false);
 const [openOperationCrypto, setOpenOperationCrypto] = useState<OperationModalProps>({isOpen:false, cryptoId:0})
+const [openNewCurrencyModal, setOpenNewCurrencyModal] = useState(false);    
     
 useEffect(()=>{
     updateCryptoCollection();    
@@ -76,6 +78,8 @@ return(
                                                             updateCryptoCollection();
                                                           }}        />}   
 
+    {openNewCurrencyModal && <CurrencyModal onClose={()=>setOpenNewCurrencyModal(false)}/>}    
+
     <h2>Crypto Exchange</h2>
     <div className="row" style={{"border":"1px solid black"}}></div>
         <div className="row mt-3 mb-3 ">
@@ -90,7 +94,13 @@ return(
                     <span className="me-1">Crypto Ref</span>
                     <i className="bi bi-plus-circle"></i>
                 </button>  
-            </div>         
+            </div>    
+            <div className="col-1">
+                <button type="button" className="btn btn-success" style={{"width":"120px"}} onClick={()=>setOpenNewCurrencyModal(true)}>
+                    <span className="me-1">Currency</span>
+                    <i className="bi bi-plus-circle"></i>
+                </button>                                             
+            </div>     
             <div className="col-1" style={{"width":"80px"}}>
                 <Switch checked={true} size={"lg"} about="" className="mt-1" onChange={(ev)=>{setShowClosedCryptos(!showClosedCryptos)}}/>                                                                          
             </div>                                    
@@ -104,7 +114,7 @@ return(
                     <thead>
                         <tr className="table-success">
                             <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>EXCHANGE FROM</th>                
-                            <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>EXCHANGE TO</th>                
+                            <th colSpan={5} className="text-center" style={{"borderRight":"1px solid black"}}>EXCHANGE TO</th>                
                             <th colSpan={3} className="text-center" style={{"borderRight":"1px solid black"}}>CURRENT STATE</th>                      
                             <th colSpan={8} className="text-center">RETURN</th>         
                         </tr>
@@ -114,13 +124,14 @@ return(
                             <th>Fee</th>
                             <th style={{"borderRight":"1px solid black"}}>Deposit</th>
                             <th>To</th>
+                            <th>Pair</th>
                             <th>Price</th>
                             <th>Amount</th>
                             <th style={{"borderRight":"1px solid black"}}>Date</th>    
                             <th>Price</th>
                             <th>%</th>
                             <th style={{"borderRight":"1px solid black"}}>Action</th>
-                            <th >Price</th>
+                            <th>Price</th>
                             <th>%</th>
                             <th>Date</th>
                             <th>Return</th>
@@ -153,16 +164,19 @@ return(
                                                 {value.cryptoCurrencyTo}
                                             </td>
                                             <td>
-                                                {value.cryptoPrice}
+                                                {value.cryptoReference}
                                             </td>
                                             <td>
-                                                {value.exchangedAmount}
+                                                <MonetaryAmount amount={value.cryptoPrice}/>
+                                            </td>
+                                            <td>
+                                                <MonetaryAmount amount={value.exchangedAmount}/>
                                             </td>
                                             <td>
                                                {value.buyDate}
                                             </td>
                                             <td style={{"borderLeft":"1px solid black"}}>
-                                                {!value.isSelled && value.currentPrice}
+                                                {!value.isSelled && <MonetaryAmount amount={value.currentPrice}/>}
                                             </td>
                                             <td>
                                                 {!value.isSelled && <PercentageIndicator amount={value.currentDiffPercentage}/>}
@@ -171,7 +185,7 @@ return(
                                                 {!value.isSelled && <MarketOperation operation={value.recomendedAction}/>}
                                             </td>
                                             <td style={{"borderLeft":"1px solid black"}}>
-                                                {value.isSelled && value.returnPrice}
+                                                {value.isSelled && <MonetaryAmount amount={value.returnPrice}/>}
                                             </td>
                                             <td> 
                                                 {value.isSelled && <PercentageIndicator amount={value.returnDiffPricePercentage}/>}
@@ -180,16 +194,16 @@ return(
                                                 {value.isSelled && value.sellDate}
                                             </td>
                                             <td>
-                                                {value.isSelled && value.returnAmount}                                                
+                                                {value.isSelled && <MonetaryAmount amount={value.returnAmount}/>}   
                                             </td>
                                             <td>
-                                                {value.isSelled && value.returnFee}
+                                                {value.isSelled && <MonetaryAmount amount={value.returnFee}/>}
                                             </td>
                                             <td>
-                                                {value.isSelled && value.returnAmountWithFee}
+                                                {value.isSelled && <MonetaryAmount amount={value.returnAmountWithFee}/>}
                                             </td>
                                             <td>
-                                                {value.isSelled && value.returnEarn}
+                                                {value.isSelled && <MonetaryAmount amount={value.returnEarn}/>}
                                             </td>
                                             <td>
                                                 {value.isSelled && <PercentageIndicator amount={value.returnDiffAmountEarnedPercentage}/>}

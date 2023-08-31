@@ -1,4 +1,4 @@
-import { deleteCryptoCurrencyReference, getCryptoCurrenciesReference, saveCryptoCurrencyReference } from "@/app/apiService/httpService";
+import { checkIfCryptoRefIsAvailable, deleteCryptoCurrencyReference, getCryptoCurrenciesReference, saveCryptoCurrencyReference } from "@/app/apiService/httpService";
 import { CryptoCurrencyReference } from "@/app/apiService/model/cryptoCurrency.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -10,6 +10,7 @@ interface Props{
 export function CryptoReferenceModal({ onClose }:Props) {
 
   const [cryptoCurrencyReferenceCollection,setCryptoCurrencyReferenceCollection] = useState<CryptoCurrencyReference[]>();
+  const [isCryptoCodeAvailable,setIsCryptoCodeAvailable] = useState<boolean | undefined>(undefined);
   const inputName = useRef<HTMLInputElement>(null);
   const inputCode = useRef<HTMLInputElement>(null);
 
@@ -31,6 +32,13 @@ export function CryptoReferenceModal({ onClose }:Props) {
 
     saveCryptoCurrencyReference(cryptoRef).then((value)=>updateCryptoCurrencies());
   }
+
+  function checkIfCodeIsAvailable(){
+    const code = inputCode.current?.value as string;
+    checkIfCryptoRefIsAvailable(code).then(response=>{      
+      setIsCryptoCodeAvailable(response);
+    });
+  }
    
   function updateCryptoCurrencies(){
     getCryptoCurrenciesReference().then(value=>{setCryptoCurrencyReferenceCollection(value);});
@@ -39,8 +47,6 @@ export function CryptoReferenceModal({ onClose }:Props) {
   function deleteCryptoRef(id:number){
     deleteCryptoCurrencyReference(id).then((value)=>updateCryptoCurrencies());
   }
-
-
 
   return (
     createPortal(
@@ -63,9 +69,18 @@ export function CryptoReferenceModal({ onClose }:Props) {
               <label className="row">Code</label>
               <input type="text" className="row form-control" placeholder="Code" ref={inputCode} />              
             </div>
-          </div>
-         
-          <div className="form-group row mt-2 mb-2">                        
+          </div>        
+          <div className="form-group row mt-3 ms-1">
+            <div className="col-5">
+              <button className="btn btn-info row" onClick={()=>checkIfCodeIsAvailable()}>Check Availability</button>             
+            </div>          
+            <div className="col-5">
+              {isCryptoCodeAvailable === undefined &&  <span className="row bi bi-question-square" style={{"fontSize":"35px"}} title="No Checked"/>}
+              {isCryptoCodeAvailable == true && <span className="row bi bi-file-earmark-check" style={{"fontSize":"35px"}} title="Available"/>}
+              {isCryptoCodeAvailable == false &&  <span className="row bi bi-file-earmark-x" style={{"fontSize":"35px"}} title="No Available"/>}             
+            </div>
+          </div>         
+          <div className="form-group row mt-3 mb-3">                        
             <div className="form-group col-12">
               <button className="btn btn-success" 
                       style={{"width":"100px","height":"40px"}}

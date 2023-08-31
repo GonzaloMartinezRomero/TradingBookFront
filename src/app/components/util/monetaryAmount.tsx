@@ -1,10 +1,12 @@
 interface Props{
-    amount: number
+    amount?: number
 }
 
 export function MonetaryAmount(props:Props){
 
-let amountNormalized = props.amount.toString();
+const formatter = new Intl.NumberFormat('es-ES');
+
+let amountNormalized:string = (props.amount!=undefined)? formatter.format(props.amount): "NO DATA";
 
 return (<>
         <span>{amountNormalized}</span>

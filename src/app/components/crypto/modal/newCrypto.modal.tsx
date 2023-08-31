@@ -1,6 +1,7 @@
 "use client";
-import { getCryptoCurrenciesReference, saveCrypto } from "@/app/apiService/httpService";
+import { getCryptoCurrenciesReference, getCurrencies, saveCrypto } from "@/app/apiService/httpService";
 import { CryptoCurrencyReference } from "@/app/apiService/model/cryptoCurrency.model";
+import { Currency } from "@/app/apiService/model/currency.model";
 import { NewCrypto } from "@/app/apiService/model/newCrypto.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -13,9 +14,11 @@ interface Props{
 export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
   
   const [cryptoCurrencyReferenceCollection, setCryptoCurrencyReferenceCollection] = useState<CryptoCurrencyReference[]>(); 
+  const [currencies,setCurrencies] = useState<Currency[]>();
 
-  const inputCryptoReferenceFrom = useRef<HTMLSelectElement>(null);
-  const inputCryptoReferenceTo = useRef<HTMLSelectElement>(null);  
+  const inputCurrencyFrom = useRef<HTMLSelectElement>(null);
+  const inputCurrencyTo = useRef<HTMLSelectElement>(null);  
+  const inputCryptoReference = useRef<HTMLSelectElement>(null);  
   const inputPrice = useRef<HTMLInputElement>(null);
   const inputStopLoss = useRef<HTMLInputElement>(null);
   const inputSellLimit = useRef<HTMLInputElement>(null);
@@ -26,6 +29,7 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
 
   useEffect(()=>{
     getCryptoCurrenciesReference().then(value=>setCryptoCurrencyReferenceCollection(value));    
+    getCurrencies().then(value=>setCurrencies(value));
   },
   []);
   
@@ -33,8 +37,9 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
 
     const newCryptoParsed:NewCrypto =
     {      
-      cryptoCurrencyReferenceFromId:(inputCryptoReferenceFrom.current?.value ?? "0") as unknown as number,
-      cryptoCurrencyReferenceToId:(inputCryptoReferenceTo.current?.value ?? "0") as unknown as number,
+      currencyFromId:(inputCurrencyFrom.current?.value ?? "0") as unknown as number,
+      currencyToId:(inputCurrencyTo.current?.value ?? "0") as unknown as number,
+      cryptoReferenceId:(inputCryptoReference.current?.value ?? "0") as unknown as number,
       cryptoPrice: (inputPrice.current?.value ?? "0") as unknown as number,
       sellLimit: (inputSellLimit.current?.value ?? "0") as unknown as number,
       stopLoss: (inputStopLoss.current?.value ?? "0") as unknown as number,
@@ -49,7 +54,7 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
   return (
     createPortal(
       <>
-        <div className="add-invest-modal">
+        <div className="add-crypto-modal">
         <div className="d-flex flex-row-reverse">
           <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
             <i className="bi-x"/>
@@ -60,8 +65,32 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
             <h3 className="mb-4">Crypto Reference</h3>
             <div className="form-group row">
             <div className="col-4">
-                <label className="row">Reference From</label>
-                <select className="row form-select" aria-label="StockReference" ref={inputCryptoReferenceFrom}>
+                <label className="row">Currency From</label>
+                <select className="row form-select" aria-label="CurrencyFrom" ref={inputCurrencyFrom}>
+                  <option selected>Select</option>
+                  {
+                    currencies?.map((currencyAux,index)=>
+                    {
+                      return (<option value={currencyAux.id}>{currencyAux.name}</option>);
+                    })
+                  }                  
+                </select>
+              </div>
+              <div className="col-4">
+                <label className="row">Currency To</label>
+                <select className="row form-select" aria-label="CurrencyTo" ref={inputCurrencyTo}>
+                  <option selected>Select</option>
+                  {
+                    currencies?.map((currencyAux,index)=>
+                    {
+                      return (<option value={currencyAux.id}>{currencyAux.name}</option>);
+                    })
+                  }                  
+                </select>
+              </div>
+              <div className="col-4">
+                <label className="row">Pair</label>
+                <select className="row form-select" aria-label="Pair" ref={inputCryptoReference}>
                   <option selected>Select</option>
                   {
                     cryptoCurrencyReferenceCollection?.map((stockReference,index)=>
@@ -71,29 +100,19 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
                   }                  
                 </select>
               </div>
-              <div className="col-4">
-                <label className="row">Reference To</label>
-                <select className="row form-select" aria-label="StockReference" ref={inputCryptoReferenceTo}>
-                  <option selected>Select</option>
-                  {
-                    cryptoCurrencyReferenceCollection?.map((stockReference,index)=>
-                    {
-                      return (<option value={stockReference.id}>{stockReference.name}</option>);
-                    })
-                  }                  
-                </select>
-              </div>
-              <div className="col-4">
-                <label className="row">Price</label>
-                <input type="number" className="form-control row" placeholder="Price" ref={inputPrice} />
-              </div>          
             </div>
             <div className="form-group row mt-3">
+            <div className="col-4">
+                <label className="row">Crypto Price</label>
+                <input type="number" className="form-control row" placeholder="CryptoPrice" ref={inputPrice} />
+              </div>    
               <div className="col-4">
                   <label className="row">Exchange Amount</label>
                   <input type="number" className="form-control row" placeholder="Amount" ref={inputExchangedAmount}/>
-                </div>
-                <div className="col-4">
+                </div>               
+              </div>
+              <div className="form-group row mt-3">
+              <div className="col-4">
                   <label className="row">Stop Loss</label>
                   <input type="number" className="form-control row" placeholder="Stop" ref={inputStopLoss}/>
                 </div>
@@ -104,7 +123,7 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
               </div>
           </div>
           <div className="m-4">
-            <h3 className="mb-4">Invest</h3>
+            <h3 className="mb-2">Invest</h3>
             <div className="form-group row">
               <div className="col-4">
                 <label className="row">Amount</label>

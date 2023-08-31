@@ -1,6 +1,7 @@
 export interface NewCrypto{
-    cryptoCurrencyReferenceFromId: number;
-    cryptoCurrencyReferenceToId: number;
+    currencyFromId: number;
+    currencyToId: number;
+    cryptoReferenceId: number;
     cryptoPrice: number;    
     amountInvest: number;
     feeInvest: number;

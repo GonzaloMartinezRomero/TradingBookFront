@@ -1,4 +1,4 @@
-import { addCurrency, deleteCurrency, getCurrencies } from "@/app/apiService/httpService";
+import { addCurrency, checkIfCurrencyCodeIsAvailable, deleteCurrency, getCurrencies } from "@/app/apiService/httpService";
 import { Currency } from "@/app/apiService/model/currency.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
@@ -10,6 +10,7 @@ interface Props{
 export function CurrencyModal({ onClose }:Props) {
   
   const [currencyCollection,setCurrencyCollection] = useState<Currency[]>();
+  const [isCurrencyCodeAvailable,setIsCurrencyCodeAvailable] = useState<boolean | undefined>(undefined);
 
   const inputName = useRef<HTMLInputElement>(null);
   const inputCode = useRef<HTMLInputElement>(null);
@@ -20,6 +21,14 @@ export function CurrencyModal({ onClose }:Props) {
   useEffect(()=>{
     loadCurrencies();
   },[]);
+
+  function checkIfCurrencyIsAvailable(){
+    const code = inputCode.current?.value as string;
+
+    checkIfCurrencyCodeIsAvailable(code).then(response=>{      
+      setIsCurrencyCodeAvailable(response);
+    });
+  }
 
 
   function deleteCurrencyById(id:number){
@@ -81,8 +90,18 @@ export function CurrencyModal({ onClose }:Props) {
               <label className="row">Code</label>
               <input type="text" className="row form-control" placeholder="Code" ref={inputCode} />              
             </div>
-          </div>         
-          <div className="form-group row mt-2 mb-2">                        
+          </div>    
+          <div className="form-group row mt-3 ms-1">
+            <div className="col-5">
+              <button className="btn btn-info row" onClick={()=>checkIfCurrencyIsAvailable()}>Check Availability</button>             
+            </div>          
+            <div className="col-5">
+              {isCurrencyCodeAvailable === undefined &&  <span className="row bi bi-question-square" style={{"fontSize":"35px"}} title="No Checked"/>}
+              {isCurrencyCodeAvailable == true && <span className="row bi bi-file-earmark-check" style={{"fontSize":"35px"}} title="Available"/>}
+              {isCurrencyCodeAvailable == false &&  <span className="row bi bi-file-earmark-x" style={{"fontSize":"35px"}} title="No Available"/>}             
+            </div>
+          </div>          
+          <div className="form-group row mt-3 mb-3">                        
             <div className="form-group col-12">
               <button className="btn btn-success" style={{"width":"100px","height":"40px"}} onClick={()=>{addNewCurrency()}}>Add</button>
             </div>
