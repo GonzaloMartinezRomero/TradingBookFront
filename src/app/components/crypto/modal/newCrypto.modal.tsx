@@ -1,10 +1,12 @@
 "use client";
-import { getCryptoCurrenciesReference, getCurrencies, saveCrypto } from "@/app/apiService/httpService";
 import { CryptoCurrencyReference } from "@/app/apiService/model/cryptoCurrency.model";
 import { Currency } from "@/app/apiService/model/currency.model";
 import { NewCrypto } from "@/app/apiService/model/newCrypto.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
+import { getCryptoCurrenciesReference, saveCrypto } from "@/app/apiService/cryptoApiService";
+import { getCurrencies } from "@/app/apiService/currencyApiService";
 
 interface Props{
     onClose: any,
@@ -15,6 +17,7 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
   
   const [cryptoCurrencyReferenceCollection, setCryptoCurrencyReferenceCollection] = useState<CryptoCurrencyReference[]>(); 
   const [currencies,setCurrencies] = useState<Currency[]>();
+  const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
 
   const inputCurrencyFrom = useRef<HTMLSelectElement>(null);
   const inputCurrencyTo = useRef<HTMLSelectElement>(null);  
@@ -35,7 +38,7 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
   
   function addCrypto(){
 
-    const newCryptoParsed:NewCrypto =
+    const newCryptoParsed: NewCrypto =
     {      
       currencyFromId:(inputCurrencyFrom.current?.value ?? "0") as unknown as number,
       currencyToId:(inputCurrencyTo.current?.value ?? "0") as unknown as number,
@@ -48,12 +51,13 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
       exchangedAmount: (inputExchangedAmount.current?.value ?? "0") as unknown as number,            
     }
 
-    saveCrypto(newCryptoParsed).then(value=>{onCloseAndReload();});
+    saveCrypto(newCryptoParsed).then(value=>{onCloseAndReload();})
+                               .catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
-
   return (
-    createPortal(
-      <>
+    <>
+    {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
+    {createPortal(      
         <div className="add-crypto-modal">
         <div className="d-flex flex-row-reverse">
           <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
@@ -104,21 +108,21 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
             <div className="form-group row mt-3">
             <div className="col-4">
                 <label className="row">Crypto Price</label>
-                <input type="number" className="form-control row" placeholder="CryptoPrice" ref={inputPrice} />
+                <input type="number" className="form-control row" placeholder="CryptoPrice" defaultValue={0} ref={inputPrice} />
               </div>    
               <div className="col-4">
                   <label className="row">Exchange Amount</label>
-                  <input type="number" className="form-control row" placeholder="Amount" ref={inputExchangedAmount}/>
+                  <input type="number" className="form-control row" placeholder="Amount" defaultValue={0} ref={inputExchangedAmount}/>
                 </div>               
               </div>
               <div className="form-group row mt-3">
               <div className="col-4">
                   <label className="row">Stop Loss</label>
-                  <input type="number" className="form-control row" placeholder="Stop" ref={inputStopLoss}/>
+                  <input type="number" className="form-control row" placeholder="Stop" defaultValue={0} ref={inputStopLoss}/>
                 </div>
                 <div className="col-4">
                   <label className="row">Sell Limit</label>
-                  <input type="number" className="form-control row" placeholder="Limit" ref={inputSellLimit}/>
+                  <input type="number" className="form-control row" placeholder="Limit" defaultValue={0} ref={inputSellLimit}/>
                   </div>
               </div>
           </div>
@@ -127,11 +131,11 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
             <div className="form-group row">
               <div className="col-4">
                 <label className="row">Amount</label>
-                <input type="number" className="form-control row" placeholder="Amount" ref={inputAmount}/>
+                <input type="number" className="form-control row" placeholder="Amount" defaultValue={0} ref={inputAmount}/>
               </div>              
               <div className="col-4">
                 <label className="row">Fee</label>
-                <input type="number" className="form-control row" placeholder="Fee" ref={inputFee}/>
+                <input type="number" className="form-control row" placeholder="Fee" defaultValue={0} ref={inputFee}/>
               </div>
             </div>
           </div>
@@ -141,7 +145,8 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
             </div>
           </div>
         </div>
-      </>,
-      document.body)
+      ,
+      document.body)}
+    </>
   );
 }

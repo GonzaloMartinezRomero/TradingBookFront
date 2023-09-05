@@ -1,4 +1,4 @@
-export interface NewCrypto{
+export interface NewCrypto {
     currencyFromId: number;
     currencyToId: number;
     cryptoReferenceId: number;

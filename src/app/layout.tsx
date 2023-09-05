@@ -1,8 +1,7 @@
 "use client";
 import 'bootstrap/dist/css/bootstrap.css';
-import { FooterCustom } from './components/footerCustom';
-import { NavigationPanel } from './components/navigationPanel';
-import '../../styles/assetModal.css';
+import '../../styles/cryptoStyles.css';
+import '../../styles/stockStyles.css';
 import '../../styles/appStyle.css';
 
 export const metadata = {
@@ -21,12 +20,11 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
       </head>    
       <body className='app-style'>        
-        <NavigationPanel></NavigationPanel>
-        <main className='m-1 mt-3'>
-          {children}
-        </main>
+        {children}
         <footer>
-          <FooterCustom></FooterCustom>
+          <div className="text-center p-3">
+          © 2023 Trading Book Web Application
+        </div>   
         </footer>
       </body>
     </html>

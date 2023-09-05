@@ -1,11 +1,11 @@
-"use client";
-import { getCurrencies, getStockReferences, saveStock } from "@/app/apiService/httpService";
+import { getCurrencies } from "@/app/apiService/currencyApiService";
 import { Currency } from "@/app/apiService/model/currency.model";
 import { NewStock } from "@/app/apiService/model/newStock.model";
 import { StockReference } from "@/app/apiService/model/stockReference.model";
+import { getStockReferences, saveStock } from "@/app/apiService/stockApiService";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-
+import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
 
 interface Props{
     onClose: any,
@@ -14,6 +14,8 @@ interface Props{
 
 export function NewStockModal({ onClose, onCloseAndReload }:Props) {
   
+  const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
+
   const [currencyCollection,setCurrencyCollection] = useState<Currency[]>();
   const [stockReferenceCollection,setStockReferenceCollection] = useState<StockReference[]>();
 
@@ -26,8 +28,8 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
   const inputStockReference = useRef<HTMLSelectElement>(null);
 
   useEffect(()=>{
-    getCurrencies().then(value=>setCurrencyCollection(value));
-    getStockReferences().then(value=>setStockReferenceCollection(value));
+    getCurrencies().then(value=>setCurrencyCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
+    getStockReferences().then(value=>setStockReferenceCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
   },
   []);
   
@@ -44,13 +46,15 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
       stopLoss: (inputStopLoss.current?.value ?? "0") as unknown as number,
     }
 
-    saveStock(newStock).then(value=>{onCloseAndReload();});
+    saveStock(newStock).then(value=>onCloseAndReload()).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
   return (
-    createPortal(
-      <>
-        <div className="add-invest-modal">
+    <>
+    {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
+    { createPortal(
+       
+        <div className="add-stock-modal">
         <div className="d-flex flex-row-reverse">
           <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
             <i className="bi-x"/>
@@ -120,8 +124,7 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
               <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }} onClick={()=>addStock()}>Add</button>
             </div>
           </div>
-        </div>
-      </>,
-      document.body)
+        </div>,document.body)}
+        </>
   );
 }

@@ -5,24 +5,22 @@ import { MonetaryAmount } from "../util/monetaryAmount";
 import { PercentageIndicator } from "../util/percentageIndicator";
 import { MarketOperation } from "../util/marketOperation";
 import { TransactionState } from "../util/transactionState";
-import { deleteCrypto, getCryptos } from "@/app/apiService/httpService";
 import { NewCryptoModal } from "./modal/newCrypto.modal";
-import { YesNoMessageModal } from "../sharedModal/yesNoMessageModal";
+import { YesNoMessageModal } from "../util/yesNoMessageModal";
 import { CryptoReferenceModal } from "./modal/cryptoReference.modal";
 import { OperationCryptoModal } from "./modal/operationsCrypto.modal";
 import { CurrencyModal } from "../stock/modal/currencyModal";
+import { deleteCrypto, getCryptos } from "@/app/apiService/cryptoApiService";
+import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
 
 interface OperationModalProps{
     isOpen:boolean;
     cryptoId:number;
 }
 
-interface Props{
-    onPropagateChanges?:any
-}
+export function CryptoCollection(){
 
-export function CryptoCollection({onPropagateChanges}:Props){
-
+const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});    
 const [cryptoCollection, setCryptoCollection] = useState<CryptoCurrency[]>();
 const [showClosedCryptos, setShowClosedCryptos] = useState<boolean>(true);
 const [openCryptoModal, setOpenNewCryptoModal] = useState(false);
@@ -36,26 +34,19 @@ useEffect(()=>{
 },[]);
 
 function updateCryptoCollection(){
-    getCryptos().then(value=>{
-
-        setCryptoCollection(value);
-        if(onPropagateChanges!=undefined)
-            onPropagateChanges();
-
-    }).catch((err)=>{
-
-        console.log("---ERRROR---");
-        console.log(err);
-    });
+    getCryptos().then(value=>setCryptoCollection(value))
+                .catch(err=>setErrorModal({isOpen:true,msg:err}));
 }
 
 function deleteSelectedCrypto(id:number){
 
-    deleteCrypto(id).then(value=>updateCryptoCollection());
+    deleteCrypto(id).then(value=>updateCryptoCollection())
+                    .catch(err=>setErrorModal({isOpen:true,msg:err}));
 }
 
 return(
     <>        
+    {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
     {openCryptoModal && <NewCryptoModal  onClose={()=>setOpenNewCryptoModal(false)} 
                                          onCloseAndReload={()=>{
                                                                     setOpenNewCryptoModal(false);

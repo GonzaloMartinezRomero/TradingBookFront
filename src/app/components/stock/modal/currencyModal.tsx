@@ -1,7 +1,8 @@
-import { addCurrency, checkIfCurrencyCodeIsAvailable, deleteCurrency, getCurrencies } from "@/app/apiService/httpService";
+import { addCurrency, checkIfCurrencyCodeIsAvailable, deleteCurrency, getCurrencies } from "@/app/apiService/currencyApiService";
 import { Currency } from "@/app/apiService/model/currency.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
 
 interface Props{
     onClose: any    
@@ -9,14 +10,13 @@ interface Props{
 
 export function CurrencyModal({ onClose }:Props) {
   
+  const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
+
   const [currencyCollection,setCurrencyCollection] = useState<Currency[]>();
   const [isCurrencyCodeAvailable,setIsCurrencyCodeAvailable] = useState<boolean | undefined>(undefined);
 
   const inputName = useRef<HTMLInputElement>(null);
   const inputCode = useRef<HTMLInputElement>(null);
-
-  const name = inputName.current?.value as string;
-  const code = inputCode.current?.value as string;
 
   useEffect(()=>{
     loadCurrencies();
@@ -25,17 +25,13 @@ export function CurrencyModal({ onClose }:Props) {
   function checkIfCurrencyIsAvailable(){
     const code = inputCode.current?.value as string;
 
-    checkIfCurrencyCodeIsAvailable(code).then(response=>{      
-      setIsCurrencyCodeAvailable(response);
-    });
+    checkIfCurrencyCodeIsAvailable(code).then(response=>setIsCurrencyCodeAvailable(response)).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
-
 
   function deleteCurrencyById(id:number){
     
     deleteCurrency(id).then(x=>{
-      if(x == 200){
-
+      
         const currencyCollectionAux: Currency[] = [];
 
         currencyCollection?.forEach(value=>{
@@ -44,11 +40,8 @@ export function CurrencyModal({ onClose }:Props) {
         })
 
         setCurrencyCollection(currencyCollectionAux);
-
-      }else{
-
-      }
-    });
+    })
+    .catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
   
   function addNewCurrency(){
@@ -62,17 +55,18 @@ export function CurrencyModal({ onClose }:Props) {
       name:name
     };
 
-    addCurrency(currency).then(x=>{loadCurrencies();});
+    addCurrency(currency).then(x=>{loadCurrencies();})
+                         .catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
   function loadCurrencies(){
-    getCurrencies().then(value=>setCurrencyCollection(value));
+    getCurrencies().then(value=>setCurrencyCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
-  return (
-    createPortal(
-      <>
-        <div className="new-asset-modal">
+  return (<>
+  {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
+  {createPortal(      
+        <div className="new-stock-modal">
           <div className="d-flex flex-row-reverse">
           <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
             <i className="bi-x"/>
@@ -137,8 +131,7 @@ export function CurrencyModal({ onClose }:Props) {
               </tbody>
             </table>
           </div>
-        </div>
-      </>,
-      document.body)
+        </div>, document.body)}
+      </>
   );
 }

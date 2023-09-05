@@ -4,3 +4,35 @@
     opacity: 0.95;    
     text-shadow:  0.5px 0px #8b7f7f;   
 }
+
+.error-message-modal {
+    display: inline-table;
+    justify-content: space-evenly;
+    align-items: center;
+    box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px;
+    background-color: rgb(240, 230, 230);
+    border: 1px solid rgb(22, 18, 18);
+    border-radius: 12px;
+    position: absolute;
+    height: 250px;
+    width: 450px;
+    top: 40%;
+    left: 40%;  
+    text-align: center;
+  }
+
+  .yes-no-modal {
+    display: inline-table;
+    justify-content: space-evenly;
+    align-items: center;
+    box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px;
+    background-color: rgb(240, 230, 230);
+    border: 1px solid rgb(22, 18, 18);
+    border-radius: 12px;
+    position:  fixed;
+    height: 200px;
+    width: 470px;
+    top: 20%;
+    left: 35%;      
+    text-align: center;
+  } 

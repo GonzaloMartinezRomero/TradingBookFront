@@ -1,9 +1,10 @@
-import { getCryptoById, sellCryptoCurrency, updateCryptoMarketLimit } from "@/app/apiService/httpService";
+import { getCryptoById, sellCryptoCurrency, updateCryptoMarketLimit } from "@/app/apiService/cryptoApiService";
 import { CryptoCurrency } from "@/app/apiService/model/crypto.model";
 import { MarketLimit } from "@/app/apiService/model/marketLimit.model";
 import { SellCrypto } from "@/app/apiService/model/sellCrypto.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
 
 interface Props{
     cryptoId: number,
@@ -13,6 +14,7 @@ interface Props{
 
 export function OperationCryptoModal({ cryptoId, onClose, onCryptoUpdateAndClose }:Props) {
 
+  const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
   const [crypto, setCrypto] = useState<CryptoCurrency>();
 
   const inputReturnAmount = useRef<HTMLInputElement>(null);
@@ -23,7 +25,7 @@ export function OperationCryptoModal({ cryptoId, onClose, onCryptoUpdateAndClose
   const inputSellLimit = useRef<HTMLInputElement>(null);
   
   useEffect(()=>{
-    getCryptoById(cryptoId).then((value)=>{setCrypto(value)});
+    getCryptoById(cryptoId).then((value)=>{setCrypto(value)}).catch(err=>setErrorModal({isOpen:true,msg:err}));
   },
   []); 
 
@@ -37,7 +39,7 @@ export function OperationCryptoModal({ cryptoId, onClose, onCryptoUpdateAndClose
         returnPrice: inputReturnPrice.current?.value as unknown as number,         
       };
 
-      sellCryptoCurrency(sellCryptoValue).then(value=>onCryptoUpdateAndClose());
+      sellCryptoCurrency(sellCryptoValue).then(value=>onCryptoUpdateAndClose()).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
   function setMarketLimit(){
@@ -50,13 +52,14 @@ export function OperationCryptoModal({ cryptoId, onClose, onCryptoUpdateAndClose
       stopLoss: inputStopLoss.current?.value as unknown as number
     };
 
-    updateCryptoMarketLimit(marketLimitValues).then(value=>onCryptoUpdateAndClose());
+    updateCryptoMarketLimit(marketLimitValues).then(value=>onCryptoUpdateAndClose()).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
   return (
-    createPortal(
-      <>
-        <div className="operation-asset-modal">
+    <>
+    {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
+    {createPortal(
+        <div className="operation-crypto-modal">
           <div className="d-flex flex-row-reverse">
             <button className="btn btn-secondary p-1 m-1" style={{ "width": "32px", "height": "33px" }} onClick={onClose}>
               <i className="bi-x" />
@@ -112,8 +115,8 @@ export function OperationCryptoModal({ cryptoId, onClose, onCryptoUpdateAndClose
               </button>
             </div>            
           </div>
-        </div>
-      </>,
-      document.body)
+        </div>,
+      document.body)}
+      </>
   );
 }

@@ -1,9 +1,10 @@
-import { getStockById, sellStock, updateStockMarketLimit } from "@/app/apiService/httpService";
 import { MarketLimit } from "@/app/apiService/model/marketLimit.model";
 import { SellStock } from "@/app/apiService/model/sellStock.model";
 import { Stock } from "@/app/apiService/model/stock.model";
+import { getStockById, sellStock, updateStockMarketLimit } from "@/app/apiService/stockApiService";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
 
 interface Props{
     stockId: number,
@@ -26,6 +27,8 @@ interface MarketLimitInputValue{
 
 export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }:Props) {
 
+  const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
+
   const [stock,setStock] = useState<Stock>();
 
   const inputReturn = useRef<HTMLInputElement>(null);
@@ -36,7 +39,7 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
   const inputSellLimit = useRef<HTMLInputElement>(null);
   
   useEffect(()=>{
-    getStockById(stockId).then(value=>setStock(value));
+    getStockById(stockId).then(value=>setStock(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
   },
   []); 
 
@@ -50,7 +53,7 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
          returnStockPrice: stockSellInputValue.returnStockPrice as number 
       };
 
-      sellStock(sellStockValue).then(value=>onStockUpdateAndClose());
+      sellStock(sellStockValue).then(value=>onStockUpdateAndClose()).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
   function setMarketLimit(marketLimitInput: MarketLimitInputValue){
@@ -63,13 +66,14 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
       stopLoss: marketLimitInput.stopLoss as number
     };
 
-    updateStockMarketLimit(marketLimitValues).then(value=>onStockUpdateAndClose());
+    updateStockMarketLimit(marketLimitValues).then(value=>onStockUpdateAndClose()).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
   return (
-    createPortal(
-      <>
-        <div className="operation-asset-modal">
+    <>
+    {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
+    { createPortal(
+        <div className="operation-stock-modal">
           <div className="d-flex flex-row-reverse">
             <button className="btn btn-secondary p-1 m-1" style={{ "width": "32px", "height": "33px" }} onClick={onClose}>
               <i className="bi-x" />
@@ -133,8 +137,7 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
               </button>
             </div>            
           </div>
-        </div>
-      </>,
-      document.body)
+        </div>, document.body)}
+      </>
   );
 }

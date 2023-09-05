@@ -10,7 +10,7 @@ export function YesNoMessageModal({ msg,onYesResponse,onNoResponse }:Props) {
     return (
       createPortal(
         <>
-          <div className="new-asset-modal">            
+          <div className="yes-no-modal">            
             <div className="row mt-4">
               <h2>{msg}</h2>
             </div>

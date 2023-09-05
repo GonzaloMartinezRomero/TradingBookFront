@@ -1,7 +1,8 @@
-import { addStockReference, checkIfStockCodeIsAvailable, deleteStockReference, getStockReferences } from "@/app/apiService/httpService";
 import { StockReference } from "@/app/apiService/model/stockReference.model";
+import { addStockReference, checkIfStockCodeIsAvailable, deleteStockReference, getStockReferences } from "@/app/apiService/stockApiService";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
 
 interface Props{
     onClose: any    
@@ -9,6 +10,7 @@ interface Props{
 
 export function StockReferenceModal({ onClose }:Props) {
 
+  const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
   const [stockReferenceCollection, setStockReferenceCollection] = useState<StockReference[]>();
   const [isStockCodeAvailable,setIsStockCodeAvailable] = useState<boolean | undefined>(undefined);
   const inputName = useRef<HTMLInputElement>(null);
@@ -32,17 +34,14 @@ export function StockReferenceModal({ onClose }:Props) {
       stockCollectionAux?.push(value);
 
       setStockReferenceCollection(stockCollectionAux);
-    });
+    }).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
   function deleteStockRef(id:number){
 
     deleteStockReference(id).then(value => {
 
-      if(value == 200){
-
         const stockCollectionAux: StockReference[] = [];
-
         stockReferenceCollection?.forEach(x=>
           {
             if(x.id !== id)
@@ -50,29 +49,25 @@ export function StockReferenceModal({ onClose }:Props) {
           });
   
           setStockReferenceCollection(stockCollectionAux);  
-      }else{
-        //Lanzar algun msg de error.....
-      }
-      
-    });
+    }).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
   useEffect(()=>{
-    getStockReferences().then(value=>setStockReferenceCollection(value));
+    getStockReferences().then(value=>setStockReferenceCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
   },[]);
 
   function checkIfCodeIsAvailable(){
     const code = inputCode.current?.value as string;
 
-    checkIfStockCodeIsAvailable(code).then(response=>{      
-      setIsStockCodeAvailable(response);
-    });
+    checkIfStockCodeIsAvailable(code).then(response=>setIsStockCodeAvailable(response)).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
   
   return (
-    createPortal(
-      <>
-        <div className="new-asset-modal">
+    <>
+    {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
+    { createPortal(
+     
+        <div className="new-stock-modal">
           <div className="d-flex flex-row-reverse">
           <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
             <i className="bi-x"/>
@@ -140,8 +135,7 @@ export function StockReferenceModal({ onClose }:Props) {
               </tbody>
             </table>
           </div>
-        </div>
-      </>,
-      document.body)
+        </div>,document.body)}
+        </>
   );
 }

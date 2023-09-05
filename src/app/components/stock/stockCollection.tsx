@@ -2,26 +2,25 @@ import { useEffect, useState } from "react";
 import { NewStockModal } from "./modal/newStockModal";
 import { StockReferenceModal } from "./modal/stockReferenceModal";
 import { Switch } from '@nextui-org/react';
-import { deleteStock, getStocks } from "@/app/apiService/httpService";
 import { Stock } from "@/app/apiService/model/stock.model";
 import { OperationsStockModal } from "./modal/operationsStockModal";
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { PercentageIndicator } from "../util/percentageIndicator";
 import { MarketOperation } from "../util/marketOperation";
 import { TransactionState } from "../util/transactionState";
-import { YesNoMessageModal } from "../sharedModal/yesNoMessageModal";
+import { YesNoMessageModal } from "../util/yesNoMessageModal";
 import { CurrencyModal } from "./modal/currencyModal";
-
-interface Props{
-    onPropagateChanges?:any
-}
+import { deleteStock, getStocks } from "@/app/apiService/stockApiService";
+import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
 
 interface StockOperationModalProps{
     isOpen:boolean;
     stockId:number;
 }
 
-export function StockCollection({onPropagateChanges}:Props){
+export function StockCollection(){
+
+    const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
 
     const [showClosedStocks, setShowClosedStocks] = useState(true);
 
@@ -41,27 +40,16 @@ export function StockCollection({onPropagateChanges}:Props){
     },[]);
 
     function updateStocks(){
-        getStocks().then(value=>{
-            setStockCollection(value);
-
-            if(onPropagateChanges !== undefined){                                                                   
-                onPropagateChanges();
-            }
-        }).catch((err)=>{
-
-            console.log("---- ERROR -----");
-            console.log(err);
-        });
+        getStocks().then(value=>setStockCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
     }
     
     function deleteSelectedStock(stockId:number){
 
-        deleteStock(stockId).then(x=>{
-            updateStocks();
-        });
+        deleteStock(stockId).then(x=>updateStocks()).catch(err=>setErrorModal({isOpen:true,msg:err}));
     }    
 return(
     <>        
+    {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
     {openStockModal && <NewStockModal onClose={()=>setOpenNewStockModal(false)} 
                                          onCloseAndReload={()=>{
                                             setOpenNewStockModal(false);
