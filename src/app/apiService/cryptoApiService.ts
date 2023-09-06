@@ -1,15 +1,9 @@
-import { get, patch, post, sendDelete } from "./httpService";
-import { Amount } from "./model/amount.model";
+import { get, patch, post, remove } from "./httpService";
 import { CryptoCurrency } from "./model/crypto.model";
 import { CryptoCurrencyReference } from "./model/cryptoCurrency.model";
 import { MarketLimit } from "./model/marketLimit.model";
 import { NewCrypto } from "./model/newCrypto.model";
 import { SellCrypto } from "./model/sellCrypto.model";
-
-export function getCryptoTotalEurEarned():Promise<Amount>{
-
-    return get<Amount>(`CryptoCurrency/TotalEurEarned`);
-}
 
 export function getCryptos():Promise<CryptoCurrency[]>{
 
@@ -28,12 +22,12 @@ export function saveCrypto(newCrypto:NewCrypto):Promise<any>{
 
 export function deleteCrypto(id:number):Promise<boolean>{
  
-    return sendDelete(`CryptoCurrency/${id}`);
+    return remove(`CryptoCurrency/${id}`);
 }
 
 export function deleteCryptoCurrencyReference(id:number):Promise<boolean>{
  
-    return sendDelete(`CryptoCurrencyReference/${id}`);
+    return remove(`CryptoCurrencyReference/${id}`);
 }
 
 export function sellCryptoCurrency(sellCrypto:SellCrypto):Promise<any>{

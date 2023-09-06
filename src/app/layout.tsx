@@ -2,6 +2,7 @@
 import 'bootstrap/dist/css/bootstrap.css';
 import '../../styles/cryptoStyles.css';
 import '../../styles/stockStyles.css';
+import '../../styles/depositStyles.css';
 import '../../styles/appStyle.css';
 
 export const metadata = {
@@ -20,13 +21,12 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
       </head>    
       <body className='app-style'>        
-        {children}
-        <footer>
-          <div className="text-center p-3">
+        {children}        
+        <footer className='text-center mt-4'>          
           © 2023 Trading Book Web Application
-        </div>   
         </footer>
       </body>
+      
     </html>
   )
 }

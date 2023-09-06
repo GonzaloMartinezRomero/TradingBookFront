@@ -1,4 +1,4 @@
-import { get, post, sendDelete } from "./httpService";
+import { get, post, remove } from "./httpService";
 import { Currency } from "./model/currency.model";
 
 export function getCurrencies():Promise<Currency[]>{
@@ -8,7 +8,7 @@ export function getCurrencies():Promise<Currency[]>{
 
 export function deleteCurrency(id:number):Promise<boolean>{
  
-    return sendDelete(`Currency/${id}`);
+    return remove(`Currency/${id}`);
 }
 
 export function addCurrency(currency: Currency):Promise<Currency>{

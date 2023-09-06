@@ -79,7 +79,7 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
 
               <div className="col-4">
                 <label className="row">Price</label>
-                <input type="number" className="form-control row" placeholder="Price" ref={inputPrice} />
+                <input type="number" className="form-control row" placeholder="Price" defaultValue={0} ref={inputPrice} />
               </div>
 
               <div className="col-4">
@@ -98,11 +98,11 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
             <div className="form-group row mt-3">
                 <div className="col-4">
                   <label className="row">Stop Loss</label>
-                  <input type="number" className="form-control row" placeholder="Stop" ref={inputStopLoss}/>
+                  <input type="number" className="form-control row" placeholder="Stop" defaultValue={0} ref={inputStopLoss}/>
                 </div>
                 <div className="col-4">
                   <label className="row">Sell Limit</label>
-                  <input type="number" className="form-control row" placeholder="Limit" ref={inputSellLimit}/>
+                  <input type="number" className="form-control row" placeholder="Limit" defaultValue={0} ref={inputSellLimit}/>
                   </div>
               </div>
           </div>
@@ -111,11 +111,11 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
             <div className="form-group row">
               <div className="col-4">
                 <label className="row">Amount</label>
-                <input type="number" className="form-control row" placeholder="Amount" ref={inputAmount}/>
+                <input type="number" className="form-control row" placeholder="Amount" defaultValue={0} ref={inputAmount}/>
               </div>              
               <div className="col-4">
                 <label className="row">Fee</label>
-                <input type="number" className="form-control row" placeholder="Fee" ref={inputFee}/>
+                <input type="number" className="form-control row" placeholder="Fee" defaultValue={0} ref={inputFee}/>
               </div>
             </div>
           </div>

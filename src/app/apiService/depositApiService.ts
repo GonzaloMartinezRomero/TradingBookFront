@@ -1,12 +1,18 @@
-import { get, post } from "./httpService";
-import { Amount } from "./model/amount.model";
+import { get, post, remove } from "./httpService";
+import { Deposit } from "./model/deposit.model";
+import { NewDeposit } from "./model/newDeposit.model";
 
-export function getDeposit(){
-
-    return get<Amount>("Deposit/TotalDeposit");
+export function getAllDeposits(){
+    
+    return get<Deposit[]>("Deposit");
 }
 
-export function addAmountToDeposit(amount:number){
+export function addDeposit(deposit:NewDeposit){
     
-    return post<any>(`https://localhost:7267/Deposit/AddDeposit?amount=${amount}`,null);
+    return post<any>("Deposit",deposit);
+}
+
+export function deleteDeposit(depositId: number){
+    
+    return remove(`Deposit/${depositId}`);
 }

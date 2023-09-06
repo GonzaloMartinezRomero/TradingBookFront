@@ -39,7 +39,7 @@ export async function post<T>(resourceEndpoint:string, body:any|null):Promise<T>
     return value;
 }
 
-export async function sendDelete(resourceEndpoint:string):Promise<boolean>{
+export async function remove(resourceEndpoint:string):Promise<boolean>{
  
     const url:string = `${urlBase}${resourceEndpoint}`;
 

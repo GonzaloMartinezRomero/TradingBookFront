@@ -4,23 +4,28 @@ import { DepositCollection } from "./components/deposit/depositCollection";
 import { StockCollection } from "./components/stock/stockCollection";
 import { CryptoCollection } from "./components/crypto/cryptoCollection";
 
-enum TradingPages{
+enum TradingPage{
   Deposit,
   Stock,
   Crypto
 }
 
+interface NavPage{
+  page:TradingPage;
+  content: React.ReactNode;
+}
+
 export default function Home() {
 
-  let mapPages = new Map<TradingPages,  React.ReactNode>();
+  let mapPages = new Map<TradingPage,  React.ReactNode>();
 
-  const [content,setContent] = useState<React.ReactNode>(<DepositCollection/>);
-
+  const [currenPage,setCurrenPage] = useState<NavPage>({page:TradingPage.Deposit,content:<DepositCollection/>});
+ 
   useEffect(()=>{
 
-    mapPages.set(TradingPages.Deposit,<DepositCollection/>);
-    mapPages.set(TradingPages.Stock,<StockCollection/>);
-    mapPages.set(TradingPages.Crypto,<CryptoCollection/>);
+    mapPages.set(TradingPage.Deposit,<DepositCollection/>);
+    mapPages.set(TradingPage.Stock,<StockCollection/>);
+    mapPages.set(TradingPage.Crypto,<CryptoCollection/>);
 
   })
 
@@ -31,25 +36,28 @@ export default function Home() {
               <div className="col-6 mt-3">
                 <h1><b>Trading Book</b></h1>
               </div>
-            </div>
-            <nav className="navbar navbar-expand-lg">
+            </div>           
+          </div>       
+          <nav className="navbar navbar-expand-lg" style={{"backgroundColor":"rgb(213, 218, 193)"}}>
             <div className="collapse navbar-collapse">
               <div className="navbar-nav">                
-                <button className="nav-item nav-link" onClick={()=>{setContent(mapPages.get(TradingPages.Deposit))}}>
-                  <h3>Deposits</h3>
+                <button className="nav-item nav-link" onClick={()=>{setCurrenPage({page:TradingPage.Deposit,content:mapPages.get(TradingPage.Deposit)})}}>
+                  {currenPage.page == TradingPage.Deposit && <h2><b>Deposits</b></h2>}
+                  {currenPage.page != TradingPage.Deposit && <h3>Deposits</h3>}
                 </button>
-                <button className="nav-item nav-link ms-2" onClick={()=>{setContent(mapPages.get(TradingPages.Stock))}}>
-                  <h3>Stocks</h3>
+                <button className="nav-item nav-link ms-2" onClick={()=>{setCurrenPage({page:TradingPage.Stock,content:mapPages.get(TradingPage.Stock)})}}>
+                  {currenPage.page == TradingPage.Stock && <h2><b>Stocks</b></h2>}
+                  {currenPage.page != TradingPage.Stock && <h3>Stocks</h3>}
                 </button>
-                <button className="nav-item nav-link ms-2" onClick={()=>{setContent(mapPages.get(TradingPages.Crypto))}}>
-                  <h3>Cryptos</h3>
+                <button className="nav-item nav-link ms-2" onClick={()=>{setCurrenPage({page:TradingPage.Crypto,content:mapPages.get(TradingPage.Crypto)})}}>
+                  {currenPage.page == TradingPage.Crypto && <h2><b>Crypto</b></h2>}
+                  {currenPage.page != TradingPage.Crypto && <h3>Crypto</h3>}
                 </button>
               </div>
             </div>
           </nav>
-          </div>       
       <main className='m-2 mt-3'>
-          {content}
+          {currenPage.content}
       </main>
     </>
   )

@@ -153,16 +153,16 @@ return(
                                                 {value.buyDate}
                                             </td>
                                             <td>
-                                                {value.amount}
+                                                <MonetaryAmount amount={value.amount} /> 
                                             </td>
                                             <td>
-                                                {value.fee}
+                                                <MonetaryAmount amount={value.fee} /> 
                                             </td>
                                             <td>
-                                                {value.deposit}
+                                                <MonetaryAmount amount={value.deposit} /> 
                                             </td>               
                                             <td style={{"borderLeft":"1px solid black"}}>
-                                                {!value.isSelled && value.currentPrice}
+                                                {!value.isSelled && <MonetaryAmount amount={value.currentPrice} /> }
                                             </td>
                                             <td>
                                                 {!value.isSelled && <PercentageIndicator amount={value.percentajeDiff}/>}
@@ -180,16 +180,16 @@ return(
                                                 {value.isSelled && value.sellDate}
                                             </td>
                                             <td>
-                                                {value.isSelled && value.returnAmount}                                                
+                                                {value.isSelled && <MonetaryAmount amount={value.returnAmount} /> }                                                
                                             </td>
                                             <td>
-                                                {value.isSelled && value.returnFee}
+                                                {value.isSelled && <MonetaryAmount amount={value.returnFee} /> }
                                             </td>
                                             <td>
-                                                {value.isSelled && value.returnAmountWithFee}
+                                                {value.isSelled && <MonetaryAmount amount={value.returnAmountWithFee} /> }
                                             </td>
                                             <td>
-                                                {value.isSelled && value.returnEarn}
+                                                {value.isSelled && <MonetaryAmount amount={value.returnEarn} /> }
                                             </td>
                                             <td>
                                                 {value.isSelled && <PercentageIndicator amount={value.returnDiffAmount}/>}

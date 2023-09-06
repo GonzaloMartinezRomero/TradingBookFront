@@ -1,5 +1,4 @@
-import { get, patch, post, sendDelete } from "./httpService";
-import { Amount } from "./model/amount.model";
+import { get, patch, post, remove } from "./httpService";
 import { MarketLimit } from "./model/marketLimit.model";
 import { NewStock } from "./model/newStock.model";
 import { SellStock } from "./model/sellStock.model";
@@ -13,7 +12,7 @@ export function getStockReferences():Promise<StockReference[]>{
 
 export function deleteStock(stockId:number):Promise<boolean>{
 
-    return sendDelete(`Stock/${stockId}`);
+    return remove(`Stock/${stockId}`);
 }
 
 export function addStockReference(stockReference: StockReference):Promise<StockReference>{
@@ -23,7 +22,7 @@ export function addStockReference(stockReference: StockReference):Promise<StockR
 
 export function deleteStockReference(id:number): Promise<boolean>{
  
-    return sendDelete(`StockReference/${id}`);
+    return remove(`StockReference/${id}`);
 }
 
 export function saveStock(newStock:NewStock):Promise<any>{
@@ -39,11 +38,6 @@ export function getStocks():Promise<Stock[]>{
 export function getStockById(id:number):Promise<Stock>{
 
     return get<Stock>(`Stock/${id}`);
-}
-
-export function getStockTotalEurEarned():Promise<Amount>{
-
-    return get<Amount>(`Stock/TotalEurEarned`);
 }
 
 export function sellStock(sellStock:SellStock):Promise<any>{
