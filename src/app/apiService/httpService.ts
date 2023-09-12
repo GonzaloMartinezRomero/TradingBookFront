@@ -1,4 +1,4 @@
-const urlBase:string ="https://localhost:7267/";
+const urlBase = process.env.TRADING_BOOK_API_ENDPOINT;
 
 export async function get<T>(resourceEndpoint:string):Promise<T>{
 
