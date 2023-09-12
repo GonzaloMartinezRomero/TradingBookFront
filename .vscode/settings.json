@@ -1,4 +1,3 @@
 {
-    "appService.defaultWebAppToDeploy": "/subscriptions/c64886f0-080c-49ce-869f-441db335b8ab/resourceGroups/TradingBook/providers/Microsoft.Web/sites/tradingbookweb"
-   
+    "appService.defaultWebAppToDeploy": "/subscriptions/c64886f0-080c-49ce-869f-441db335b8ab/resourceGroups/TradingBook/providers/Microsoft.Web/sites/tradingbookweb",    
 }

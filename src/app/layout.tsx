@@ -5,10 +5,6 @@ import '../../styles/stockStyles.css';
 import '../../styles/depositStyles.css';
 import '../../styles/appStyle.css';
 
-export const metadata = {
-  title: 'Trading Book'  
-}
-
 export default function RootLayout({
   children,
 }: {
