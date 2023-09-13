@@ -12,6 +12,7 @@ export interface Stock{
     deposit:number;
     currentPrice:number;
     percentajeDiff: number;
+    estimatedReturnPrice: number;
     recomendedAction: string;
     stopLoss: number;
     sellLimit: number;

@@ -109,7 +109,7 @@ return(
                         <tr className="table-success">
                             <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>INFORMATION</th>                
                             <th colSpan={3} className="text-center" style={{"borderRight":"1px solid black"}}>INVEST</th>                      
-                            <th colSpan={3} className="text-center" style={{"borderRight":"1px solid black"}}>CURRENT STATE</th>      
+                            <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>CURRENT STATE</th>      
                             <th colSpan={7} className="text-center">RETURN</th>         
                         </tr>
                         <tr className="text-center table-secondary table-group-divider" style={{"fontStyle":"oblique"}}>
@@ -122,6 +122,7 @@ return(
                             <th>Deposit</th>                                
                             <th style={{"borderLeft":"1px solid black"}}>Price</th>
                             <th>%</th>         
+                            <th>Estimated Return</th>         
                             <th>Action</th>       
                             <th style={{"borderLeft":"1px solid black"}}>Price</th>
                             <th>%</th>                
@@ -167,6 +168,9 @@ return(
                                             <td>
                                                 {!value.isSelled && <PercentageIndicator amount={value.percentajeDiff}/>}
                                             </td>
+                                            <td> 
+                                                {!value.isSelled && <MonetaryAmount amount={value.estimatedReturnPrice}/>}
+                                            </td>
                                             <td>          
                                                 {!value.isSelled && <MarketOperation operation={value.recomendedAction}/>}
                                             </td>
@@ -175,7 +179,7 @@ return(
                                             </td>
                                             <td> 
                                                 {value.isSelled && <PercentageIndicator amount={value.returnStockDiffPricePercentaje}/>}
-                                            </td>
+                                            </td>                                           
                                             <td>
                                                 {value.isSelled && value.sellDate}
                                             </td>

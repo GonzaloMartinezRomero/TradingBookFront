@@ -14,6 +14,7 @@ export interface CryptoCurrency{
     exchangedAmount: number,
     currentPrice?: number,
     currentDiffPercentage?: number,
+    estimatedReturnPrice:number,
     recomendedAction: string,
     isSelled: boolean,
     returnPrice: number,

@@ -106,7 +106,7 @@ return(
                         <tr className="table-success">
                             <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>EXCHANGE FROM</th>                
                             <th colSpan={5} className="text-center" style={{"borderRight":"1px solid black"}}>EXCHANGE TO</th>                
-                            <th colSpan={3} className="text-center" style={{"borderRight":"1px solid black"}}>CURRENT STATE</th>                      
+                            <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>CURRENT STATE</th>                      
                             <th colSpan={8} className="text-center">RETURN</th>         
                         </tr>
                         <tr className="text-center table-secondary table-group-divider" style={{"fontStyle":"oblique"}}>
@@ -121,6 +121,7 @@ return(
                             <th style={{"borderRight":"1px solid black"}}>Date</th>    
                             <th>Price</th>
                             <th>%</th>
+                            <th>Estimated Return</th>
                             <th style={{"borderRight":"1px solid black"}}>Action</th>
                             <th>Price</th>
                             <th>%</th>
@@ -171,6 +172,9 @@ return(
                                             </td>
                                             <td>
                                                 {!value.isSelled && <PercentageIndicator amount={value.currentDiffPercentage}/>}
+                                            </td>
+                                            <td>
+                                                 {!value.isSelled && <MonetaryAmount amount={value.estimatedReturnPrice}/>}
                                             </td>
                                             <td>          
                                                 {!value.isSelled && <MarketOperation operation={value.recomendedAction}/>}
