@@ -4,7 +4,14 @@ export async function get<T>(resourceEndpoint:string):Promise<T>{
 
     const url:string = `${urlBase}${resourceEndpoint}`;
 
-    const response = await fetch(url);
+    const response = await fetch(url,
+        {
+            headers:
+            {
+              'Host':'10.0.2.5'    
+            }
+        }
+    );
 
     if(!response.ok){
         let errorMsg:string = response.statusText;
