@@ -1,17 +1,10 @@
-const urlBase = '10.0.2.5';
+const urlBase = process.env.TRADING_BOOK_API_ENDPOINT;
 
 export async function get<T>(resourceEndpoint:string):Promise<T>{
 
     const url:string = `${urlBase}${resourceEndpoint}`;
 
-    const response = await fetch(url,
-        {
-            headers:
-            {
-              'Host':'tradingbookapi.azurewebsites.net'    
-            }
-        }
-    );
+    const response = await fetch(url);
 
     if(!response.ok){
         let errorMsg:string = response.statusText;
