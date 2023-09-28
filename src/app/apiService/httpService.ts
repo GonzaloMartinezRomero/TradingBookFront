@@ -1,4 +1,4 @@
-const urlBase = process.env.TRADING_BOOK_API_ENDPOINT;
+const urlBase = '10.0.2.5';
 
 export async function get<T>(resourceEndpoint:string):Promise<T>{
 
@@ -8,7 +8,7 @@ export async function get<T>(resourceEndpoint:string):Promise<T>{
         {
             headers:
             {
-              'Host':'10.0.2.5'    
+              'Host':'tradingbookapi.azurewebsites.net'    
             }
         }
     );
