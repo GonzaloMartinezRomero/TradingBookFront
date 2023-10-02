@@ -12,6 +12,7 @@ import { OperationCryptoModal } from "./modal/operationsCrypto.modal";
 import { CurrencyModal } from "../stock/modal/currencyModal";
 import { deleteCrypto, getCryptos } from "@/app/apiService/cryptoApiService";
 import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
+import { CollapsableContainer } from "../util/collapsableContainer";
 
 interface OperationModalProps{
     isOpen:boolean;
@@ -22,7 +23,7 @@ export function CryptoCollection(){
 
 const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});    
 const [cryptoCollection, setCryptoCollection] = useState<CryptoCurrency[]>();
-const [showClosedCryptos, setShowClosedCryptos] = useState<boolean>(true);
+const [showClosedCryptos, setShowClosedCryptos] = useState<boolean>(false);
 const [openCryptoModal, setOpenNewCryptoModal] = useState(false);
 const [openDeleteModal, setOpenDeleteModal] = useState<OperationModalProps>({isOpen:false,cryptoId:0});
 const [openCryptoRefModal, setOpenCryptoRefModal] = useState(false);
@@ -71,9 +72,8 @@ return(
 
     {openNewCurrencyModal && <CurrencyModal onClose={()=>setOpenNewCurrencyModal(false)}/>}    
 
-    <h2>Crypto Exchange</h2>
-    <div className="row" style={{"border":"1px solid black"}}></div>
-        <div className="row mt-3 mb-3 ">
+     <CollapsableContainer title="Crypto">
+     <div className="row mt-3 mb-3 ">
             <div className="col-1">          
                 <button type="button" className="btn btn-success" style={{"width":"130px"}}  onClick={()=>setOpenNewCryptoModal(true)} >
                     <span className="me-1">Crypto</span>
@@ -93,7 +93,7 @@ return(
                 </button>                                             
             </div>     
             <div className="col-1" style={{"width":"80px"}}>
-                <Switch checked={true} size={"lg"} about="" className="mt-1" onChange={(ev)=>{setShowClosedCryptos(!showClosedCryptos)}}/>                                                                          
+                <Switch checked={false} size={"lg"} about="" className="mt-1" onChange={(ev)=>{setShowClosedCryptos(!showClosedCryptos)}}/>                                                                          
             </div>                                    
             <div className="col-1">
                 <p>Show Closed Cryptos</p>
@@ -229,5 +229,6 @@ return(
                 </table>
             </div>
         </div>    
+     </CollapsableContainer>                 
     </>
 );}

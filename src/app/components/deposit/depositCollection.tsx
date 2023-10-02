@@ -54,8 +54,7 @@ return(
         {openPlatformModal && <PlatformModal onClose={()=>setOpenPlatformModal(false)}/>}
 
         <h2>Deposit Operations</h2>
-        <div className="row" style={{"border":"1px solid black"}}>
-        </div>
+        <div className="row" style={{"border":"1px solid black"}}/>
         <div className="row mt-2 mb-2">
             <div className="col-1">
                 <button type="button" className="btn btn-success" style={{"width":"150px"}} onClick={()=>{setOpenDepositModal(true)}}>

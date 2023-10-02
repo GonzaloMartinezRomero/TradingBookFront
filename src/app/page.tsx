@@ -26,7 +26,6 @@ export default function Home() {
     mapPages.set(TradingPage.Deposit,<DepositCollection/>);
     mapPages.set(TradingPage.Stock,<StockCollection/>);
     mapPages.set(TradingPage.Crypto,<CryptoCollection/>);
-
   })
 
   return (   
@@ -52,7 +51,7 @@ export default function Home() {
                 <button className="nav-item nav-link ms-2" onClick={()=>{setCurrenPage({page:TradingPage.Crypto,content:mapPages.get(TradingPage.Crypto)})}}>
                   {currenPage.page == TradingPage.Crypto && <h2><b>Crypto</b></h2>}
                   {currenPage.page != TradingPage.Crypto && <h3>Crypto</h3>}
-                </button>
+                </button>           
               </div>
             </div>
           </nav>
