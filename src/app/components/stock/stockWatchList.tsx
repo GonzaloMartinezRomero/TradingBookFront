@@ -57,7 +57,7 @@ export function StockWatchList(){
         </div>
         <div className="row">
             <div className="col-5 mt-1">        
-                <table className="mt-1" style={{"width":"100%"}}>
+                <table className="mt-1 table-header" style={{"width":"100%"}}>
                     <thead>                      
                         <tr className="text-center table-secondary table-group-divider" style={{"fontStyle":"oblique"}}>
                             <th>Stock</th>

@@ -102,7 +102,7 @@ return(
         </div>        
         <div className="row">
             <div className="col mt-1">
-                <table className="mt-1" style={{"width":"100%"}}>
+                <table className="mt-1 table-header" style={{"width":"100%"}}>
                     <thead>
                         <tr className="table-success">
                             <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>EXCHANGE FROM</th>                
@@ -134,13 +134,13 @@ return(
                             <th>DiffAmount</th>
                         </tr>
                     </thead>
-                    <tbody className="text-center ">          
+                    <tbody className="text-center table-items">          
                             {cryptoCollection !== undefined && cryptoCollection?.map((value,index)=>{
                                 if((showClosedCryptos && value.isSelled)||(!showClosedCryptos && !value.isSelled))
                                 {
                                     return (  
                                         <>  
-                                    <tr className="table-items">
+                                    <tr>
                                             <td>
                                                 {value.cryptoCurrencyFrom}
                                             </td>

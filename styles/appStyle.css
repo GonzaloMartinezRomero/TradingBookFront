@@ -1,20 +1,32 @@
 .app-style {
     font-family: "Trirong", serif;
-    background: linear-gradient(50deg, rgb(227, 233, 206), rgb(175, 175, 162));
-    opacity: 0.95;    
-    text-shadow:  0.5px 0px #8b7f7f;   
+    background-image: url("/backgroundimg1.jpg");
+    background-position: center;
+    background-size: cover;
+    background-repeat: no-repeat;
+    opacity: 1;        
+    font-size: large;
+    color: azure;    
+    height: 850px;    
+    width: 1920px;
 }
 
 .main-title{  
-  background: linear-gradient(150deg, rgb(179, 192, 133), rgb(226, 228, 222));
+  background: linear-gradient(150deg, rgb(180, 221, 198), rgb(226, 228, 222));
+  opacity: 0.8;   
+  color: black;
 }
 
-.nav-bar-menu{  
-  background: linear-gradient(150deg, rgb(194, 199, 176), rgb(215, 216, 210));
+.table-header{
+  background: linear-gradient(100deg, rgb(228, 226, 210), rgb(255, 255, 255));  
+  color: black;
+  opacity: 0.92;
+  
 }
 
 .table-items{  
-  background: linear-gradient(100deg, rgb(233, 229, 232), rgb(216, 210, 216));  
+  background: linear-gradient(100deg, rgb(255, 255, 255), rgb(216, 210, 216));  
+  color: black;  
 }
 
 .error-message-modal {

@@ -101,15 +101,15 @@ return(
          </div>        
          <div className="row">
              <div className="col mt-1">        
-                 <table className="mt-1" style={{"width":"100%"}}>
+                 <table className="mt-1 table-header text-center" style={{"width":"100%"}}>
                      <thead>
                          <tr className="table-success">
-                             <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>INFORMATION</th>                
-                             <th colSpan={3} className="text-center" style={{"borderRight":"1px solid black"}}>INVEST</th>                      
-                             <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>CURRENT STATE</th>      
-                             <th colSpan={7} className="text-center">RETURN</th>         
+                             <th colSpan={4}  style={{"borderRight":"1px solid black"}}>INFORMATION</th>                
+                             <th colSpan={3}  style={{"borderRight":"1px solid black"}}>INVEST</th>                      
+                             <th colSpan={4}  style={{"borderRight":"1px solid black"}}>CURRENT STATE</th>      
+                             <th colSpan={7}>RETURN</th>         
                          </tr>
-                         <tr className="text-center table-secondary table-group-divider" style={{"fontStyle":"oblique"}}>
+                         <tr className=" table-group-divider" style={{"fontStyle":"oblique"}}>
                              <th>Name</th>
                              <th>Price</th>
                              <th>Currency</th>

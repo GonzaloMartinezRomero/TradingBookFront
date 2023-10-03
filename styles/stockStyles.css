@@ -13,6 +13,7 @@
     left: 30%;  
     bottom: 70px;
     text-align: center;
+    color: black;    
 }
 
 
@@ -31,6 +32,7 @@
   top: 20%;
   left: 35%;  
   text-align: center;
+  color: black;    
 } 
 
 .new-stock-modal {
@@ -47,6 +49,7 @@
   top: 20%;
   left: 35%;      
   text-align: center;
+  color: black;    
 } 
 
 .new-stock-watch-modal {
@@ -63,4 +66,5 @@
   top: 20%;
   left: 35%;      
   text-align: center;
+  color: black;    
 } 

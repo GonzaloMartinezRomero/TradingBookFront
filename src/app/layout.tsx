@@ -17,12 +17,11 @@ export default function RootLayout({
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.5/font/bootstrap-icons.css"/>
       </head>    
       <body className='app-style'>        
-        {children}        
-        <footer className='text-center mt-4'>          
-          © 2023 Trading Book Web Application
-        </footer>
+        {children}         
+         <footer className='text-center mt-4'>          
+            © 2023 Trading Book Web Application
+        </footer> 
       </body>
-      
     </html>
   )
 }

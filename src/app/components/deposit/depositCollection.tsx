@@ -71,7 +71,7 @@ return(
         </div>
         <div className="row">
             <div className="col-5 mt-1">        
-                <table className="mt-1" style={{"width":"100%"}}>
+                <table className="mt-1 table-header" style={{"width":"100%"}}>
                     <thead>                      
                         <tr className="text-center table-secondary table-group-divider" style={{"fontStyle":"oblique"}}>
                             <th>Platform</th>
@@ -83,10 +83,10 @@ return(
                             <th>Action</th>
                         </tr>
                     </thead>
-                    <tbody className="text-center">          
+                    <tbody className="text-center table-items">          
                     {deposits !== undefined && deposits?.map((value,index)=>{
                         return (<>
-                          <tr className="table-items">
+                          <tr>
                             <td>
                                 {value.platform}
                             </td>

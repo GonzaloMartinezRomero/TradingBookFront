@@ -32,32 +32,32 @@ export default function Home() {
     <>
        <div className="container-fluid main-title">
             <div className="row">             
-              <div className="col-6 mt-3">
-                <h1><b>Trading Book</b></h1>
+              <div className="col-2 mt-3">
+                <h1><b>\Trading Book/</b></h1>                
+              </div>
+              <div className="col-1 mt-4">
+              <button className="nav-item nav-link" onClick={()=>{setCurrenPage({page:TradingPage.Deposit,content:mapPages.get(TradingPage.Deposit)})}}>
+                  {currenPage.page == TradingPage.Deposit && <h2><i><b>Deposits</b></i></h2>}
+                  {currenPage.page != TradingPage.Deposit && <h3><i>Deposits</i></h3>}
+                </button>
+              </div>
+              <div className="col-1 mt-4">
+                <button className="nav-item nav-link ms-2" onClick={()=>{setCurrenPage({page:TradingPage.Stock,content:mapPages.get(TradingPage.Stock)})}}>
+                  {currenPage.page == TradingPage.Stock && <h2><i><b>Stocks</b></i></h2>}
+                  {currenPage.page != TradingPage.Stock && <h3><i>Stocks</i></h3>}
+                </button>
+                </div>
+                <div className="col-1 mt-4">
+                <button className="nav-item nav-link ms-2" onClick={()=>{setCurrenPage({page:TradingPage.Crypto,content:mapPages.get(TradingPage.Crypto)})}}>
+                  {currenPage.page == TradingPage.Crypto && <h2><i><b>Crypto</b></i></h2>}
+                  {currenPage.page != TradingPage.Crypto && <h3><i>Crypto</i></h3>}
+                </button>           
               </div>
             </div>           
           </div>       
-          <nav className="navbar navbar-expand-lg nav-bar-menu">
-            <div className="collapse navbar-collapse">
-              <div className="navbar-nav">                
-                <button className="nav-item nav-link" onClick={()=>{setCurrenPage({page:TradingPage.Deposit,content:mapPages.get(TradingPage.Deposit)})}}>
-                  {currenPage.page == TradingPage.Deposit && <h2><b>Deposits</b></h2>}
-                  {currenPage.page != TradingPage.Deposit && <h3>Deposits</h3>}
-                </button>
-                <button className="nav-item nav-link ms-2" onClick={()=>{setCurrenPage({page:TradingPage.Stock,content:mapPages.get(TradingPage.Stock)})}}>
-                  {currenPage.page == TradingPage.Stock && <h2><b>Stocks</b></h2>}
-                  {currenPage.page != TradingPage.Stock && <h3>Stocks</h3>}
-                </button>
-                <button className="nav-item nav-link ms-2" onClick={()=>{setCurrenPage({page:TradingPage.Crypto,content:mapPages.get(TradingPage.Crypto)})}}>
-                  {currenPage.page == TradingPage.Crypto && <h2><b>Crypto</b></h2>}
-                  {currenPage.page != TradingPage.Crypto && <h3>Crypto</h3>}
-                </button>           
-              </div>
-            </div>
-          </nav>
-      <main className='m-2 mt-3'>
+      <div className='m-2 mt-3'>
           {currenPage.content}
-      </main>
+      </div>
     </>
   )
 }

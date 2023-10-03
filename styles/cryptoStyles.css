@@ -13,6 +13,7 @@
   left: 30%;  
   bottom: 70px;
   text-align: center;    
+  color: black;    
 }
 
 .new-crypto-modal {
@@ -29,6 +30,7 @@
   top: 20%;
   left: 35%;      
   text-align: center;
+  color: black;    
 } 
 
 .operation-crypto-modal {
@@ -45,6 +47,7 @@
   top: 20%;
   left: 35%;  
   text-align: center;
+  color: black;    
 } 
 
 .new-crypto-watch-modal{
@@ -61,4 +64,5 @@
   top: 20%;
   left: 35%;      
   text-align: center;
+  color: black;    
 }
