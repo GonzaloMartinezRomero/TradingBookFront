@@ -13,6 +13,7 @@ import { CurrencyModal } from "../stock/modal/currencyModal";
 import { deleteCrypto, getCryptos } from "@/app/apiService/cryptoApiService";
 import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
 import { CollapsableContainer } from "../util/collapsableContainer";
+import { CryptoWatchList } from "./cryptoWatchList";
 
 interface OperationModalProps{
     isOpen:boolean;
@@ -96,7 +97,7 @@ return(
                 <Switch checked={false} size={"lg"} about="" className="mt-1" onChange={(ev)=>{setShowClosedCryptos(!showClosedCryptos)}}/>                                                                          
             </div>                                    
             <div className="col-1">
-                <p>Show Closed Cryptos</p>
+                <p>Switch To Closed Cryptos</p>
             </div>            
         </div>        
         <div className="row">
@@ -133,13 +134,13 @@ return(
                             <th>DiffAmount</th>
                         </tr>
                     </thead>
-                    <tbody className="text-center">          
+                    <tbody className="text-center ">          
                             {cryptoCollection !== undefined && cryptoCollection?.map((value,index)=>{
-                                if(showClosedCryptos || !value.isSelled)
+                                if((showClosedCryptos && value.isSelled)||(!showClosedCryptos && !value.isSelled))
                                 {
                                     return (  
                                         <>  
-                                    <tr style={{"backgroundColor":"rgb(237, 222, 233)"}}>
+                                    <tr className="table-items">
                                             <td>
                                                 {value.cryptoCurrencyFrom}
                                             </td>
@@ -229,6 +230,9 @@ return(
                 </table>
             </div>
         </div>    
-     </CollapsableContainer>                 
+     </CollapsableContainer>         
+     <CollapsableContainer title="Watch List">
+        <CryptoWatchList/>
+     </CollapsableContainer>        
     </>
 );}

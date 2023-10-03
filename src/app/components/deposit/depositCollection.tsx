@@ -86,7 +86,7 @@ return(
                     <tbody className="text-center">          
                     {deposits !== undefined && deposits?.map((value,index)=>{
                         return (<>
-                          <tr>
+                          <tr className="table-items">
                             <td>
                                 {value.platform}
                             </td>

@@ -1,8 +1,20 @@
 .app-style {
     font-family: "Trirong", serif;
-    background-color: rgb(227, 233, 206);
+    background: linear-gradient(50deg, rgb(227, 233, 206), rgb(175, 175, 162));
     opacity: 0.95;    
     text-shadow:  0.5px 0px #8b7f7f;   
+}
+
+.main-title{  
+  background: linear-gradient(150deg, rgb(179, 192, 133), rgb(226, 228, 222));
+}
+
+.nav-bar-menu{  
+  background: linear-gradient(150deg, rgb(194, 199, 176), rgb(215, 216, 210));
+}
+
+.table-items{  
+  background: linear-gradient(100deg, rgb(233, 229, 232), rgb(216, 210, 216));  
 }
 
 .error-message-modal {

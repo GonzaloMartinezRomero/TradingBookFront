@@ -30,14 +30,14 @@ export default function Home() {
 
   return (   
     <>
-       <div className="container-fluid" style={{"backgroundColor":"rgb(193, 197, 175)"}}>
+       <div className="container-fluid main-title">
             <div className="row">             
               <div className="col-6 mt-3">
                 <h1><b>Trading Book</b></h1>
               </div>
             </div>           
           </div>       
-          <nav className="navbar navbar-expand-lg" style={{"backgroundColor":"rgb(213, 218, 193)"}}>
+          <nav className="navbar navbar-expand-lg nav-bar-menu">
             <div className="collapse navbar-collapse">
               <div className="navbar-nav">                
                 <button className="nav-item nav-link" onClick={()=>{setCurrenPage({page:TradingPage.Deposit,content:mapPages.get(TradingPage.Deposit)})}}>

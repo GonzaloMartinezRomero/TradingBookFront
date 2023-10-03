@@ -29,8 +29,7 @@ export function StockCollection(){
     const [openOperationsStockModal, setOpenOperationsStockModal] = useState<StockOperationModalProps>({isOpen:false,stockId:0});
     const [stockCollection, setStockCollection] = useState<Stock[]>();        
     const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<StockOperationModalProps>({isOpen:false,stockId:0});
-    const [openNewCurrencyModal, setOpenNewCurrencyModal] = useState(false);    
-   
+    const [openNewCurrencyModal, setOpenNewCurrencyModal] = useState(false);       
 
     useEffect(()=>
     {
@@ -97,7 +96,7 @@ return(
                  <Switch checked={false} size={"lg"} about="" className="mt-1" onChange={(ev)=>{setShowClosedStocks(!showClosedStocks)}}/>                                                                                     
              </div>                                    
              <div className="col-1">
-                 <p>Show Closed Stocks</p>
+                 <p>Switch to Closed Stocks</p>
              </div>            
          </div>        
          <div className="row">
@@ -134,11 +133,11 @@ return(
                      </thead>
                      <tbody className="text-center">          
                              {stockCollection!==undefined && stockCollection?.map((value,index)=>{
-                                 if(showClosedStocks || !value.isSelled)
+                                 if((showClosedStocks && value.isSelled)||(!showClosedStocks && !value.isSelled))
                                  {
                                      return (  
                                          <>  
-                                     <tr style={{"backgroundColor":"rgb(237, 222, 233)"}}>
+                                     <tr className="table-items">
                                              <td>
                                                  <span className="media-body">{value.stockReference?.name}</span>
                                              </td>
