@@ -6,6 +6,7 @@ import { MonetaryAmount } from "../util/monetaryAmount";
 import { deleteCryptokWatch, getCryptoWatchs } from "@/app/apiService/cryptoWatchService";
 import { CryptoWatch } from "@/app/apiService/model/cryptoWatch.model";
 import { CryptoWatchListModal } from "./modal/cryptoWatchListModal";
+import { MarketOperation } from "../util/marketOperation";
 
 interface DeleteCryptoWatchModalProp{
     isOpen:boolean;
@@ -63,7 +64,8 @@ export function CryptoWatchList(){
                             <th>Crypto Reference</th>
                             <th>Target</th>                            
                             <th>Current</th>
-                            <th>Diff %</th>                            
+                            <th>Distance %</th>               
+                            <th>Action</th>             
                             <th></th>
                         </tr>
                     </thead>
@@ -84,7 +86,10 @@ export function CryptoWatchList(){
                             </td>
                             <td>
                                 <PercentageIndicator amount={value.diff}/>
-                            </td>                            
+                            </td>   
+                            <td>
+                                <MarketOperation operation={value.recomendedAction}/>
+                            </td>                         
                             <td>
                                 <button className="btn btn-danger" onClick={()=>{setOpenDeleteConfirmationModal({isOpen:true,cryptoWatchId:value.id})}}>
                                                     <i className="bi bi-trash"></i>

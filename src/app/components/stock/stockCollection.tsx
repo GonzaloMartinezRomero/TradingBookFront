@@ -7,7 +7,6 @@ import { OperationsStockModal } from "./modal/operationsStockModal";
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { PercentageIndicator } from "../util/percentageIndicator";
 import { MarketOperation } from "../util/marketOperation";
-import { TransactionState } from "../util/transactionState";
 import { YesNoMessageModal } from "../util/yesNoMessageModal";
 import { CurrencyModal } from "./modal/currencyModal";
 import { deleteStock, getStocks } from "@/app/apiService/stockApiService";
@@ -101,13 +100,17 @@ return(
          </div>        
          <div className="row">
              <div className="col mt-1">        
-                 <table className="mt-1 table-header text-center" style={{"width":"100%"}}>
+                 <table className="mt-1 table-header text-center" style={{"width":"85%"}}>
                      <thead>
                          <tr className="table-success">
                              <th colSpan={4}  style={{"borderRight":"1px solid black"}}>INFORMATION</th>                
-                             <th colSpan={3}  style={{"borderRight":"1px solid black"}}>INVEST</th>                      
-                             <th colSpan={4}  style={{"borderRight":"1px solid black"}}>CURRENT STATE</th>      
-                             <th colSpan={7}>RETURN</th>         
+                             <th colSpan={3}  style={{"borderRight":"1px solid black"}}>INVEST</th>                                                   
+                             {
+                                !showClosedStocks && <th colSpan={4}  style={{"borderRight":"1px solid black"}}>CURRENT STATE</th> 
+                             }
+                             {
+                                showClosedStocks && <th colSpan={7}>RETURN</th>       
+                             }
                          </tr>
                          <tr className=" table-group-divider" style={{"fontStyle":"oblique"}}>
                              <th>Name</th>
@@ -117,11 +120,16 @@ return(
                              <th>Amount</th>                                
                              <th>Fee</th>
                              <th>Deposit</th>                                
+                             {!showClosedStocks && 
+                             (<>
                              <th style={{"borderLeft":"1px solid black"}}>Price</th>
                              <th>%</th>         
                              <th>Estimated Return</th>         
                              <th>Action</th>       
-                             <th style={{"borderLeft":"1px solid black"}}>Price</th>
+                             </>)}
+                             {showClosedStocks && 
+                             (<>
+                                <th style={{"borderLeft":"1px solid black"}}>Price</th>
                              <th>%</th>                
                              <th>Sell Date</th>                
                              <th>Return</th>
@@ -129,6 +137,8 @@ return(
                              <th>AmountWithFee</th>
                              <th>Earn</th>                
                              <th>Diff-Amount</th>  
+                             </>)}
+                             
                          </tr>
                      </thead>
                      <tbody className="text-center">          
@@ -159,6 +169,8 @@ return(
                                              <td>
                                                  <MonetaryAmount amount={value.deposit} /> 
                                              </td>               
+                                             { !showClosedStocks && 
+                                             (  <>
                                              <td style={{"borderLeft":"1px solid black"}}>
                                                  {!value.isSelled && <MonetaryAmount amount={value.currentPrice} /> }
                                              </td>
@@ -171,7 +183,10 @@ return(
                                              <td>          
                                                  {!value.isSelled && <MarketOperation operation={value.recomendedAction}/>}
                                              </td>
-                                             <td style={{"borderLeft":"1px solid black"}}>
+                                                </>)
+                                             }
+                                             {showClosedStocks && (<>
+                                                <td style={{"borderLeft":"1px solid black"}}>
                                                  {value.isSelled && value.returnStockPrice}
                                              </td>
                                              <td> 
@@ -195,9 +210,8 @@ return(
                                              <td>
                                                  {value.isSelled && <PercentageIndicator amount={value.returnDiffAmount}/>}
                                              </td>
-                                             <td>
-                                                 <TransactionState isSelled={value.isSelled}/>
-                                             </td>                                          
+                                             </>)
+                                             }                          
                                              <td>                
                                                  <button className="btn btn-warning" 
                                                          onClick={()=>{

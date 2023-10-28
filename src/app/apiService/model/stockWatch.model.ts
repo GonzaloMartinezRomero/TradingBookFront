@@ -4,5 +4,6 @@ export interface StockWatch{
     currency: string,
     target: number,
     current: number,
-    diff: number
+    diff: number,
+    recomendedAction: string
 }

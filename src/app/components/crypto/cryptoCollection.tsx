@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { PercentageIndicator } from "../util/percentageIndicator";
 import { MarketOperation } from "../util/marketOperation";
-import { TransactionState } from "../util/transactionState";
 import { NewCryptoModal } from "./modal/newCrypto.modal";
 import { YesNoMessageModal } from "../util/yesNoMessageModal";
 import { CryptoReferenceModal } from "./modal/cryptoReference.modal";
@@ -102,13 +101,19 @@ return(
         </div>        
         <div className="row">
             <div className="col mt-1">
-                <table className="mt-1 table-header" style={{"width":"100%"}}>
+                <table className="mt-1 table-header" style={{"width":"85%"}}>
                     <thead>
                         <tr className="table-success">
                             <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>EXCHANGE FROM</th>                
                             <th colSpan={5} className="text-center" style={{"borderRight":"1px solid black"}}>EXCHANGE TO</th>                
+                            {!showClosedCryptos && 
+                            (<>
                             <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>CURRENT STATE</th>                      
-                            <th colSpan={8} className="text-center">RETURN</th>         
+                            </>)}                            
+                            {showClosedCryptos &&  
+                            (<>
+                                <th colSpan={8} className="text-center">RETURN</th>         
+                            </>)}
                         </tr>
                         <tr className="text-center table-secondary table-group-divider" style={{"fontStyle":"oblique"}}>
                             <th>From</th>                                                       
@@ -120,10 +125,15 @@ return(
                             <th>Price</th>
                             <th>Amount</th>
                             <th style={{"borderRight":"1px solid black"}}>Date</th>    
+                            {!showClosedCryptos && 
+                            (<>
                             <th>Price</th>
                             <th>%</th>
                             <th>Estimated Return</th>
                             <th style={{"borderRight":"1px solid black"}}>Action</th>
+                            </>)}
+                            {showClosedCryptos && 
+                            (<>
                             <th>Price</th>
                             <th>%</th>
                             <th>Date</th>
@@ -132,6 +142,7 @@ return(
                             <th>AmountWithFee</th>
                             <th>Earn</th>
                             <th>DiffAmount</th>
+                            </>)}
                         </tr>
                     </thead>
                     <tbody className="text-center table-items">          
@@ -168,6 +179,8 @@ return(
                                             <td>
                                                {value.buyDate}
                                             </td>
+                                            {!showClosedCryptos && 
+                                            (<>
                                             <td style={{"borderLeft":"1px solid black"}}>
                                                 {!value.isSelled && <MonetaryAmount amount={value.currentPrice}/>}
                                             </td>
@@ -180,6 +193,9 @@ return(
                                             <td>          
                                                 {!value.isSelled && <MarketOperation operation={value.recomendedAction}/>}
                                             </td>
+                                            </>)}
+                                            {showClosedCryptos && 
+                                            (<>
                                             <td style={{"borderLeft":"1px solid black"}}>
                                                 {value.isSelled && <MonetaryAmount amount={value.returnPrice}/>}
                                             </td>
@@ -203,10 +219,8 @@ return(
                                             </td>
                                             <td>
                                                 {value.isSelled && <PercentageIndicator amount={value.returnDiffAmountEarnedPercentage}/>}
-                                            </td>
-                                            <td>
-                                                <TransactionState isSelled={value.isSelled}/>
-                                            </td>                                          
+                                            </td>                                        
+                                            </>)}                                   
                                             <td>                
                                                 <button className="btn btn-warning" 
                                                         onClick={()=>{

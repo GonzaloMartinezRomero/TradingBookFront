@@ -3,5 +3,6 @@ export interface CryptoWatch{
     cryptoReference: string,    
     target: number,
     current: number,
-    diff: number
+    diff: number,
+    recomendedAction: string
 }

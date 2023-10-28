@@ -6,6 +6,7 @@ import { StockWatch } from "@/app/apiService/model/stockWatch.model";
 import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
 import { deleteStockWatch, getStockWatchs } from "@/app/apiService/stockWatchService";
 import { MonetaryAmount } from "../util/monetaryAmount";
+import { MarketOperation } from "../util/marketOperation";
 
 interface DeleteStockWatchModalProp{
     isOpen:boolean;
@@ -64,7 +65,8 @@ export function StockWatchList(){
                             <th>Currency</th>
                             <th>Target</th>
                             <th>Current</th>
-                            <th>Diff %</th>                            
+                            <th>Distance %</th>              
+                            <th>Action</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -89,6 +91,9 @@ export function StockWatchList(){
                             <td>
                                 <PercentageIndicator amount={value.diff}/>
                             </td>                            
+                            <td>
+                                <MarketOperation operation={value.recomendedAction}/>
+                            </td>
                             <td>
                                 <button className="btn btn-danger" onClick={()=>{setOpenDeleteConfirmationModal({isOpen:true,stockWatchId:value.id})}}>
                                                     <i className="bi bi-trash"></i>
