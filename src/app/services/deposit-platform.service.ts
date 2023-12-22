@@ -1,6 +1,6 @@
-import { get, post, remove } from "./httpService";
-import { DepositPlatform } from "./model/depositPlatform.model";
-import { NewDepositPlatform } from "./model/newDepositPlatform.model";
+import { DepositPlatform } from "../domain/deposit/deposit-platform.model";
+import { NewDepositPlatform } from "../domain/deposit/new-deposit-platform.model";
+import { get, post, remove } from "./http-client.service";
 
 export function getAllDepositPlatforms(){
     

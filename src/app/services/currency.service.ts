@@ -1,6 +1,5 @@
-import { get, post, remove } from "./httpService";
-import { Currency } from "./model/currency.model";
-
+import { Currency } from "../domain/currency.model";
+import { get, post, remove } from "./http-client.service";
 export function getCurrencies():Promise<Currency[]>{
 
     return get<Currency[]>("Currency");

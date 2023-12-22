@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
-import { getCryptoCurrenciesReference } from "@/app/apiService/cryptoApiService";
-import { CryptoCurrencyReference } from "@/app/apiService/model/cryptoCurrency.model";
-import { CryptoWatchSave } from "@/app/apiService/model/cryptoWatchSave.model";
-import { addCryptoWatch } from "@/app/apiService/cryptoWatchService";
+import { getCryptoCurrenciesReference } from "../../../services/crypto.service";
+import { CryptoCurrencyReference } from "../../../domain/crypto/crypto-currency.model";
+import { addCryptoWatch } from "../../../services/crypto-watch.service";
+import { CryptoWatchSave } from "../../../domain/crypto/crypto-watch-save.model";
 
 interface Props{
     onClose: any,

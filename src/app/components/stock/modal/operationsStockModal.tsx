@@ -1,10 +1,10 @@
-import { MarketLimit } from "@/app/apiService/model/marketLimit.model";
-import { SellStock } from "@/app/apiService/model/sellStock.model";
-import { Stock } from "@/app/apiService/model/stock.model";
-import { getStockById, sellStock, updateStockMarketLimit } from "@/app/apiService/stockApiService";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
+import { Stock } from "../../../domain/stocks/stock.model";
+import { getStockById, sellStock, updateStockMarketLimit } from "../../../services/stock.service";
+import { SellStock } from "../../../domain/stocks/sell-stock.model";
+import { MarketLimit } from "../../../domain/market-limit.model";
 
 interface Props{
     stockId: number,

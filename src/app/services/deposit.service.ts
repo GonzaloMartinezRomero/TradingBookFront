@@ -1,6 +1,6 @@
-import { get, post, remove } from "./httpService";
-import { Deposit } from "./model/deposit.model";
-import { NewDeposit } from "./model/newDeposit.model";
+import { Deposit } from "../domain/deposit/deposit.model";
+import { NewDeposit } from "../domain/deposit/new-deposit.model";
+import { get, post, remove } from "./http-client.service";
 
 export function getAllDeposits(){
     

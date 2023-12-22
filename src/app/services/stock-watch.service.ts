@@ -1,6 +1,6 @@
-import { get, post, remove } from "./httpService";
-import { StockWatch } from "./model/stockWatch.model";
-import { StockWatchSave } from "./model/stockWatchSave.model";
+import { StockWatchSave } from "../domain/stocks/stock-watch-save.model";
+import { StockWatch } from "../domain/stocks/stock-watch.model";
+import { get, post, remove } from "./http-client.service";
 
 const endpoint:string = "StockWatcher";
 

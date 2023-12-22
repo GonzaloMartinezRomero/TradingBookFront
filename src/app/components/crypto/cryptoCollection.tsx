@@ -1,18 +1,18 @@
-import { CryptoCurrency } from "@/app/apiService/model/crypto.model";
 import { Switch } from "@nextui-org/react";
 import { useEffect, useState } from "react";
+import { CurrencyModal } from "../stock/modal/currencyModal";
+import { CollapsableContainer } from "../util/collapsableContainer";
+import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
+import { MarketOperation } from "../util/marketOperation";
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { PercentageIndicator } from "../util/percentageIndicator";
-import { MarketOperation } from "../util/marketOperation";
-import { NewCryptoModal } from "./modal/newCrypto.modal";
 import { YesNoMessageModal } from "../util/yesNoMessageModal";
-import { CryptoReferenceModal } from "./modal/cryptoReference.modal";
-import { OperationCryptoModal } from "./modal/operationsCrypto.modal";
-import { CurrencyModal } from "../stock/modal/currencyModal";
-import { deleteCrypto, getCryptos } from "@/app/apiService/cryptoApiService";
-import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
-import { CollapsableContainer } from "../util/collapsableContainer";
 import { CryptoWatchList } from "./cryptoWatchList";
+import { CryptoReferenceModal } from "./modal/cryptoReference.modal";
+import { NewCryptoModal } from "./modal/newCrypto.modal";
+import { OperationCryptoModal } from "./modal/operationsCrypto.modal";
+import { deleteCrypto, getCryptos } from "../../services/crypto.service";
+import { CryptoCurrency } from "../../domain/crypto/crypto.model";
 
 interface OperationModalProps{
     isOpen:boolean;

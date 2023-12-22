@@ -5,5 +5,6 @@ export interface StockWatch{
     target: number,
     current: number,
     diff: number,
-    recomendedAction: string
+    recomendedAction: string,
+    chartReferenceUrl: string
 }

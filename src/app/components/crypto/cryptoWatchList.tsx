@@ -3,10 +3,10 @@ import { YesNoMessageModal } from "../util/yesNoMessageModal";
 import { PercentageIndicator } from "../util/percentageIndicator";
 import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
 import { MonetaryAmount } from "../util/monetaryAmount";
-import { deleteCryptokWatch, getCryptoWatchs } from "@/app/apiService/cryptoWatchService";
-import { CryptoWatch } from "@/app/apiService/model/cryptoWatch.model";
 import { CryptoWatchListModal } from "./modal/cryptoWatchListModal";
 import { MarketOperation } from "../util/marketOperation";
+import { CryptoWatch } from "../../domain/crypto/crypto-watch.model";
+import { deleteCryptokWatch, getCryptoWatchs } from "../../services/crypto-watch.service";
 
 interface DeleteCryptoWatchModalProp{
     isOpen:boolean;

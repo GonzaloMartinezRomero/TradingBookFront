@@ -1,8 +1,8 @@
-import { checkIfCryptoRefIsAvailable, deleteCryptoCurrencyReference, getCryptoCurrenciesReference, saveCryptoCurrencyReference } from "@/app/apiService/cryptoApiService";
-import { CryptoCurrencyReference } from "@/app/apiService/model/cryptoCurrency.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
+import { CryptoCurrencyReference } from "../../../domain/crypto/crypto-currency.model";
+import { checkIfCryptoRefIsAvailable, deleteCryptoCurrencyReference, getCryptoCurrenciesReference, saveCryptoCurrencyReference } from "../../../services/crypto.service";
 
 interface Props{
     onClose: any    

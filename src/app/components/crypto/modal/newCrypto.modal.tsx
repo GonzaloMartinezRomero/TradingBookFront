@@ -1,12 +1,12 @@
 "use client";
-import { CryptoCurrencyReference } from "@/app/apiService/model/cryptoCurrency.model";
-import { Currency } from "@/app/apiService/model/currency.model";
-import { NewCrypto } from "@/app/apiService/model/newCrypto.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
-import { getCryptoCurrenciesReference, saveCrypto } from "@/app/apiService/cryptoApiService";
-import { getCurrencies } from "@/app/apiService/currencyApiService";
+import { CryptoCurrencyReference } from "../../../domain/crypto/crypto-currency.model";
+import { Currency } from "../../../domain/currency.model";
+import { getCryptoCurrenciesReference, saveCrypto } from "../../../services/crypto.service";
+import { getCurrencies } from "../../../services/currency.service";
+import { NewCrypto } from "../../../domain/crypto/new-crypto.model";
 
 interface Props{
     onClose: any,

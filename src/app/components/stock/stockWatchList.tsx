@@ -2,11 +2,12 @@ import { useEffect, useState } from "react";
 import { YesNoMessageModal } from "../util/yesNoMessageModal";
 import { PercentageIndicator } from "../util/percentageIndicator";
 import { StockWatchListModal } from "./modal/stockWatchListModal";
-import { StockWatch } from "@/app/apiService/model/stockWatch.model";
 import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
-import { deleteStockWatch, getStockWatchs } from "@/app/apiService/stockWatchService";
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { MarketOperation } from "../util/marketOperation";
+import { deleteStockWatch, getStockWatchs } from "../../services/stock-watch.service";
+import { StockWatch } from "../../domain/stocks/stock-watch.model";
+import { StockChartLink } from "../util/referenceUrl";
 
 interface DeleteStockWatchModalProp{
     isOpen:boolean;
@@ -57,20 +58,21 @@ export function StockWatchList(){
             </div>          
         </div>
         <div className="row">
-            <div className="col-5 mt-1">        
-                <table className="mt-1 table-header" style={{"width":"100%"}}>
-                    <thead>                      
-                        <tr className="text-center table-secondary table-group-divider" style={{"fontStyle":"oblique"}}>
+            <div className="col-5 mt-1 stock-table-watcher">        
+                <table className="mt-1 table-header" style={{ "width": "100%" }}>
+                    <thead>
+                        <tr className="text-center table-secondary table-group-divider" style={{ "fontStyle": "oblique" }}>
                             <th>Stock</th>
                             <th>Currency</th>
                             <th>Target</th>
                             <th>Current</th>
                             <th>Distance %</th>              
                             <th>Action</th>
+                            <th>Chart</th>
                             <th></th>
                         </tr>
                     </thead>
-                    <tbody className="text-center table-items">                                                      
+                    <tbody className="text-center table-items" >                                                      
                         { stockWatchCollection!==undefined && stockWatchCollection?.map((value,index)=>{
 
                             return(
@@ -93,6 +95,9 @@ export function StockWatchList(){
                             </td>                            
                             <td>
                                 <MarketOperation operation={value.recomendedAction}/>
+                            </td>
+                            <td>
+                                <StockChartLink url={value.chartReferenceUrl} />
                             </td>
                             <td>
                                 <button className="btn btn-danger" onClick={()=>{setOpenDeleteConfirmationModal({isOpen:true,stockWatchId:value.id})}}>

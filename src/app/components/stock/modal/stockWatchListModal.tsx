@@ -1,12 +1,13 @@
-import { getCurrencies } from "@/app/apiService/currencyApiService";
-import { Currency } from "@/app/apiService/model/currency.model";
-import { StockReference } from "@/app/apiService/model/stockReference.model";
-import { getStockReferences, saveStock } from "@/app/apiService/stockApiService";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
-import { StockWatchSave } from "@/app/apiService/model/stockWatchSave.model";
-import { addStockWatchReference } from "@/app/apiService/stockWatchService";
+import { Currency } from "../../../domain/currency.model";
+import { StockReference } from "../../../domain/stocks/stock-reference.model";
+import { getCurrencies } from "../../../services/currency.service";
+import { getStockReferences } from "../../../services/stock.service";
+import { StockWatchSave } from "../../../domain/stocks/stock-watch-save.model";
+import { addStockWatchReference } from "../../../services/stock-watch.service";
+
 
 interface Props{
     onClose: any,

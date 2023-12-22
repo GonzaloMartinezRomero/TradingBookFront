@@ -1,9 +1,9 @@
-import { get, patch, post, remove } from "./httpService";
-import { CryptoCurrency } from "./model/crypto.model";
-import { CryptoCurrencyReference } from "./model/cryptoCurrency.model";
-import { MarketLimit } from "./model/marketLimit.model";
-import { NewCrypto } from "./model/newCrypto.model";
-import { SellCrypto } from "./model/sellCrypto.model";
+import { CryptoCurrencyReference } from "../domain/crypto/crypto-currency.model";
+import { CryptoCurrency } from "../domain/crypto/crypto.model";
+import { NewCrypto } from "../domain/crypto/new-crypto.model";
+import { SellCrypto } from "../domain/crypto/sell-crypto.model";
+import { MarketLimit } from "../domain/market-limit.model";
+import { get, patch, post, remove } from "./http-client.service";
 
 export function getCryptos():Promise<CryptoCurrency[]>{
 
@@ -37,7 +37,7 @@ export function sellCryptoCurrency(sellCrypto:SellCrypto):Promise<any>{
 
 export function checkIfCryptoRefIsAvailable(code:string):Promise<boolean>{
 
-    return get<boolean>(`CryptoCurrencyReference/CheckIfReferenceExists?referenceCode=${code}`);
+    return get<boolean>(`CryptoCurrencyReference/CheckIfReferenceIsAvailable?referenceCode=${code}`);
 }
 
 export function updateCryptoMarketLimit(marketLimit:MarketLimit):Promise<any>{

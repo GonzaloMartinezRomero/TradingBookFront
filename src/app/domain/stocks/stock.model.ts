@@ -1,5 +1,5 @@
-import { Currency } from "./currency.model";
-import { StockReference } from "./stockReference.model";
+import { Currency } from "../currency.model";
+import { StockReference } from "./stock-reference.model";
 
 export interface Stock{
     id: number;
@@ -13,6 +13,7 @@ export interface Stock{
     currentPrice:number;
     percentajeDiff: number;
     estimatedReturnPrice: number;
+    estimatedEarn: number;
     recomendedAction: string;
     stopLoss: number;
     sellLimit: number;
@@ -25,4 +26,5 @@ export interface Stock{
     returnEarn: number;
     returnDiffAmount: number;
     returnAmountWithFee: number;
+    chartReferenceUrl: string;
 }

@@ -1,8 +1,8 @@
-import { addCurrency, checkIfCurrencyCodeIsAvailable, deleteCurrency, getCurrencies } from "@/app/apiService/currencyApiService";
-import { Currency } from "@/app/apiService/model/currency.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
+import { Currency } from "../../../domain/currency.model";
+import { addCurrency, checkIfCurrencyCodeIsAvailable, deleteCurrency, getCurrencies } from "../../../services/currency.service";
 
 interface Props{
     onClose: any    

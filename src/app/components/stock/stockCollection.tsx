@@ -2,17 +2,18 @@ import { useEffect, useState } from "react";
 import { NewStockModal } from "./modal/newStockModal";
 import { StockReferenceModal } from "./modal/stockReferenceModal";
 import { Switch } from '@nextui-org/react';
-import { Stock } from "@/app/apiService/model/stock.model";
 import { OperationsStockModal } from "./modal/operationsStockModal";
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { PercentageIndicator } from "../util/percentageIndicator";
 import { MarketOperation } from "../util/marketOperation";
 import { YesNoMessageModal } from "../util/yesNoMessageModal";
 import { CurrencyModal } from "./modal/currencyModal";
-import { deleteStock, getStocks } from "@/app/apiService/stockApiService";
 import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
 import { StockWatchList } from "./stockWatchList";
 import { CollapsableContainer } from "../util/collapsableContainer";
+import { Stock } from "../../domain/stocks/stock.model";
+import { deleteStock, getStocks } from "../../services/stock.service";
+import { StockChartLink } from "../util/referenceUrl";
 
 interface StockOperationModalProps{
     isOpen:boolean;
@@ -125,7 +126,9 @@ return(
                              <th style={{"borderLeft":"1px solid black"}}>Price</th>
                              <th>%</th>         
                              <th>Estimated Return</th>         
-                             <th>Action</th>       
+                             <th>Estimated Earn</th>
+                                    <th>Action</th>       
+                             <th>Chart</th>
                              </>)}
                              {showClosedStocks && 
                              (<>
@@ -180,9 +183,15 @@ return(
                                              <td> 
                                                  {!value.isSelled && <MonetaryAmount amount={value.estimatedReturnPrice}/>}
                                              </td>
+                                             <td>
+                                                  {!value.isSelled && <MonetaryAmount amount={value.estimatedEarn} />}
+                                             </td>
                                              <td>          
                                                  {!value.isSelled && <MarketOperation operation={value.recomendedAction}/>}
                                              </td>
+                                             <td>
+                                                 {!value.isSelled && <StockChartLink url={value.chartReferenceUrl}/> }                                             
+                                            </td>
                                                 </>)
                                              }
                                              {showClosedStocks && (<>
@@ -239,6 +248,5 @@ return(
         <CollapsableContainer title="Watch List">
             <StockWatchList></StockWatchList>
         </CollapsableContainer> 
-        
     </>
 );}

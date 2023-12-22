@@ -1,6 +1,6 @@
-import { get, post, remove } from "./httpService";
-import { CryptoWatch } from "./model/cryptoWatch.model";
-import { CryptoWatchSave } from "./model/cryptoWatchSave.model";
+import { CryptoWatchSave } from "../domain/crypto/crypto-watch-save.model";
+import { CryptoWatch } from "../domain/crypto/crypto-watch.model";
+import { get, post, remove } from "./http-client.service";
 
 const endpoint:string = "CryptoWatcher";
 

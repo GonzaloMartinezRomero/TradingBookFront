@@ -1,8 +1,8 @@
-import { StockReference } from "@/app/apiService/model/stockReference.model";
-import { addStockReference, checkIfStockCodeIsAvailable, deleteStockReference, getStockReferences } from "@/app/apiService/stockApiService";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
+import { StockReference } from "../../../domain/stocks/stock-reference.model";
+import { addStockReference, checkIfStockCodeIsAvailable, deleteStockReference, getStockReferences } from "../../../services/stock.service";
 
 interface Props{
     onClose: any    
@@ -29,12 +29,13 @@ export function StockReferenceModal({ onClose }:Props) {
 
     addStockReference(stockRef).then(value=>
     {      
-      const stockCollectionAux: StockReference[] = [];
-      stockReferenceCollection?.forEach(value=>stockCollectionAux.push(value));
-      stockCollectionAux?.push(value);
+        const stockCollectionAux: StockReference[] = [];
+        stockReferenceCollection?.forEach(value=>stockCollectionAux.push(value));
+        stockCollectionAux?.push(value);
 
-      setStockReferenceCollection(stockCollectionAux);
-    }).catch(err=>setErrorModal({isOpen:true,msg:err}));
+        setStockReferenceCollection(stockCollectionAux);
+
+    }).catch(err => setErrorModal({ isOpen: true, msg: err }));
   }
 
   function deleteStockRef(id:number){

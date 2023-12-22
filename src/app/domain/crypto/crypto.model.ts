@@ -1,6 +1,3 @@
-import { Currency } from "./currency.model";
-import { StockReference } from "./stockReference.model";
-
 export interface CryptoCurrency{
     id: number,
     cryptoCurrencyFrom: string,

@@ -7,8 +7,8 @@
     opacity: 1;        
     font-size: large;
     color: azure;    
-    height: 850px;    
-    width: 1920px;
+    height: auto;    
+    width: auto;
 }
 
 .main-title{  

@@ -1,10 +1,10 @@
-import { getCryptoById, sellCryptoCurrency, updateCryptoMarketLimit } from "@/app/apiService/cryptoApiService";
-import { CryptoCurrency } from "@/app/apiService/model/crypto.model";
-import { MarketLimit } from "@/app/apiService/model/marketLimit.model";
-import { SellCrypto } from "@/app/apiService/model/sellCrypto.model";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
+import { CryptoCurrency } from "../../../domain/crypto/crypto.model";
+import { getCryptoById, sellCryptoCurrency, updateCryptoMarketLimit } from "../../../services/crypto.service";
+import { SellCrypto } from "../../../domain/crypto/sell-crypto.model";
+import { MarketLimit } from "../../../domain/market-limit.model";
 
 interface Props{
     cryptoId: number,

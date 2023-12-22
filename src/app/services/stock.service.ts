@@ -1,9 +1,9 @@
-import { get, patch, post, remove } from "./httpService";
-import { MarketLimit } from "./model/marketLimit.model";
-import { NewStock } from "./model/newStock.model";
-import { SellStock } from "./model/sellStock.model";
-import { Stock } from "./model/stock.model";
-import { StockReference } from "./model/stockReference.model";
+import { MarketLimit } from "../domain/market-limit.model";
+import { NewStock } from "../domain/stocks/new-stock.model";
+import { SellStock } from "../domain/stocks/sell-stock.model";
+import { StockReference } from "../domain/stocks/stock-reference.model";
+import { Stock } from "../domain/stocks/stock.model";
+import { get, patch, post, remove } from "./http-client.service";
 
 export function getStockReferences():Promise<StockReference[]>{
 
@@ -52,5 +52,5 @@ export function updateStockMarketLimit(marketLimit:MarketLimit):Promise<any>{
 
 export function checkIfStockCodeIsAvailable(code:string):Promise<boolean>{
 
-    return get<boolean>(`StockReference/CheckIfStockExists?referenceCode=${code}`);
+    return get<boolean>(`StockReference/CheckIfStockIsAvailable?referenceCode=${code}`);
 }

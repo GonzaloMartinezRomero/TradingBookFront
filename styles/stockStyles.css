@@ -16,8 +16,6 @@
     color: black;    
 }
 
-
-
 .operation-stock-modal {
   display: inline-table;
   justify-content: space-evenly;
@@ -67,4 +65,9 @@
   left: 35%;      
   text-align: center;
   color: black;    
-} 
+}
+
+.stock-table-watcher {
+    max-height: 300px;
+    overflow-y: auto;
+}
