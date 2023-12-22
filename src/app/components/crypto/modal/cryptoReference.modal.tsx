@@ -3,6 +3,8 @@ import { createPortal } from "react-dom";
 import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
 import { CryptoCurrencyReference } from "../../../domain/crypto/crypto-currency.model";
 import { checkIfCryptoRefIsAvailable, deleteCryptoCurrencyReference, getCryptoCurrenciesReference, saveCryptoCurrencyReference } from "../../../services/crypto.service";
+import { InformationMessageModal, InformationModalProps } from "../../util/informationMessageModal";
+import { Loading } from "@nextui-org/react";
 
 interface Props{
     onClose: any    
@@ -10,7 +12,9 @@ interface Props{
 
 export function CryptoReferenceModal({ onClose }:Props) {
 
-  const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
+    const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
+    const [showSpinner, setShowSpinner] = useState<boolean>(false);
+  const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
   const [cryptoCurrencyReferenceCollection,setCryptoCurrencyReferenceCollection] = useState<CryptoCurrencyReference[]>();
   const [isCryptoCodeAvailable,setIsCryptoCodeAvailable] = useState<boolean | undefined>(undefined);
   const inputName = useRef<HTMLInputElement>(null);
@@ -32,14 +36,20 @@ export function CryptoReferenceModal({ onClose }:Props) {
       name:name
     };
 
-    saveCryptoCurrencyReference(cryptoRef).then((value)=>updateCryptoCurrencies())
-                                          .catch(err=>setErrorModal({isOpen:true,msg:err}));
+      saveCryptoCurrencyReference(cryptoRef).then((value) =>
+      {
+          setInformationModal({ isOpen: true, msg: "Crypto added successfully!" });
+          updateCryptoCurrencies();
+      }).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
   function checkIfCodeIsAvailable(){
-    const code = inputCode.current?.value as string;
+      setShowSpinner(true);
+      setIsCryptoCodeAvailable(undefined);
+      const code = inputCode.current?.value as string;
     checkIfCryptoRefIsAvailable(code).then(response=>setIsCryptoCodeAvailable(response))
-                                     .catch(err=>setErrorModal({isOpen:true,msg:err}));
+        .catch(err => setErrorModal({ isOpen: true, msg: err }))
+        .finally(() => setShowSpinner(false));
   }
    
   function updateCryptoCurrencies(){
@@ -53,7 +63,8 @@ export function CryptoReferenceModal({ onClose }:Props) {
   }
 
   return (<>
-    {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
+      {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={() => setErrorModal({ isOpen: false })} />}
+      {informationModal.isOpen && <InformationMessageModal msg={informationModal.msg} onClose={onClose} />}
     {createPortal(     
         <div className="new-crypto-modal">
           <div className="d-flex flex-row-reverse">
@@ -78,8 +89,8 @@ export function CryptoReferenceModal({ onClose }:Props) {
             <div className="col-5">
               <button className="btn btn-info row" onClick={()=>checkIfCodeIsAvailable()}>Check Availability</button>             
             </div>          
-            <div className="col-5">
-              {isCryptoCodeAvailable === undefined &&  <span className="row bi bi-question-square" style={{"fontSize":"35px"}} title="No Checked"/>}
+            <div className="col-1">
+              {showSpinner && <div className="row"><Loading /></div>}
               {isCryptoCodeAvailable == true && <span className="row bi bi-file-earmark-check" style={{"fontSize":"35px"}} title="Available"/>}
               {isCryptoCodeAvailable == false &&  <span className="row bi bi-file-earmark-x" style={{"fontSize":"35px"}} title="No Available"/>}             
             </div>
