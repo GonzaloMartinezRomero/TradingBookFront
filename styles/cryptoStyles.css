@@ -7,7 +7,7 @@
   border: 1px solid rgb(22, 18, 18);
   border-radius: 12px;
   position:  absolute;
-  height: 620px;
+  height: 640px;
   width: 750px;
   top: 10%;
   left: 30%;  
@@ -16,7 +16,7 @@
   color: black;    
 }
 
-.new-crypto-modal {
+.new-crypto-reference-modal {
   display: inline-table;
   justify-content: space-evenly;
   align-items: center;
@@ -31,23 +31,23 @@
   left: 35%;      
   text-align: center;
   color: black;    
-} 
+}
 
 .operation-crypto-modal {
-  display: inline-table;
-  justify-content: space-evenly;
-  align-items: center;
-  box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px;
-  background-color: rgb(240, 230, 230);
-  border: 1px solid rgb(22, 18, 18);
-  border-radius: 12px;
-  position:  absolute;
-  height: 500px;
-  width: 550px;
-  top: 20%;
-  left: 35%;  
-  text-align: center;
-  color: black;    
+    display: inline-table;
+    justify-content: space-evenly;
+    align-items: center;
+    box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px;
+    background-color: rgb(240, 230, 230);
+    border: 1px solid rgb(22, 18, 18);
+    border-radius: 12px;
+    position: absolute;
+    height: 320px;
+    width: 480px;
+    top: 20%;
+    left: 35%;
+    text-align: center;
+    color: black;
 } 
 
 .new-crypto-watch-modal{

@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
-import { Currency } from "../../../domain/currency.model";
-import { addCurrency, checkIfCurrencyCodeIsAvailable, deleteCurrency, getCurrencies } from "../../../services/currency.service";
+import { ErrorMessageModal, ErrorModalProps } from "./error-message-modal";
+import { Currency } from "../../domain/currency.model";
+import { addCurrency, checkIfCurrencyCodeIsAvailable, deleteCurrency, getCurrencies } from "../../services/currency.service";
+
 
 interface Props{
     onClose: any    
@@ -18,7 +19,7 @@ export function CurrencyModal({ onClose }:Props) {
   const inputName = useRef<HTMLInputElement>(null);
   const inputCode = useRef<HTMLInputElement>(null);
 
-  useEffect(()=>{
+    useEffect(() => {       
     loadCurrencies();
   },[]);
 
@@ -66,7 +67,7 @@ export function CurrencyModal({ onClose }:Props) {
   return (<>
   {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
   {createPortal(      
-        <div className="new-stock-modal">
+      <div className="currency-modal">
           <div className="d-flex flex-row-reverse">
           <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
             <i className="bi-x"/>

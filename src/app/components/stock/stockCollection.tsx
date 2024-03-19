@@ -1,23 +1,35 @@
-import { useEffect, useState } from "react";
-import { NewStockModal } from "./modal/newStockModal";
-import { StockReferenceModal } from "./modal/stockReferenceModal";
 import { Switch } from '@nextui-org/react';
-import { OperationsStockModal } from "./modal/operationsStockModal";
+import { useEffect, useState } from "react";
+import { MarketOperation } from "../util/marketOperation";
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { PercentageIndicator } from "../util/percentageIndicator";
-import { MarketOperation } from "../util/marketOperation";
-import { YesNoMessageModal } from "../util/yesNoMessageModal";
-import { CurrencyModal } from "./modal/currencyModal";
-import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
-import { StockWatchList } from "./stockWatchList";
-import { CollapsableContainer } from "../util/collapsableContainer";
+
+import { NewStockModal } from "./modal/newStockModal";
+import { OperationsStockModal } from "./modal/operationsStockModal";
+import { StockReferenceModal } from "./modal/stockReferenceModal";
+
 import { Stock } from "../../domain/stocks/stock.model";
-import { deleteStock, getStocks } from "../../services/stock.service";
+import { deleteStock, getStocks, updateStockMarketLimit } from "../../services/stock.service";
+import { CurrencyModal } from "../modal/currency-modal";
+import { CollapsableContainer } from "../util/collapsable.container.component";
+
+import { ErrorMessageModal, ErrorModalProps } from '../modal/error-message-modal';
+import { YesNoMessageModal } from '../modal/yes-no-message-modal';
+import { MarketLimitModal, MarketLimitModalValue } from '../util/MarketLimit.Modal';
 import { StockChartLink } from "../util/referenceUrl";
+import { StockWatchList } from "./stockWatchList";
+import { MarketLimit } from '../../domain/market-limit.model';
 
 interface StockOperationModalProps{
     isOpen:boolean;
     stockId:number;
+}
+
+interface StockMarketLimitProps {
+    isOpen: boolean;
+    stockId?: number;
+    stopLoss?: number;
+    sellLimit?: number;
 }
 
 export function StockCollection(){
@@ -26,7 +38,8 @@ export function StockCollection(){
     const [showClosedStocks, setShowClosedStocks] = useState(false);
     const [openNewStockReferenceModal, setOpenNewStockReferenceModal] = useState(false);
     const [openStockModal, setOpenNewStockModal] = useState(false);
-    const [openOperationsStockModal, setOpenOperationsStockModal] = useState<StockOperationModalProps>({isOpen:false,stockId:0});
+    const [openOperationsStockModal, setOpenOperationsStockModal] = useState<StockOperationModalProps>({ isOpen: false, stockId: 0 });
+    const [openMarketLimits, setOpenMarketLimits] = useState<StockMarketLimitProps>({ isOpen: false });
     const [stockCollection, setStockCollection] = useState<Stock[]>();        
     const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<StockOperationModalProps>({isOpen:false,stockId:0});
     const [openNewCurrencyModal, setOpenNewCurrencyModal] = useState(false);       
@@ -63,14 +76,23 @@ return(
                                                         }} 
                                                         onNoResponse={()=>{setOpenDeleteConfirmationModal({isOpen:false,stockId:0})}}/>}
 
-    {openNewCurrencyModal && <CurrencyModal onClose={()=>setOpenNewCurrencyModal(false)}/>}    
+        {openNewCurrencyModal && <CurrencyModal onClose={() => setOpenNewCurrencyModal(false)}/>}    
 
     {openOperationsStockModal.isOpen && <OperationsStockModal stockId={openOperationsStockModal.stockId} 
                                                                onClose={()=>setOpenOperationsStockModal({isOpen:false,stockId:0})}
                                                                onStockUpdateAndClose={()=>{
                                                                 setOpenOperationsStockModal({isOpen:false,stockId:0});
                                                                 updateStocks();                                                           
-                                                            }}/>}
+            }} />}
+        {openMarketLimits.isOpen && <MarketLimitModal stopLoss={openMarketLimits.stopLoss ?? 0}
+            sellLimit={openMarketLimits.sellLimit ?? 0}
+            onClose={() => setOpenMarketLimits({ isOpen: false })}
+            onUpdateAndClose={(marketLimit: MarketLimitModalValue) => {
+                updateStockMarketLimit({ stockId: openMarketLimits.stockId, sellLimit: marketLimit.sellLimit, stopLoss: marketLimit.stopLoss } as MarketLimit)
+                    .then(() => {
+                        setOpenMarketLimits({ isOpen: false });
+                        updateStocks();});
+            }} />}
 
   <CollapsableContainer title="Stocks">  
          <div className="row mt-3 mb-3 ">
@@ -87,7 +109,7 @@ return(
                  </button>  
              </div>   
              <div className="col-1">          
-                 <button type="button" className="btn btn-success" style={{"width":"120px"}} onClick={()=>setOpenNewCurrencyModal(true)}>
+                    <button type="button" className="btn btn-success" style={{ "width": "120px" }} onClick={() => { console.log("entra"); setOpenNewCurrencyModal(true); } }>
                      <span className="me-1">Currency</span>
                      <i className="bi bi-plus-circle"></i>
                  </button>  
@@ -108,7 +130,10 @@ return(
                              <th colSpan={3}  style={{"borderRight":"1px solid black"}}>INVEST</th>                                                   
                              {
                                 !showClosedStocks && <th colSpan={4}  style={{"borderRight":"1px solid black"}}>CURRENT STATE</th> 
-                             }
+                            }
+                            {
+                                !showClosedStocks && <th colSpan={3} style={{ "borderRight": "1px solid black" }}>STATUS</th>
+                            }
                              {
                                 showClosedStocks && <th colSpan={7}>RETURN</th>       
                              }
@@ -126,9 +151,13 @@ return(
                              <th style={{"borderLeft":"1px solid black"}}>Price</th>
                              <th>%</th>         
                              <th>Estimated Return</th>         
-                             <th>Estimated Earn</th>
-                                    <th>Action</th>       
-                             <th>Chart</th>
+                            <th>Estimated Earn</th>
+                            <th>Stop Loss</th>
+                            <th>Sell Limit</th>
+                             <th>Action</th>       
+                                    <th>Chart</th>
+                                    <th>Market</th>
+                                    <th>Sell</th>
                              </>)}
                              {showClosedStocks && 
                              (<>
@@ -186,7 +215,13 @@ return(
                                              <td>
                                                   {!value.isSelled && <MonetaryAmount amount={value.estimatedEarn} />}
                                              </td>
-                                             <td>          
+                                                     <td>
+                                                         {!value.isSelled && <MonetaryAmount amount={value.stopLoss} />}
+                                                     </td>
+                                                     <td>
+                                                         {!value.isSelled && <MonetaryAmount amount={value.sellLimit} />}
+                                                     </td>
+                                                     <td>          
                                                  {!value.isSelled && <MarketOperation operation={value.recomendedAction}/>}
                                              </td>
                                              <td>
@@ -220,7 +255,15 @@ return(
                                                  {value.isSelled && <PercentageIndicator amount={value.returnDiffAmount}/>}
                                              </td>
                                              </>)
-                                             }                          
+                                                 }               
+                                                 <td>
+                                                     <button className="btn btn-success"
+                                                         onClick={() => {
+                                                             setOpenMarketLimits({ isOpen: true, stockId: value.id, sellLimit: value.sellLimit, stopLoss: value.stopLoss });
+                                                         }}>
+                                                         <i className="bi bi-sliders2-vertical"></i>
+                                                     </button>
+                                                 </td>
                                              <td>                
                                                  <button className="btn btn-warning" 
                                                          onClick={()=>{
@@ -228,7 +271,8 @@ return(
                                                          }}>
                                                      <i className="bi bi-box-arrow-up-right"></i>
                                                  </button>
-                                             </td>
+                                                 </td>
+
                                              <td>
                                                  <button className="btn btn-danger" onClick={()=>{setOpenDeleteConfirmationModal({isOpen:true,stockId:value.id})}}>
                                                      <i className="bi bi-trash"></i>

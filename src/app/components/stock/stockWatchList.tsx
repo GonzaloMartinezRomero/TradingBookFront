@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react";
-import { YesNoMessageModal } from "../util/yesNoMessageModal";
+
 import { PercentageIndicator } from "../util/percentageIndicator";
 import { StockWatchListModal } from "./modal/stockWatchListModal";
-import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
+
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { MarketOperation } from "../util/marketOperation";
 import { deleteStockWatch, getStockWatchs } from "../../services/stock-watch.service";
 import { StockWatch } from "../../domain/stocks/stock-watch.model";
 import { StockChartLink } from "../util/referenceUrl";
+import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message-modal";
+import { YesNoMessageModal } from "../modal/yes-no-message-modal";
 
 interface DeleteStockWatchModalProp{
     isOpen:boolean;

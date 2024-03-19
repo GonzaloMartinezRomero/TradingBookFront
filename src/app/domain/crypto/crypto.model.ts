@@ -21,6 +21,7 @@ export interface CryptoCurrency{
     returnFee: number,
     returnAmountWithFee: number,
     returnEarn: number,
+    estimatedEarn: number;
     returnDiffAmountEarnedPercentage: number,
     stopLoss: number,
     sellLimit: number

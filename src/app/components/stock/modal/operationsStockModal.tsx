@@ -1,10 +1,9 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
-import { Stock } from "../../../domain/stocks/stock.model";
-import { getStockById, sellStock, updateStockMarketLimit } from "../../../services/stock.service";
 import { SellStock } from "../../../domain/stocks/sell-stock.model";
-import { MarketLimit } from "../../../domain/market-limit.model";
+import { Stock } from "../../../domain/stocks/stock.model";
+import { getStockById, sellStock } from "../../../services/stock.service";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 
 interface Props{
     stockId: number,
@@ -19,12 +18,6 @@ interface SellStockInputValue{
   returnStockPrice: any;
 }
 
-interface MarketLimitInputValue{
-  stockId: any;
-  stopLoss:any;
-  sellLimit:any;
-}
-
 export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }:Props) {
 
   const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
@@ -34,10 +27,7 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
   const inputReturn = useRef<HTMLInputElement>(null);
   const inputFee = useRef<HTMLInputElement>(null);
   const inputPrice = useRef<HTMLInputElement>(null);
-
-  const inputStopLoss = useRef<HTMLInputElement>(null);
-  const inputSellLimit = useRef<HTMLInputElement>(null);
-  
+    
   useEffect(()=>{
     getStockById(stockId).then(value=>setStock(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
   },
@@ -56,18 +46,6 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
       sellStock(sellStockValue).then(value=>onStockUpdateAndClose()).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
-  function setMarketLimit(marketLimitInput: MarketLimitInputValue){
-
-    const marketLimitValues: MarketLimit=
-    {
-      cryptoCurrencyId:0,
-      stockId: marketLimitInput.stockId as number,
-      sellLimit: marketLimitInput.sellLimit as number,
-      stopLoss: marketLimitInput.stopLoss as number
-    };
-
-    updateStockMarketLimit(marketLimitValues).then(value=>onStockUpdateAndClose()).catch(err=>setErrorModal({isOpen:true,msg:err}));
-  }
 
   return (
     <>
@@ -109,34 +87,7 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
 
               {stock?.isSelled && <button className="btn btn-success disabled" style={{ "width": "100px", "height": "40px" }}>Sell</button>}              
             </div>
-          </div>
-
-          <h3 className="mt-4">Market Limit</h3>
-          <div className="form-group row ms-3">
-            <div className="col-6">
-              <label className="row">Stop Loss</label>
-              <input type="text" className="form-control row" placeholder="Stop" defaultValue={stock?.stopLoss} ref={inputStopLoss} disabled={stock?.isSelled}/>
-            </div>
-            <div className="col-6">
-              <label className="row">Sell Limit</label>
-              <input type="text" className="form-control row" placeholder="Limit" defaultValue={stock?.sellLimit} ref={inputSellLimit} disabled={stock?.isSelled}/>
-            </div>
-          </div>
-          <div className="form-group row mt-4">
-            <div className="form-group col-12">
-              <button className="btn btn-success" 
-                      disabled={stock?.isSelled}
-                      style={{ "width": "100px", "height": "40px" }}
-                      onClick={()=>setMarketLimit(
-                        {
-                           stockId: stock?.id,
-                           sellLimit: inputSellLimit.current?.value,
-                           stopLoss: inputStopLoss.current?.value
-                        })}>
-                        Update
-              </button>
-            </div>            
-          </div>
+          </div>       
         </div>, document.body)}
       </>
   );

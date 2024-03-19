@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import { MonetaryAmount } from "../util/monetaryAmount";
-import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
+
 import { NewDepositModal } from "./modal/newDeposit.modal";
-import { YesNoMessageModal } from "../util/yesNoMessageModal";
+
 import { PlatformModal } from "./modal/platform.modal";
 import { Deposit } from "../../domain/deposit/deposit.model";
 import { deleteDeposit, getAllDeposits } from "../../services/deposit.service";
+import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message-modal";
+import { YesNoMessageModal } from "../modal/yes-no-message-modal";
 
 interface DeleteModalProp{
     isOpen:boolean;

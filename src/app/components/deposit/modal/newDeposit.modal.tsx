@@ -1,13 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
+
 import { DepositPlatform } from "../../../domain/deposit/deposit-platform.model";
 import { Currency } from "../../../domain/currency.model";
 import { getAllDepositPlatforms } from "../../../services/deposit-platform.service";
 import { getCurrencies } from "../../../services/currency.service";
 import { NewDeposit } from "../../../domain/deposit/new-deposit.model";
 import { addDeposit } from "../../../services/deposit.service";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 
 interface Props {
   onClose: any,

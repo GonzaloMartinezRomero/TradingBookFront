@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
-import { getCurrencies } from "../../../services/currency.service";
-import { getStockReferences, saveStock } from "../../../services/stock.service";
-import { StockReference } from "../../../domain/stocks/stock-reference.model";
 import { Currency } from "../../../domain/currency.model";
 import { NewStock } from "../../../domain/stocks/new-stock.model";
+import { StockReference } from "../../../domain/stocks/stock-reference.model";
+import { getCurrencies } from "../../../services/currency.service";
+import { getStockReferences, saveStock } from "../../../services/stock.service";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
+import { DecimalInput } from "../../util/decimal.input.component";
+import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
 
 interface Props{
     onClose: any,
@@ -15,18 +17,14 @@ interface Props{
 export function NewStockModal({ onClose, onCloseAndReload }:Props) {
   
   const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
-
   const [currencyCollection,setCurrencyCollection] = useState<Currency[]>();
   const [stockReferenceCollection,setStockReferenceCollection] = useState<StockReference[]>();
 
-  const inputPrice = useRef<HTMLInputElement>(null);
-  const inputStopLoss = useRef<HTMLInputElement>(null);
-  const inputSellLimit = useRef<HTMLInputElement>(null);
-  const inputAmount = useRef<HTMLInputElement>(null);
-  const inputFee = useRef<HTMLInputElement>(null);
-  const inputCurrency = useRef<HTMLSelectElement>(null);
-  const inputStockReference = useRef<HTMLSelectElement>(null);
-
+  const newStock: NewStock = {} as NewStock;
+  
+  const stockOptions: DropDownValue[] | undefined = stockReferenceCollection?.map((stockAux) => { return { value: stockAux.id, label: stockAux.name } as DropDownValue });
+  const currencyOptions: DropDownValue[] | undefined = currencyCollection?.map((currencyAux) => { return { value: currencyAux.id, label: currencyAux.name } as DropDownValue });
+ 
   useEffect(()=>{
     getCurrencies().then(value=>setCurrencyCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
     getStockReferences().then(value=>setStockReferenceCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
@@ -34,18 +32,7 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
   []);
   
   function addStock(){
-
-    const newStock:NewStock =
-    {
-      currencyId: (inputCurrency.current?.value ?? "0") as unknown as number,
-      stockReferenceId:(inputStockReference.current?.value ?? "0") as unknown as number,
-      amount: (inputAmount.current?.value ?? "0") as unknown as number,
-      fee: (inputFee.current?.value ?? "0") as unknown as number,
-      price: (inputPrice.current?.value ?? "0") as unknown as number,
-      sellLimit: (inputSellLimit.current?.value ?? "0") as unknown as number,
-      stopLoss: (inputStopLoss.current?.value ?? "0") as unknown as number,
-    }
-
+      
     saveStock(newStock).then(value=>onCloseAndReload()).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
@@ -62,68 +49,54 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
           </div>
           <h1>New Stock</h1>
           <div className="m-4">
-            <h3 className="mb-4">Stock Reference</h3>
-            <div className="form-group row">
-            <div className="col-4">
-                <label className="row">Reference</label>
-                <select className="row form-select" aria-label="StockReference" ref={inputStockReference}>
-                  <option selected>Select</option>
-                  {
-                    stockReferenceCollection?.map((stockReference,index)=>
-                    {
-                      return (<option value={stockReference.id}>{stockReference.name}</option>);
-                    })
-                  }                  
-                </select>
-              </div>
-
-              <div className="col-4">
-                <label className="row">Price</label>
-                <input type="number" className="form-control row" placeholder="Price" defaultValue={0} ref={inputPrice} />
-              </div>
-
-              <div className="col-4">
-                <label className="row">Currency</label>
-                <select className="row form-select" aria-label="Currency" ref={inputCurrency}>
-                  <option selected>Select</option>
-                  {
-                    currencyCollection?.map((currencyAux,index)=>
-                    {
-                      return (<option value={currencyAux.id}>{currencyAux.name}</option>);
-                    })
-                  }         
-                </select>
-              </div>            
-            </div>
-            <div className="form-group row mt-3">
-                <div className="col-4">
-                  <label className="row">Stop Loss</label>
-                  <input type="number" className="form-control row" placeholder="Stop" defaultValue={0} ref={inputStopLoss}/>
+                <h3 className="mb-4">Stock Reference</h3>
+                <div className="row" style={{ "textAlign": "left" }}>
+                    <div className="col-4">           
+                        <label>Reference</label>
+                        <DropDownInput values={stockOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => newStock.stockReferenceId = valueSelected.value}></DropDownInput>
                 </div>
-                <div className="col-4">
-                  <label className="row">Sell Limit</label>
-                  <input type="number" className="form-control row" placeholder="Limit" defaultValue={0} ref={inputSellLimit}/>
+                    <div className="col-4">                      
+                            <label>Price</label>
+                            <DecimalInput onChangeValue={(value: number) => { newStock.price = value; }} />                                                         
+              </div>
+                    <div className="col-4">
+                            <label>Currency</label>
+                        <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => newStock.currencyId = valueSelected.value}></DropDownInput>
+                        </div>
+            </div>
+                <div className="form-group row mt-3" style={{"textAlign":"left"} }>
+                    <div className="col-4">
+                       
+                            <label>Stop Loss</label>
+                        <DecimalInput onChangeValue={(value: number) => { newStock.stopLoss = value; }} />                  
+                        
+                </div>
+                    <div className="col-4">
+                     
+                            <label>Sell Limit</label>
+                        <DecimalInput onChangeValue={(value: number) => { newStock.sellLimit = value; }} />    
+                        
                   </div>
               </div>
           </div>
           <div className="m-4">
-            <h3 className="mb-4">Invest</h3>
-            <div className="form-group row">
-              <div className="col-4">
-                <label className="row">Amount</label>
-                <input type="number" className="form-control row" placeholder="Amount" defaultValue={0} ref={inputAmount}/>
+            <h3 className="mb-3">Invest</h3>
+                <div className="form-group row" style={{ "textAlign": "left" }}>
+                    <div className="col-4">
+                      
+                            <label>Amount</label>
+                        <DecimalInput onChangeValue={(value: number) => { newStock.amount = value; }} />                    
+                       
               </div>              
-              <div className="col-4">
-                <label className="row">Fee</label>
-                <input type="number" className="form-control row" placeholder="Fee" defaultValue={0} ref={inputFee}/>
+                    <div className="col-4">
+                      
+                            <label>Fee</label>
+                        <DecimalInput onChangeValue={(value: number) => { newStock.fee = value; }} />       
+                       
               </div>
             </div>
           </div>
-          <div className="form-group row mt-2">            
-            <div className="form-group col-12">
-              <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }} onClick={()=>addStock()}>Add</button>
-            </div>
-          </div>
+          <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }} onClick={()=>addStock()}>Add</button>
         </div>,document.body)}
         </>
   );

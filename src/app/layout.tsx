@@ -4,6 +4,7 @@ import '../../styles/cryptoStyles.css';
 import '../../styles/stockStyles.css';
 import '../../styles/depositStyles.css';
 import '../../styles/appStyle.css';
+import '../../styles/MarketLimitModal.css';
 
 export default function RootLayout({
   children,

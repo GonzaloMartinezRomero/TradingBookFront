@@ -1,22 +1,35 @@
 import { Switch } from "@nextui-org/react";
 import { useEffect, useState } from "react";
-import { CurrencyModal } from "../stock/modal/currencyModal";
-import { CollapsableContainer } from "../util/collapsableContainer";
-import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
+
+
+import { CollapsableContainer } from "../util/collapsable.container.component";
+
 import { MarketOperation } from "../util/marketOperation";
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { PercentageIndicator } from "../util/percentageIndicator";
-import { YesNoMessageModal } from "../util/yesNoMessageModal";
+
 import { CryptoWatchList } from "./cryptoWatchList";
 import { CryptoReferenceModal } from "./modal/cryptoReference.modal";
 import { NewCryptoModal } from "./modal/newCrypto.modal";
 import { OperationCryptoModal } from "./modal/operationsCrypto.modal";
-import { deleteCrypto, getCryptos } from "../../services/crypto.service";
+import { deleteCrypto, getCryptos, updateCryptoMarketLimit } from "../../services/crypto.service";
 import { CryptoCurrency } from "../../domain/crypto/crypto.model";
+import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message-modal";
+import { YesNoMessageModal } from "../modal/yes-no-message-modal";
+import { CurrencyModal } from "../modal/currency-modal";
+import { MarketLimitModal, MarketLimitModalValue } from "../util/MarketLimit.Modal";
+import { MarketLimit } from "../../domain/market-limit.model";
 
 interface OperationModalProps{
     isOpen:boolean;
     cryptoId:number;
+}
+
+interface CryptoMarketLimitProps {
+    isOpen: boolean;
+    cryptoId?: number;
+    stopLoss?: number;
+    sellLimit?: number;
 }
 
 export function CryptoCollection(){
@@ -25,6 +38,7 @@ const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
 const [cryptoCollection, setCryptoCollection] = useState<CryptoCurrency[]>();
 const [showClosedCryptos, setShowClosedCryptos] = useState<boolean>(false);
 const [openCryptoModal, setOpenNewCryptoModal] = useState(false);
+const [openMarketLimits, setOpenMarketLimits] = useState<CryptoMarketLimitProps>({ isOpen: false });
 const [openDeleteModal, setOpenDeleteModal] = useState<OperationModalProps>({isOpen:false,cryptoId:0});
 const [openCryptoRefModal, setOpenCryptoRefModal] = useState(false);
 const [openOperationCrypto, setOpenOperationCrypto] = useState<OperationModalProps>({isOpen:false, cryptoId:0})
@@ -70,7 +84,18 @@ return(
                                                             updateCryptoCollection();
                                                           }}        />}   
 
-    {openNewCurrencyModal && <CurrencyModal onClose={()=>setOpenNewCurrencyModal(false)}/>}    
+        {openNewCurrencyModal && <CurrencyModal onClose={() => setOpenNewCurrencyModal(false)} />}    
+
+        {openMarketLimits.isOpen && <MarketLimitModal stopLoss={openMarketLimits.stopLoss ?? 0}
+            sellLimit={openMarketLimits.sellLimit ?? 0}
+            onClose={() => setOpenMarketLimits({ isOpen: false })}
+            onUpdateAndClose={(marketLimit: MarketLimitModalValue) => {
+                updateCryptoMarketLimit({ cryptoCurrencyId: openMarketLimits.cryptoId, sellLimit: marketLimit.sellLimit, stopLoss: marketLimit.stopLoss } as MarketLimit)
+                    .then(() => {
+                        setOpenMarketLimits({ isOpen: false });
+                        updateCryptoCollection();
+                    });
+            }} />}
 
      <CollapsableContainer title="Crypto">
      <div className="row mt-3 mb-3 ">
@@ -108,7 +133,8 @@ return(
                             <th colSpan={5} className="text-center" style={{"borderRight":"1px solid black"}}>EXCHANGE TO</th>                
                             {!showClosedCryptos && 
                             (<>
-                            <th colSpan={4} className="text-center" style={{"borderRight":"1px solid black"}}>CURRENT STATE</th>                      
+                                    <th colSpan={4} className="text-center" style={{ "borderRight": "1px solid black" }}>CURRENT STATE</th>                      
+                                    <th colSpan={3} className="text-center" style={{ "borderRight": "1px solid black" }}>STATUS</th>                      
                             </>)}                            
                             {showClosedCryptos &&  
                             (<>
@@ -129,8 +155,14 @@ return(
                             (<>
                             <th>Price</th>
                             <th>%</th>
-                            <th>Estimated Return</th>
-                            <th style={{"borderRight":"1px solid black"}}>Action</th>
+                                    <th>Estimated Return</th>
+                                    <th>Estimated Earn</th>
+                                    <th>Stop Loss</th>
+                                    <th>Sell Limit</th>
+                                    <th style={{ "borderRight": "1px solid black" }}>Action</th>
+                                    <th>Chart</th>
+                                    <th>Market</th>
+                                    <th>Sell</th>
                             </>)}
                             {showClosedCryptos && 
                             (<>
@@ -189,7 +221,16 @@ return(
                                             </td>
                                             <td>
                                                  {!value.isSelled && <MonetaryAmount amount={value.estimatedReturnPrice}/>}
-                                            </td>
+                                                    </td>
+                                                    <td>
+                                                        {!value.isSelled && <MonetaryAmount amount={value.estimatedEarn} />}
+                                                    </td>
+                                                    <td>
+                                                        {!value.isSelled && <MonetaryAmount amount={value.stopLoss} />}
+                                                    </td>
+                                                    <td>
+                                                        {!value.isSelled && <MonetaryAmount amount={value.sellLimit} />}
+                                                    </td>
                                             <td>          
                                                 {!value.isSelled && <MarketOperation operation={value.recomendedAction}/>}
                                             </td>
@@ -215,13 +256,21 @@ return(
                                                 {value.isSelled && <MonetaryAmount amount={value.returnAmountWithFee}/>}
                                             </td>
                                             <td>
-                                                {value.isSelled && <MonetaryAmount amount={value.returnEarn}/>}
+                                                        {value.isSelled && <MonetaryAmount amount={value.returnEarn}/>}
                                             </td>
                                             <td>
                                                 {value.isSelled && <PercentageIndicator amount={value.returnDiffAmountEarnedPercentage}/>}
                                             </td>                                        
                                             </>)}                                   
-                                            <td>                
+                                                <td>
+                                                    <button className="btn btn-success"
+                                                        onClick={() => {
+                                                            setOpenMarketLimits({ isOpen: true, cryptoId: value.id, sellLimit: value.sellLimit, stopLoss: value.stopLoss });
+                                                        }}>
+                                                        <i className="bi bi-sliders2-vertical"></i>
+                                                    </button>
+                                                </td>
+                                                <td>                
                                                 <button className="btn btn-warning" 
                                                         onClick={()=>{
                                                          setOpenOperationCrypto({isOpen:true,cryptoId:value.id});

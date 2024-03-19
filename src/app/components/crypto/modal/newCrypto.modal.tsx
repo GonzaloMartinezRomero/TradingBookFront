@@ -1,12 +1,14 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
 import { CryptoCurrencyReference } from "../../../domain/crypto/crypto-currency.model";
 import { Currency } from "../../../domain/currency.model";
 import { getCryptoCurrenciesReference, saveCrypto } from "../../../services/crypto.service";
 import { getCurrencies } from "../../../services/currency.service";
 import { NewCrypto } from "../../../domain/crypto/new-crypto.model";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
+import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
+import { DecimalInput } from "../../util/decimal.input.component";
 
 interface Props{
     onClose: any,
@@ -17,18 +19,12 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
   
   const [cryptoCurrencyReferenceCollection, setCryptoCurrencyReferenceCollection] = useState<CryptoCurrencyReference[]>(); 
   const [currencies,setCurrencies] = useState<Currency[]>();
-  const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
+    const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
 
-  const inputCurrencyFrom = useRef<HTMLSelectElement>(null);
-  const inputCurrencyTo = useRef<HTMLSelectElement>(null);  
-  const inputCryptoReference = useRef<HTMLSelectElement>(null);  
-  const inputPrice = useRef<HTMLInputElement>(null);
-  const inputStopLoss = useRef<HTMLInputElement>(null);
-  const inputSellLimit = useRef<HTMLInputElement>(null);
-  const inputAmount = useRef<HTMLInputElement>(null);
-  const inputFee = useRef<HTMLInputElement>(null);  
-  const inputExchangedAmount = useRef<HTMLInputElement>(null);  
-  
+    const currencyOptions: DropDownValue[] | undefined = currencies?.map((currencyAux) => { return { value: currencyAux.id, label: currencyAux.name } as DropDownValue });
+    const cryptoCurrencyOptions: DropDownValue[] | undefined = cryptoCurrencyReferenceCollection?.map((cryptoCurrencyAux) => { return { value: cryptoCurrencyAux.id, label: cryptoCurrencyAux.name } as DropDownValue });
+
+  const newCrypto: NewCrypto = {} as NewCrypto;
 
   useEffect(()=>{
     getCryptoCurrenciesReference().then(value=>setCryptoCurrencyReferenceCollection(value));    
@@ -37,21 +33,8 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
   []);
   
   function addCrypto(){
-
-    const newCryptoParsed: NewCrypto =
-    {      
-      currencyFromId:(inputCurrencyFrom.current?.value ?? "0") as unknown as number,
-      currencyToId:(inputCurrencyTo.current?.value ?? "0") as unknown as number,
-      cryptoReferenceId:(inputCryptoReference.current?.value ?? "0") as unknown as number,
-      cryptoPrice: (inputPrice.current?.value ?? "0") as unknown as number,
-      sellLimit: (inputSellLimit.current?.value ?? "0") as unknown as number,
-      stopLoss: (inputStopLoss.current?.value ?? "0") as unknown as number,
-      amountInvest: (inputAmount.current?.value ?? "0") as unknown as number,
-      feeInvest: (inputFee.current?.value ?? "0") as unknown as number,           
-      exchangedAmount: (inputExchangedAmount.current?.value ?? "0") as unknown as number,            
-    }
-
-    saveCrypto(newCryptoParsed).then(value=>{onCloseAndReload();})
+      
+      saveCrypto(newCrypto).then(value=>{onCloseAndReload();})
                                .catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
   return (
@@ -67,82 +50,60 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
           <h1>New Crypto</h1>
           <div className="m-4">
             <h3 className="mb-4">Crypto Reference</h3>
-            <div className="form-group row">
+                <div className="row" style={{ "textAlign": "left" }}>
             <div className="col-4">
-                <label className="row">Currency From</label>
-                <select className="row form-select" aria-label="CurrencyFrom" ref={inputCurrencyFrom}>
-                  <option selected>Select</option>
-                  {
-                    currencies?.map((currencyAux,index)=>
-                    {
-                      return (<option value={currencyAux.id}>{currencyAux.name}</option>);
-                    })
-                  }                  
-                </select>
+               <label>Currency From</label>
+               <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => newCrypto.currencyFromId = valueSelected.value}></DropDownInput>
               </div>
               <div className="col-4">
-                <label className="row">Currency To</label>
-                <select className="row form-select" aria-label="CurrencyTo" ref={inputCurrencyTo}>
-                  <option selected>Select</option>
-                  {
-                    currencies?.map((currencyAux,index)=>
-                    {
-                      return (<option value={currencyAux.id}>{currencyAux.name}</option>);
-                    })
-                  }                  
-                </select>
+                    <label>Currency To</label>
+                    <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => newCrypto.currencyToId = valueSelected.value}></DropDownInput>
               </div>
               <div className="col-4">
-                <label className="row">Pair</label>
-                <select className="row form-select" aria-label="Pair" ref={inputCryptoReference}>
-                  <option selected>Select</option>
-                  {
-                    cryptoCurrencyReferenceCollection?.map((stockReference,index)=>
-                    {
-                      return (<option value={stockReference.id}>{stockReference.name}</option>);
-                    })
-                  }                  
-                </select>
+                    <label>Pair</label>
+                    <DropDownInput values={cryptoCurrencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => newCrypto.cryptoReferenceId = valueSelected.value}></DropDownInput>
               </div>
             </div>
-            <div className="form-group row mt-3">
+                <div className="row mt-3" style={{ "textAlign": "left" }}>
             <div className="col-4">
-                <label className="row">Crypto Price</label>
-                <input type="number" className="form-control row" placeholder="CryptoPrice" defaultValue={0} ref={inputPrice} />
+                        <label>Crypto Price</label>
+                        <DecimalInput onChangeValue={(value: number) => { newCrypto.cryptoPrice = value; }} />    
+                
               </div>    
               <div className="col-4">
-                  <label className="row">Exchange Amount</label>
-                  <input type="number" className="form-control row" placeholder="Amount" defaultValue={0} ref={inputExchangedAmount}/>
+                        <label>Exchange Amount</label>
+                        <DecimalInput onChangeValue={(value: number) => { newCrypto.exchangedAmount = value; }} />    
+                  
                 </div>               
               </div>
-              <div className="form-group row mt-3">
+                <div className="row mt-3" style={{ "textAlign": "left" }}>
               <div className="col-4">
-                  <label className="row">Stop Loss</label>
-                  <input type="number" className="form-control row" placeholder="Stop" defaultValue={0} ref={inputStopLoss}/>
+                  <label>Stop Loss</label>
+                        <DecimalInput onChangeValue={(value: number) => { newCrypto.stopLoss = value; }} />    
                 </div>
                 <div className="col-4">
-                  <label className="row">Sell Limit</label>
-                  <input type="number" className="form-control row" placeholder="Limit" defaultValue={0} ref={inputSellLimit}/>
+                  <label>Sell Limit</label>
+                        <DecimalInput onChangeValue={(value: number) => { newCrypto.sellLimit = value; }} />   
                   </div>
               </div>
           </div>
           <div className="m-4">
             <h3 className="mb-2">Invest</h3>
-            <div className="form-group row">
+                <div className="row" style={{ "textAlign": "left" }}>
               <div className="col-4">
-                <label className="row">Amount</label>
-                <input type="number" className="form-control row" placeholder="Amount" defaultValue={0} ref={inputAmount}/>
+                <label>Amount</label>
+                        <DecimalInput onChangeValue={(value: number) => { newCrypto.amountInvest = value; }} />   
               </div>              
               <div className="col-4">
-                <label className="row">Fee</label>
-                <input type="number" className="form-control row" placeholder="Fee" defaultValue={0} ref={inputFee}/>
+                <label>Fee</label>
+                        <DecimalInput onChangeValue={(value: number) => { newCrypto.feeInvest = value; }} />   
               </div>
             </div>
           </div>
-          <div className="form-group row mt-2">            
-            <div className="form-group col-12">
-              <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }} onClick={()=>addCrypto()}>Add</button>
-            </div>
+            <div className="row mt-2" style={{ "textAlign": "center" }}>
+                <div className="col-12">
+                    <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }} onClick={() => addCrypto()}>Add</button>            
+                </div>
           </div>
         </div>
       ,

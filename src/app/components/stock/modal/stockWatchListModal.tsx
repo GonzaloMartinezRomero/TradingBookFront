@@ -1,12 +1,13 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
+
 import { Currency } from "../../../domain/currency.model";
 import { StockReference } from "../../../domain/stocks/stock-reference.model";
 import { getCurrencies } from "../../../services/currency.service";
 import { getStockReferences } from "../../../services/stock.service";
 import { StockWatchSave } from "../../../domain/stocks/stock-watch-save.model";
 import { addStockWatchReference } from "../../../services/stock-watch.service";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 
 
 interface Props{
@@ -58,9 +59,9 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
           <div className="m-4">            
             <div className="form-group row">
             <div className="col-4">
-                <label className="row">Reference</label>
-                <select className="row form-select" aria-label="StockReference" ref={inputStockReference}>
-                  <option selected>Select</option>
+                        <label className="row">Reference</label>
+                        <select className="row form-select" aria-label="StockReference" ref={inputStockReference} style={{ overflowY: "visible" }}>
+                            <option selected style={{ maxHeight: "50px" }}>Select</option>
                   {
                     stockReferenceCollection?.map((stockReference,index)=>
                     {

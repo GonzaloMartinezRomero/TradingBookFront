@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
+
 import { DepositPlatform } from "../../../domain/deposit/deposit-platform.model";
 import { addDepositPlatform, deleteDepositPlatform, getAllDepositPlatforms } from "../../../services/deposit-platform.service";
 import { NewDepositPlatform } from "../../../domain/deposit/new-deposit-platform.model";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 
 interface Props{
     onClose: any    

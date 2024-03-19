@@ -1,10 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { ErrorMessageModal, ErrorModalProps } from "../../util/errorMessageModal";
 import { CryptoCurrency } from "../../../domain/crypto/crypto.model";
 import { getCryptoById, sellCryptoCurrency, updateCryptoMarketLimit } from "../../../services/crypto.service";
 import { SellCrypto } from "../../../domain/crypto/sell-crypto.model";
 import { MarketLimit } from "../../../domain/market-limit.model";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 
 interface Props{
     cryptoId: number,
@@ -20,9 +20,6 @@ export function OperationCryptoModal({ cryptoId, onClose, onCryptoUpdateAndClose
   const inputReturnAmount = useRef<HTMLInputElement>(null);
   const inputReturnFee = useRef<HTMLInputElement>(null);
   const inputReturnPrice = useRef<HTMLInputElement>(null);
-
-  const inputStopLoss = useRef<HTMLInputElement>(null);
-  const inputSellLimit = useRef<HTMLInputElement>(null);
   
   useEffect(()=>{
     getCryptoById(cryptoId).then((value)=>{setCrypto(value)}).catch(err=>setErrorModal({isOpen:true,msg:err}));
@@ -41,20 +38,7 @@ export function OperationCryptoModal({ cryptoId, onClose, onCryptoUpdateAndClose
 
       sellCryptoCurrency(sellCryptoValue).then(value=>onCryptoUpdateAndClose()).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
-
-  function setMarketLimit(){
-
-    const marketLimitValues: MarketLimit=
-    {
-      stockId:0,
-      cryptoCurrencyId: cryptoId,
-      sellLimit: inputSellLimit.current?.value as unknown as number,
-      stopLoss: inputStopLoss.current?.value as unknown as number
-    };
-
-    updateCryptoMarketLimit(marketLimitValues).then(value=>onCryptoUpdateAndClose()).catch(err=>setErrorModal({isOpen:true,msg:err}));
-  }
-
+  
   return (
     <>
     {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
@@ -92,28 +76,6 @@ export function OperationCryptoModal({ cryptoId, onClose, onCryptoUpdateAndClose
 
               {crypto?.isSelled && <button className="btn btn-success disabled" style={{ "width": "100px", "height": "40px" }}>Sell</button>}              
             </div>
-          </div>
-
-          <h3 className="mt-4">Market Limit</h3>
-          <div className="form-group row ms-3">
-            <div className="col-6">
-              <label className="row">Stop Loss</label>
-              <input type="text" className="form-control row" placeholder="Stop" defaultValue={crypto?.stopLoss} ref={inputStopLoss} disabled={crypto?.isSelled}/>
-            </div>
-            <div className="col-6">
-              <label className="row">Sell Limit</label>
-              <input type="text" className="form-control row" placeholder="Limit" defaultValue={crypto?.sellLimit} ref={inputSellLimit} disabled={crypto?.isSelled}/>
-            </div>
-          </div>
-          <div className="form-group row mt-4">
-            <div className="form-group col-12">
-              <button className="btn btn-success" 
-                      disabled={crypto?.isSelled}
-                      style={{ "width": "100px", "height": "40px" }}
-                      onClick={()=>setMarketLimit()}>
-                        Update
-              </button>
-            </div>            
           </div>
         </div>,
       document.body)}

@@ -1,12 +1,14 @@
 import { useEffect, useState } from "react";
-import { YesNoMessageModal } from "../util/yesNoMessageModal";
+
 import { PercentageIndicator } from "../util/percentageIndicator";
-import { ErrorMessageModal, ErrorModalProps } from "../util/errorMessageModal";
+
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { CryptoWatchListModal } from "./modal/cryptoWatchListModal";
 import { MarketOperation } from "../util/marketOperation";
 import { CryptoWatch } from "../../domain/crypto/crypto-watch.model";
 import { deleteCryptokWatch, getCryptoWatchs } from "../../services/crypto-watch.service";
+import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message-modal";
+import { YesNoMessageModal } from "../modal/yes-no-message-modal";
 
 interface DeleteCryptoWatchModalProp{
     isOpen:boolean;
