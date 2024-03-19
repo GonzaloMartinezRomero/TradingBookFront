@@ -68,7 +68,7 @@ export function StockWatchList(){
                             <th>Currency</th>
                             <th>Target</th>
                             <th>Current</th>
-                            <th>Distance %</th>              
+                            <th>Gap %</th>              
                             <th>Action</th>
                             <th>Chart</th>
                             <th></th>

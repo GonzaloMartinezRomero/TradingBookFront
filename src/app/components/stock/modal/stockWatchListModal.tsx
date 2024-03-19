@@ -8,6 +8,8 @@ import { getStockReferences } from "../../../services/stock.service";
 import { StockWatchSave } from "../../../domain/stocks/stock-watch-save.model";
 import { addStockWatchReference } from "../../../services/stock-watch.service";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
+import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
+import { DecimalInput } from "../../util/decimal.input.component";
 
 
 interface Props{
@@ -22,9 +24,12 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
   const [currencyCollection,setCurrencyCollection] = useState<Currency[]>();
   const [stockReferenceCollection,setStockReferenceCollection] = useState<StockReference[]>();
 
-  const inputTarget = useRef<HTMLInputElement>(null);
-  const inputCurrency = useRef<HTMLSelectElement>(null);
-  const inputStockReference = useRef<HTMLSelectElement>(null);
+    const stockReferenceOptions: DropDownValue[] | undefined = stockReferenceCollection?.map((val) => { return { value: val.id, label: val.name } as DropDownValue });
+    const currencyOptions: DropDownValue[] | undefined = currencyCollection?.map((currencyAux) => { return { value: currencyAux.id, label: currencyAux.name } as DropDownValue });
+    
+    var stockTarget: number = 0;
+    var stockReferenceId: number = 0;
+    var currencyId: number = 0;
 
   useEffect(()=>{
     getCurrencies().then(value=>setCurrencyCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
@@ -36,9 +41,9 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
 
     const newStockWatch:StockWatchSave =
     {
-      currencyId: (inputCurrency.current?.value ?? "0") as unknown as number,
-      stockReferenceId:(inputStockReference.current?.value ?? "0") as unknown as number,
-      target:(inputTarget.current?.value ?? "0") as unknown as number     
+        currencyId: currencyId,
+        stockReferenceId: stockReferenceId,
+        target: stockTarget
     }
 
     addStockWatchReference(newStockWatch).then(value=>onCloseAndReload()).catch(err=>setErrorModal({isOpen:true,msg:err}));
@@ -56,44 +61,27 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
           </button>
           </div>
           <h1>Add Stock Watch</h1>
-          <div className="m-4">            
-            <div className="form-group row">
-            <div className="col-4">
-                        <label className="row">Reference</label>
-                        <select className="row form-select" aria-label="StockReference" ref={inputStockReference} style={{ overflowY: "visible" }}>
-                            <option selected style={{ maxHeight: "50px" }}>Select</option>
-                  {
-                    stockReferenceCollection?.map((stockReference,index)=>
-                    {
-                      return (<option value={stockReference.id}>{stockReference.name}</option>);
-                    })
-                  }                  
-                </select>
+            <div className="m-4">
+                <div className="form-group row" style={{ "textAlign":"left"}}>
+            <div className="col-7">
+                 <label>Reference</label>
+                 <DropDownInput values={stockReferenceOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => stockReferenceId = valueSelected.value} ></DropDownInput>
               </div>
-              <div className="col-4">
-                <label className="row">Currency</label>
-                <select className="row form-select" aria-label="Currency" ref={inputCurrency}>
-                  <option selected>Select</option>
-                  {
-                    currencyCollection?.map((currencyAux,index)=>
-                    {
-                      return (<option value={currencyAux.id}>{currencyAux.name}</option>);
-                    })
-                  }         
-                </select>
+              <div className="col-5">
+                 <label>Currency</label>
+                 <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => currencyId = valueSelected.value} ></DropDownInput>
               </div>        
-
-              <div className="col-4">
-                <label className="row">Target</label>
-                <input type="number" className="form-control row" placeholder="Target" defaultValue={0} ref={inputTarget} />
-              </div>
-
-                 
-            </div>          
+                </div>          
+                <div className="form-group row mt-3" style={{ "textAlign": "left" }}>
+                    <div className="col-4">
+                        <label>Target</label>
+                        <DecimalInput onChangeValue={(value: number) => { stockTarget = value; }} />
+                    </div>
+                </div>
           </div>       
           <div className="form-group row mt-2">            
             <div className="form-group col-12">
-              <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }} onClick={()=>addStockWatch()}>Add</button>
+              <button className="btn btn-success" style={{ "width": "100px", "height": "50px" }} onClick={()=>addStockWatch()}>Add</button>
             </div>
           </div>
         </div>,document.body)}

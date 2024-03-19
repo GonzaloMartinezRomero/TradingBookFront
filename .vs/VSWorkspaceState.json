@@ -8,9 +8,9 @@
     "\\src\\app\\components\\crypto\\modal",
     "\\src\\app\\components\\stock",
     "\\src\\app\\components\\stock\\modal",
-    "\\src\\app\\services",
+    "\\src\\app\\components\\util",
     "\\styles"
   ],
-  "SelectedNode": "\\styles\\cryptoStyles.css",
+  "SelectedNode": "\\src\\app\\components\\crypto\\cryptoWatchList.tsx",
   "PreviewInSolutionExplorer": false
 }

@@ -66,7 +66,7 @@ export function CryptoWatchList(){
                             <th>Crypto Reference</th>
                             <th>Target</th>                            
                             <th>Current</th>
-                            <th>Distance %</th>               
+                            <th>Gap %</th>               
                             <th>Action</th>             
                             <th></th>
                         </tr>
