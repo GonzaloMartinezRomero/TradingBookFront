@@ -65,26 +65,26 @@
     left: 35%;
     text-align: center;
     color: black;
-} 
+}
 
 .new-stock-watch-modal {
-  display: inline-table;
-  justify-content: space-evenly;
-  align-items: center;
-  box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px;
-  background-color: rgb(240, 230, 230);
-  border: 1px solid rgb(22, 18, 18);
-  border-radius: 12px;
-  position:  fixed;
-  height: 350px;
-  width: 500px;
-  top: 20%;
-  left: 35%;      
-  text-align: center;
-  color: black;    
+    display: inline-table;
+    justify-content: space-evenly;
+    align-items: center;
+    box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px;
+    background-color: rgb(240, 230, 230);
+    border: 1px solid rgb(22, 18, 18);
+    border-radius: 12px;
+    position: absolute;
+    height: 350px;
+    width: 500px;
+    top: 20%;
+    left: 35%;
+    text-align: center;
+    color: black;
 }
 
 .stock-table-watcher {
-    max-height: 300px;
+    max-height: 400px;
     overflow-y: auto;
 }

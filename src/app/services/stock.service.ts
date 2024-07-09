@@ -1,7 +1,11 @@
 import { MarketLimit } from "../domain/market-limit.model";
 import { NewStock } from "../domain/stocks/new-stock.model";
 import { SellStock } from "../domain/stocks/sell-stock.model";
+import { StockActiveDto } from "../domain/stocks/stock-active-dto";
+
 import { StockReference } from "../domain/stocks/stock-reference.model";
+import { StockSelledDto } from "../domain/stocks/stock-selled-dto";
+
 import { Stock } from "../domain/stocks/stock.model";
 import { get, patch, post, remove } from "./http-client.service";
 
@@ -30,12 +34,17 @@ export function saveStock(newStock:NewStock):Promise<any>{
     return post<any>("Stock",newStock);
 }
 
-export function getStocks():Promise<Stock[]>{
+export function getActiveStocks(): Promise<StockActiveDto[]>{
 
-    return get<Stock[]>("Stock");
+    return get<StockActiveDto[]>("Stock/Active");
 }
 
-export function getStockById(id:number):Promise<Stock>{
+export function getSelledStocks(): Promise<StockSelledDto[]> {
+
+    return get<StockSelledDto[]>("Stock/Selled");
+}
+
+export function getStockById(id: number): Promise<Stock>{
 
     return get<Stock>(`Stock/${id}`);
 }

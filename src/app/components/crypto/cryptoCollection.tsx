@@ -2,23 +2,22 @@ import { Switch } from "@nextui-org/react";
 import { useEffect, useState } from "react";
 
 
-import { CollapsableContainer } from "../util/collapsable.container.component";
 
 import { MarketOperation } from "../util/marketOperation";
 import { MonetaryAmount } from "../util/monetaryAmount";
 import { PercentageIndicator } from "../util/percentageIndicator";
 
+import { CryptoCurrency } from "../../domain/crypto/crypto.model";
+import { MarketLimit } from "../../domain/market-limit.model";
+import { deleteCrypto, getCryptos, updateCryptoMarketLimit } from "../../services/crypto.service";
+import { CurrencyModal } from "../modal/currency-modal";
+import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message-modal";
+import { YesNoMessageModal } from "../modal/yes-no-message-modal";
+import { MarketLimitModal, MarketLimitModalValue } from "../util/MarketLimit.Modal";
 import { CryptoWatchList } from "./cryptoWatchList";
 import { CryptoReferenceModal } from "./modal/cryptoReference.modal";
 import { NewCryptoModal } from "./modal/newCrypto.modal";
 import { OperationCryptoModal } from "./modal/operationsCrypto.modal";
-import { deleteCrypto, getCryptos, updateCryptoMarketLimit } from "../../services/crypto.service";
-import { CryptoCurrency } from "../../domain/crypto/crypto.model";
-import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message-modal";
-import { YesNoMessageModal } from "../modal/yes-no-message-modal";
-import { CurrencyModal } from "../modal/currency-modal";
-import { MarketLimitModal, MarketLimitModalValue } from "../util/MarketLimit.Modal";
-import { MarketLimit } from "../../domain/market-limit.model";
 
 interface OperationModalProps{
     isOpen:boolean;
@@ -97,7 +96,8 @@ return(
                     });
             }} />}
 
-     <CollapsableContainer title="Crypto">
+        <h2 className="mt-4">Crypto</h2>
+        <div className="row container-separator" />
      <div className="row mt-3 mb-3 ">
             <div className="col-1">          
                 <button type="button" className="btn btn-success" style={{"width":"130px"}}  onClick={()=>setOpenNewCryptoModal(true)} >
@@ -293,9 +293,9 @@ return(
                 </table>
             </div>
         </div>    
-     </CollapsableContainer>         
-     <CollapsableContainer title="Watch List">
+    
+        <h2 className="mt-4">Watch List</h2>
+        <div className="row container-separator" />
         <CryptoWatchList/>
-     </CollapsableContainer>        
     </>
 );}

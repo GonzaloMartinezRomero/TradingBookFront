@@ -46,7 +46,6 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
       sellStock(sellStockValue).then(value=>onStockUpdateAndClose()).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
-
   return (
     <>
     {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
@@ -61,31 +60,29 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
           <div className="form-group row ms-3">
             <div className="col-6 ">
               <label className="row">Return</label>
-              <input type="text" className="form-control row" placeholder="Return" defaultValue={stock?.returnAmount} ref={inputReturn} disabled={stock?.isSelled} />
+              <input type="text" className="form-control row" placeholder="Return" defaultValue={0} ref={inputReturn}/>
             </div>
             <div className="col-6">
               <label className="row">Fee</label>
-              <input type="text" className="form-control row" placeholder="Fee" defaultValue={stock?.returnFee} ref={inputFee} disabled={stock?.isSelled}/>
+              <input type="text" className="form-control row" placeholder="Fee" defaultValue={0} ref={inputFee}/>
             </div>
           </div>
           <div className="form-group row ms-3 mt-2">
             <div className="col-6 ">
               <label className="row">Stock Price</label>
-              <input type="text" className="form-control row" placeholder="Price" defaultValue={stock?.returnStockPrice} ref={inputPrice} disabled={stock?.isSelled}/>
+              <input type="text" className="form-control row" placeholder="Price" defaultValue={0} ref={inputPrice}/>
             </div>
           </div>
           <div className="form-group row mt-3">            
             <div className="form-group col-12">
-              {!stock?.isSelled && <button className="btn btn-success" 
+               <button className="btn btn-success" 
                                            style={{ "width": "100px", "height": "40px" }} 
                                            onClick={()=>sell({stockId:stock?.id,
                                                               return:inputReturn.current?.value,
                                                               returnFee:inputFee.current?.value,
                                                               returnStockPrice:inputPrice.current?.value})}>
                                           Sell
-                                    </button>}              
-
-              {stock?.isSelled && <button className="btn btn-success disabled" style={{ "width": "100px", "height": "40px" }}>Sell</button>}              
+                </button>         
             </div>
           </div>       
         </div>, document.body)}

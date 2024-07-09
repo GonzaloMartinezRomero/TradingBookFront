@@ -1,16 +1,14 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-
-import { Currency } from "../../../domain/currency.model";
-import { StockReference } from "../../../domain/stocks/stock-reference.model";
-import { getCurrencies } from "../../../services/currency.service";
-import { getStockReferences } from "../../../services/stock.service";
-import { StockWatchSave } from "../../../domain/stocks/stock-watch-save.model";
-import { addStockWatchReference } from "../../../services/stock-watch.service";
-import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
-import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
-import { DecimalInput } from "../../util/decimal.input.component";
-
+import { ErrorMessageModal, ErrorModalProps } from "../../../modal/error-message-modal";
+import { DropDownInput, DropDownValue } from "../../../util/dropdown.input.component";
+import { StockReference } from "../../../../domain/stocks/stock-reference.model";
+import { Currency } from "../../../../domain/currency.model";
+import { getCurrencies } from "../../../../services/currency.service";
+import { getStockReferences } from "../../../../services/stock.service";
+import { StockWatchSave } from "../../../../domain/stocks/stock-watch-save.model";
+import { addStockWatchReference } from "../../../../services/stock-watch.service";
+import { DecimalInput } from "../../../util/decimal.input.component";
 
 interface Props{
     onClose: any,
@@ -33,7 +31,8 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
 
   useEffect(()=>{
     getCurrencies().then(value=>setCurrencyCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
-    getStockReferences().then(value=>setStockReferenceCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
+      getStockReferences().then(value => setStockReferenceCollection(value)).catch(err => setErrorModal({ isOpen: true, msg: err }));
+      window.scrollTo(0, 0);
   },
   []);
   

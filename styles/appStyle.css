@@ -61,4 +61,8 @@
     left: 35%;      
     text-align: center;
     color: black;  
-  } 
+  }
+
+.container-separator {
+    border:1px solid black
+} 

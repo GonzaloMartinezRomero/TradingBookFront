@@ -1,11 +1,9 @@
 "use client";
 import { useEffect, useState } from "react";
-import { DepositCollection } from "./components/deposit/depositCollection";
-import { StockCollection } from "./components/stock/stockCollection";
 import { CryptoCollection } from "./components/crypto/cryptoCollection";
+import { StockCollection } from "./components/stock/stock-collection";
 
-enum TradingPage{
-  Deposit,
+enum TradingPage{  
   Stock,
   Crypto
 }
@@ -19,11 +17,9 @@ export default function Home() {
 
   let mapPages = new Map<TradingPage,  React.ReactNode>();
 
-  const [currenPage,setCurrenPage] = useState<NavPage>({page:TradingPage.Deposit,content:<DepositCollection/>});
+    const [currenPage, setCurrenPage] = useState<NavPage>({ page: TradingPage.Stock, content: <StockCollection />});
  
   useEffect(()=>{
-
-    mapPages.set(TradingPage.Deposit,<DepositCollection/>);
     mapPages.set(TradingPage.Stock,<StockCollection/>);
     mapPages.set(TradingPage.Crypto,<CryptoCollection/>);
   })
@@ -34,12 +30,6 @@ export default function Home() {
             <div className="row">             
               <div className="col-2 mt-3">
                 <h1><b>\Trading Book/</b></h1>                
-              </div>
-              <div className="col-1 mt-4">
-              <button className="nav-item nav-link" onClick={()=>{setCurrenPage({page:TradingPage.Deposit,content:mapPages.get(TradingPage.Deposit)})}}>
-                  {currenPage.page == TradingPage.Deposit && <h2><i><b>Deposits</b></i></h2>}
-                  {currenPage.page != TradingPage.Deposit && <h3><i>Deposits</i></h3>}
-                </button>
               </div>
               <div className="col-1 mt-4">
                 <button className="nav-item nav-link ms-2" onClick={()=>{setCurrenPage({page:TradingPage.Stock,content:mapPages.get(TradingPage.Stock)})}}>

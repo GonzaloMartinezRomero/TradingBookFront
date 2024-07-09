@@ -31,8 +31,7 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
   },
   []);
   
-  function addStock(){
-      
+  function addStock(){      
     saveStock(newStock).then(value=>onCloseAndReload()).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
