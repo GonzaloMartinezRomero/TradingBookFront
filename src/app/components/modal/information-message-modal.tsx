@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 export interface InformationModalProps{
@@ -8,7 +9,9 @@ export interface InformationModalProps{
 
 export function InformationMessageModal({ msg, onClose }:InformationModalProps) {
   
-  const message:string = msg?.toString() ?? "No Message";
+    const message: string = msg?.toString() ?? "No Message";
+
+    useEffect(() => { window.scrollTo(0, 0); }, []);
 
     return (
       createPortal(

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 interface Props{
@@ -7,6 +8,9 @@ interface Props{
 }
 
 export function YesNoMessageModal({ msg,onYesResponse,onNoResponse }:Props) {
+
+    useEffect(() => { window.scrollTo(0, 0); },[]);
+
     return (
       createPortal(
         <>

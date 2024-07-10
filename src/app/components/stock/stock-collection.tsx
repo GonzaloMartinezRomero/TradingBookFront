@@ -12,6 +12,7 @@ import { StockSelled } from './stock-selled';
 import { StockWatchList } from './watch-list/stock-watch-list';
 import { Deposit } from '../deposit/deposit';
 import { DepositType } from '../../domain/deposit/deposit-type';
+import { ButtonCustom, ButtonType } from '../util/button.component';
 
 export function StockCollection() {
 
@@ -36,22 +37,13 @@ export function StockCollection() {
                 <div className="row container-separator" />
                 <div className="row mt-3 mb-3 ">
                     <div className="col-1">
-                        <button type="button" className="btn btn-success" style={{ "width": "120px" }} onClick={() => setOpenNewStockModal(true)}>
-                            <span className="me-1">Stock</span>
-                            <i className="bi bi-plus-circle"></i>
-                        </button>
+                        <ButtonCustom btnType={ButtonType.Add} text={'Stock'} onClick={() => { setOpenNewStockModal(true); }} />
                     </div>
                     <div className="col-1 ">
-                        <button type="button" className="btn btn-success" style={{ "width": "120px" }} onClick={() => setOpenNewStockReferenceModal(true)}>
-                            <span className="me-1">Stock Ref</span>
-                            <i className="bi bi-plus-circle"></i>
-                        </button>
+                        <ButtonCustom btnType={ButtonType.Add} text={'Stock Ref'} onClick={() => { setOpenNewStockReferenceModal(true); }} />                        
                     </div>
                     <div className="col-1">
-                        <button type="button" className="btn btn-success" style={{ "width": "120px" }} onClick={() => { setOpenNewCurrencyModal(true); }}>
-                            <span className="me-1">Currency</span>
-                            <i className="bi bi-plus-circle"></i>
-                        </button>
+                        <ButtonCustom btnType={ButtonType.Add} text={'Currency'} onClick={() => { setOpenNewCurrencyModal(true); }} />
                     </div>
                     <div className="col-1" style={{ "width": "80px" }}>
                         <Switch checked={false} size={"lg"} about="" className="mt-1" onChange={(ev) => { setShowSelledStocks(!showSelledStocks) }} />

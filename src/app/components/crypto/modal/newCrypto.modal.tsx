@@ -8,7 +8,8 @@ import { getCurrencies } from "../../../services/currency.service";
 import { NewCrypto } from "../../../domain/crypto/new-crypto.model";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
-import { DecimalInput } from "../../util/decimal.input.component";
+import { NumberDecimalInput } from "../../util/number-decimal.input.component";
+
 
 interface Props{
     onClose: any,
@@ -67,23 +68,23 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
                 <div className="row mt-3" style={{ "textAlign": "left" }}>
             <div className="col-4">
                         <label>Crypto Price</label>
-                        <DecimalInput onChangeValue={(value: number) => { newCrypto.cryptoPrice = value; }} />    
+                        <NumberDecimalInput onChangeValue={(value: number) => { newCrypto.cryptoPrice = value; }} />    
                 
               </div>    
               <div className="col-4">
                         <label>Exchange Amount</label>
-                        <DecimalInput onChangeValue={(value: number) => { newCrypto.exchangedAmount = value; }} />    
+                        <NumberDecimalInput onChangeValue={(value: number) => { newCrypto.exchangedAmount = value; }} />    
                   
                 </div>               
               </div>
                 <div className="row mt-3" style={{ "textAlign": "left" }}>
               <div className="col-4">
                   <label>Stop Loss</label>
-                        <DecimalInput onChangeValue={(value: number) => { newCrypto.stopLoss = value; }} />    
+                        <NumberDecimalInput onChangeValue={(value: number) => { newCrypto.stopLoss = value; }} />    
                 </div>
                 <div className="col-4">
                   <label>Sell Limit</label>
-                        <DecimalInput onChangeValue={(value: number) => { newCrypto.sellLimit = value; }} />   
+                        <NumberDecimalInput onChangeValue={(value: number) => { newCrypto.sellLimit = value; }} />   
                   </div>
               </div>
           </div>
@@ -92,11 +93,11 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
                 <div className="row" style={{ "textAlign": "left" }}>
               <div className="col-4">
                 <label>Amount</label>
-                        <DecimalInput onChangeValue={(value: number) => { newCrypto.amountInvest = value; }} />   
+                        <NumberDecimalInput onChangeValue={(value: number) => { newCrypto.amountInvest = value; }} />   
               </div>              
               <div className="col-4">
                 <label>Fee</label>
-                        <DecimalInput onChangeValue={(value: number) => { newCrypto.feeInvest = value; }} />   
+                        <NumberDecimalInput onChangeValue={(value: number) => { newCrypto.feeInvest = value; }} />   
               </div>
             </div>
           </div>

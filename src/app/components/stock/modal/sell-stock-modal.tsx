@@ -4,6 +4,8 @@ import { SellStock } from "../../../domain/stocks/sell-stock.model";
 import { Stock } from "../../../domain/stocks/stock.model";
 import { getStockById, sellStock } from "../../../services/stock.service";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
+import { NumberDecimalInput } from "../../util/number-decimal.input.component";
+import { ButtonCustom, ButtonType } from "../../util/button.component";
 
 interface Props{
     stockId: number,
@@ -18,15 +20,15 @@ interface SellStockInputValue{
   returnStockPrice: any;
 }
 
-export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }:Props) {
+export function SellStockModal({ stockId, onClose, onStockUpdateAndClose }:Props) {
 
   const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
 
   const [stock,setStock] = useState<Stock>();
 
-  const inputReturn = useRef<HTMLInputElement>(null);
-  const inputFee = useRef<HTMLInputElement>(null);
-  const inputPrice = useRef<HTMLInputElement>(null);
+  var inputReturn: number = 0;
+  var inputFee:number = 0;
+  var inputPrice:number = 0;
     
   useEffect(()=>{
     getStockById(stockId).then(value=>setStock(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
@@ -51,38 +53,34 @@ export function OperationsStockModal({ stockId, onClose, onStockUpdateAndClose }
     {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
     { createPortal(
         <div className="operation-stock-modal">
-          <div className="d-flex flex-row-reverse">
-            <button className="btn btn-secondary p-1 m-1" style={{ "width": "32px", "height": "33px" }} onClick={onClose}>
-              <i className="bi-x" />
-            </button>
+            <div className="d-flex flex-row-reverse">
+                <ButtonCustom btnType={ButtonType.Close} onClick={onClose} />   
           </div>
           <h3>Sell {stock?.stockReference.name}</h3>
           <div className="form-group row ms-3">
             <div className="col-6 ">
-              <label className="row">Return</label>
-              <input type="text" className="form-control row" placeholder="Return" defaultValue={0} ref={inputReturn}/>
+                    <label className="row">Return</label>
+                    <NumberDecimalInput onChangeValue={(val: number) => { inputReturn = val; }}></NumberDecimalInput>
             </div>
             <div className="col-6">
-              <label className="row">Fee</label>
-              <input type="text" className="form-control row" placeholder="Fee" defaultValue={0} ref={inputFee}/>
+                    <label className="row">Fee</label>
+                    <NumberDecimalInput onChangeValue={(val: number) => { inputFee = val; }}></NumberDecimalInput>
             </div>
           </div>
           <div className="form-group row ms-3 mt-2">
             <div className="col-6 ">
-              <label className="row">Stock Price</label>
-              <input type="text" className="form-control row" placeholder="Price" defaultValue={0} ref={inputPrice}/>
+                    <label className="row">Stock Price</label>
+                    <NumberDecimalInput onChangeValue={(val: number) => { inputPrice = val; }}></NumberDecimalInput>
             </div>
           </div>
           <div className="form-group row mt-3">            
-            <div className="form-group col-12">
-               <button className="btn btn-success" 
-                                           style={{ "width": "100px", "height": "40px" }} 
-                                           onClick={()=>sell({stockId:stock?.id,
-                                                              return:inputReturn.current?.value,
-                                                              returnFee:inputFee.current?.value,
-                                                              returnStockPrice:inputPrice.current?.value})}>
-                                          Sell
-                </button>         
+                <div className="form-group col-12">
+                    <ButtonCustom btnType={ButtonType.Update} text={'Sell'} onClick={() => sell({
+                        stockId: stock?.id,
+                        return: inputReturn,
+                        returnFee: inputFee,
+                        returnStockPrice: inputPrice
+                    })} />   
             </div>
           </div>       
         </div>, document.body)}

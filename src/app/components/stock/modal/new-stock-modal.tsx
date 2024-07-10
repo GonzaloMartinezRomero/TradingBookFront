@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Currency } from "../../../domain/currency.model";
 import { NewStock } from "../../../domain/stocks/new-stock.model";
@@ -6,8 +6,9 @@ import { StockReference } from "../../../domain/stocks/stock-reference.model";
 import { getCurrencies } from "../../../services/currency.service";
 import { getStockReferences, saveStock } from "../../../services/stock.service";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
-import { DecimalInput } from "../../util/decimal.input.component";
 import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
+import { NumberDecimalInput } from "../../util/number-decimal.input.component";
+import { ButtonCustom, ButtonType } from "../../util/button.component";
 
 interface Props{
     onClose: any,
@@ -41,10 +42,8 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
     { createPortal(
        
         <div className="add-stock-modal">
-        <div className="d-flex flex-row-reverse">
-          <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
-            <i className="bi-x"/>
-          </button>
+            <div className="d-flex flex-row-reverse">
+                <ButtonCustom btnType={ButtonType.Close} onClick={onClose} />
           </div>
           <h1>New Stock</h1>
           <div className="m-4">
@@ -56,7 +55,7 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
                 </div>
                     <div className="col-4">                      
                             <label>Price</label>
-                            <DecimalInput onChangeValue={(value: number) => { newStock.price = value; }} />                                                         
+                        <NumberDecimalInput onChangeValue={(value: number) => { newStock.price = value; }} />                                                         
               </div>
                     <div className="col-4">
                             <label>Currency</label>
@@ -67,13 +66,13 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
                     <div className="col-4">
                        
                             <label>Stop Loss</label>
-                        <DecimalInput onChangeValue={(value: number) => { newStock.stopLoss = value; }} />                  
+                        <NumberDecimalInput onChangeValue={(value: number) => { newStock.stopLoss = value; }} />                  
                         
                 </div>
                     <div className="col-4">
                      
                             <label>Sell Limit</label>
-                        <DecimalInput onChangeValue={(value: number) => { newStock.sellLimit = value; }} />    
+                        <NumberDecimalInput onChangeValue={(value: number) => { newStock.sellLimit = value; }} />    
                         
                   </div>
               </div>
@@ -84,18 +83,18 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
                     <div className="col-4">
                       
                             <label>Amount</label>
-                        <DecimalInput onChangeValue={(value: number) => { newStock.amount = value; }} />                    
+                        <NumberDecimalInput onChangeValue={(value: number) => { newStock.amount = value; }} />                    
                        
               </div>              
                     <div className="col-4">
                       
                             <label>Fee</label>
-                        <DecimalInput onChangeValue={(value: number) => { newStock.fee = value; }} />       
+                        <NumberDecimalInput onChangeValue={(value: number) => { newStock.fee = value; }} />       
                        
               </div>
             </div>
           </div>
-          <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }} onClick={()=>addStock()}>Add</button>
+            <ButtonCustom btnType={ButtonType.Add} onClick={() => addStock()} />
         </div>,document.body)}
         </>
   );

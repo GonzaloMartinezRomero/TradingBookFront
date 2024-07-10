@@ -3,6 +3,8 @@ import { createPortal } from "react-dom";
 import { ErrorMessageModal, ErrorModalProps } from "./error-message-modal";
 import { Currency } from "../../domain/currency.model";
 import { addCurrency, checkIfCurrencyCodeIsAvailable, deleteCurrency, getCurrencies } from "../../services/currency.service";
+import { TextInput } from "../util/text.input.component";
+import { ButtonCustom, ButtonType } from "../util/button.component";
 
 
 interface Props{
@@ -16,17 +18,15 @@ export function CurrencyModal({ onClose }:Props) {
   const [currencyCollection,setCurrencyCollection] = useState<Currency[]>();
   const [isCurrencyCodeAvailable,setIsCurrencyCodeAvailable] = useState<boolean | undefined>(undefined);
 
-  const inputName = useRef<HTMLInputElement>(null);
-  const inputCode = useRef<HTMLInputElement>(null);
+    var inputName: string = '';
+  var inputCode: string = '';
 
     useEffect(() => {       
     loadCurrencies();
   },[]);
 
   function checkIfCurrencyIsAvailable(){
-    const code = inputCode.current?.value as string;
-
-    checkIfCurrencyCodeIsAvailable(code).then(response=>setIsCurrencyCodeAvailable(response)).catch(err=>setErrorModal({isOpen:true,msg:err}));
+      checkIfCurrencyCodeIsAvailable(inputCode).then(response => setIsCurrencyCodeAvailable(response)).catch(err => setErrorModal({ isOpen: true, msg: err }));
   }
 
   function deleteCurrencyById(id:number){
@@ -47,13 +47,12 @@ export function CurrencyModal({ onClose }:Props) {
   
   function addNewCurrency(){
 
-    const name = inputName.current?.value as string;
-    const code = inputCode.current?.value as string;
-
+    
+  
     const currency:Currency = {
       id:0,
-      code:code,
-      name:name
+        code: inputCode,
+      name:inputName
     };
 
     addCurrency(currency).then(x=>{loadCurrencies();})
@@ -69,26 +68,24 @@ export function CurrencyModal({ onClose }:Props) {
   {createPortal(      
       <div className="currency-modal">
           <div className="d-flex flex-row-reverse">
-          <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
-            <i className="bi-x"/>
-          </button>
+              <ButtonCustom btnType={ButtonType.Close} onClick={onClose} />
           </div>
           <h2>Currency</h2>
           <div className="form-group row ms-4">
             <div className="col-10">
-              <label className="row">Name</label>
-              <input type="text" className="row form-control" placeholder="Name" ref={inputName} />              
+                  <label className="row">Name</label>
+                  <TextInput placeHolder={'Name'} onChangeValue={(x: string) => inputName = x} ></TextInput>        
             </div>
           </div>
           <div className="form-group row mt-2 ms-4">
             <div className="col-10">
-              <label className="row">Code</label>
-              <input type="text" className="row form-control" placeholder="Code" ref={inputCode} />              
+                  <label className="row">Code</label>
+                  <TextInput placeHolder={'Code'} onChangeValue={(x:string)=> inputCode = x } ></TextInput>
             </div>
           </div>    
           <div className="form-group row mt-3 ms-1">
-            <div className="col-5">
-              <button className="btn btn-info row" onClick={()=>checkIfCurrencyIsAvailable()}>Check Availability</button>             
+              <div className="col-5">
+                  <ButtonCustom btnType={ButtonType.Info} text={'Check'} onClick={() => { checkIfCurrencyIsAvailable() }} />                
             </div>          
             <div className="col-5">
               {isCurrencyCodeAvailable === undefined &&  <span className="row bi bi-question-square" style={{"fontSize":"35px"}} title="No Checked"/>}
@@ -97,8 +94,8 @@ export function CurrencyModal({ onClose }:Props) {
             </div>
           </div>          
           <div className="form-group row mt-3 mb-3">                        
-            <div className="form-group col-12">
-              <button className="btn btn-success" style={{"width":"100px","height":"40px"}} onClick={()=>{addNewCurrency()}}>Add</button>
+              <div className="form-group col-12">
+                  <ButtonCustom btnType={ButtonType.Add} onClick={() => { addNewCurrency(); }} />                
             </div>
           </div>
           <div className="m-1" style={{"maxHeight":"200px","overflowY":"auto"}}>                                  
@@ -123,8 +120,7 @@ export function CurrencyModal({ onClose }:Props) {
                             <span>{value.code}</span>
                             </td>
                             <td>
-                            <button className="btn btn-danger" 
-                              onClick={()=>{deleteCurrencyById(value.id)}}><i className="bi bi-trash3"></i></button>
+                                    <ButtonCustom btnType={ButtonType.Delete} onClick={() => { deleteCurrencyById(value.id); }} />                            
                             </td>
                           </tr>);
                   })

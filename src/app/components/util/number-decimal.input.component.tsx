@@ -6,7 +6,7 @@ interface Props {
     onChangeValue: (value: number) => void
 }
 
-export function DecimalInput(props: Props) {
+export function NumberDecimalInput(props: Props) {
 
     const [inputValue, setInputValue] = useState<number>(0.0);
     

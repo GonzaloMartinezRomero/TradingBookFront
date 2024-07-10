@@ -7,7 +7,8 @@ import { addCryptoWatch } from "../../../services/crypto-watch.service";
 import { getCryptoCurrenciesReference } from "../../../services/crypto.service";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
-import { DecimalInput } from "../../util/decimal.input.component";
+import { NumberDecimalInput } from "../../util/number-decimal.input.component";
+
 
 interface Props{
     onClose: any,
@@ -62,7 +63,7 @@ export function CryptoWatchListModal({ onClose, onCloseAndReload }:Props) {
               </div>
               <div className="col-6">
                         <label>Target</label>
-                        <DecimalInput onChangeValue={(val: number) => { cryptoTarget = val; }}></DecimalInput>
+                        <NumberDecimalInput onChangeValue={(val: number) => { cryptoTarget = val; }}></NumberDecimalInput>
               </div>
             </div>          
           </div>       

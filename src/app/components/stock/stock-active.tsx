@@ -11,11 +11,14 @@ import { MarketLimit } from '../../domain/market-limit.model';
 import { StockActiveDto } from "../../domain/stocks/stock-active-dto";
 import { ErrorMessageModal, ErrorModalProps } from '../modal/error-message-modal';
 import { YesNoMessageModal } from '../modal/yes-no-message-modal';
-import { MarketLimitModal, MarketLimitModalValue } from '../util/MarketLimit.Modal';
+
 import { DateFormat } from "../util/date.component";
 import { StockChartLink } from "../util/referenceUrl";
 import { TextFormat } from "../util/text.component";
-import { OperationsStockModal } from "./modal/operations-stock-modal";
+
+import { ButtonCustom, ButtonType } from "../util/button.component";
+import { MarketLimitModal, MarketLimitModalValue } from "../modal/market-limit.modal";
+import { SellStockModal } from "./modal/sell-stock-modal";
 
 interface StockOperationModalProps {
     isOpen: boolean;
@@ -32,7 +35,7 @@ interface StockMarketLimitProps {
 export function StockActive() {
     
     const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
-    const [openOperationsStockModal, setOpenOperationsStockModal] = useState<StockOperationModalProps>({ isOpen: false, stockId: 0 });
+    const [openSellStockModal, setSellStockModal] = useState<StockOperationModalProps>({ isOpen: false, stockId: 0 });
     const [openMarketLimits, setOpenMarketLimits] = useState<StockMarketLimitProps>({ isOpen: false });
     const [stockCollection, setStockCollection] = useState<StockActiveDto[]>([]);
     const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<StockOperationModalProps>({ isOpen: false, stockId: 0 });
@@ -63,10 +66,10 @@ export function StockActive() {
                 }}
                 onNoResponse={() => { setOpenDeleteConfirmationModal({ isOpen: false, stockId: 0 }) }} />}
 
-            {openOperationsStockModal.isOpen && <OperationsStockModal stockId={openOperationsStockModal.stockId}
-                onClose={() => setOpenOperationsStockModal({ isOpen: false, stockId: 0 })}
+            {openSellStockModal.isOpen && <SellStockModal stockId={openSellStockModal.stockId}
+                onClose={() => setSellStockModal({ isOpen: false, stockId: 0 })}
                 onStockUpdateAndClose={() => {
-                    setOpenOperationsStockModal({ isOpen: false, stockId: 0 });
+                    setSellStockModal({ isOpen: false, stockId: 0 });
                     updateStocks(true);
                 }} />}
 
@@ -112,6 +115,7 @@ export function StockActive() {
                         <th>Chart</th>
                         <th>Market</th>
                         <th>Sell</th>
+                        <th>Delete</th>
                     </tr>
                 </thead>
                 <tbody className="text-center">
@@ -164,27 +168,20 @@ export function StockActive() {
                                          <td>
                                              <StockChartLink url={value.chartReferenceUrl} />
                                          </td>
-                                        <td>
-                                            <button className="btn btn-success"
-                                                onClick={() => {
-                                                    setOpenMarketLimits({ isOpen: true, stockId: value.id, sellLimit: value.sellLimit, stopLoss: value.stopLoss });
-                                                }}>
-                                                <i className="bi bi-sliders2-vertical"></i>
-                                            </button>
+                                     <td>
+                                         <ButtonCustom btnType={ButtonType.Market} onClick={() => {
+                                             setOpenMarketLimits({ isOpen: true, stockId: value.id, sellLimit: value.sellLimit, stopLoss: value.stopLoss });
+                                         } }/> 
                                         </td>
-                                        <td>
-                                            <button className="btn btn-warning"
-                                                onClick={() => {
-                                                    setOpenOperationsStockModal({ isOpen: true, stockId: value.id });
-                                                }}>
-                                                <i className="bi bi-box-arrow-up-right"></i>
-                                            </button>
+                                     <td>
+                                         <ButtonCustom btnType={ButtonType.Sell} onClick={() => {
+                                             setSellStockModal({ isOpen: true, stockId: value.id });
+                                         }} /> 
                                         </td>
-
-                                        <td>
-                                            <button className="btn btn-danger" onClick={() => { setOpenDeleteConfirmationModal({ isOpen: true, stockId: value.id }) }}>
-                                                <i className="bi bi-trash"></i>
-                                            </button>
+                                     <td>
+                                         <ButtonCustom btnType={ButtonType.Delete} onClick={() => {
+                                             setOpenDeleteConfirmationModal({ isOpen: true, stockId: value.id });
+                                         }} /> 
                                         </td>
                                     </tr>
                                 </>

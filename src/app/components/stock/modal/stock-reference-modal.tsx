@@ -6,6 +6,8 @@ import { addStockReference, checkIfStockCodeIsAvailable, deleteStockReference, g
 import { Loading } from "@nextui-org/react";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 import { InformationMessageModal, InformationModalProps } from "../../modal/information-message-modal";
+import { TextInput } from "../../util/text.input.component";
+import { ButtonCustom, ButtonType } from "../../util/button.component";
 
 interface Props{
     onClose: any    
@@ -18,21 +20,18 @@ export function StockReferenceModal({ onClose }:Props) {
   const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
   const [stockReferenceCollection, setStockReferenceCollection] = useState<StockReference[]>();
   const [isStockCodeAvailable,setIsStockCodeAvailable] = useState<boolean | undefined>(undefined);
-  const inputName = useRef<HTMLInputElement>(null);
-  const inputCode = useRef<HTMLInputElement>(null);
   const stockFindCode = useRef<HTMLInputElement>(null);
-
   const [stocksReference, setStocksReference] = useState<StockReference[]>([]);
+
+  var inputName: string = '';
+  var inputCode: string = '';
 
   function saveStockReference(){
 
-    const name = inputName.current?.value as string;
-    const code = inputCode.current?.value as string;
-
     const stockRef:StockReference = {
       id:0,
-      code:code,
-      name:name
+        code: inputCode,
+        name: inputName
     };
 
     addStockReference(stockRef).then(value=>
@@ -76,9 +75,7 @@ export function StockReferenceModal({ onClose }:Props) {
       setShowSpinner(true);
       setIsStockCodeAvailable(undefined);
 
-      const code = inputCode.current?.value as string;
-
-      checkIfStockCodeIsAvailable(code)
+      checkIfStockCodeIsAvailable(inputCode)
           .then(response => {
             setIsStockCodeAvailable(response);
            })
@@ -112,38 +109,32 @@ export function StockReferenceModal({ onClose }:Props) {
      
         <div className="new-stock-reference-modal">
           <div className="d-flex flex-row-reverse">
-          <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
-            <i className="bi-x"/>
-          </button>
+                <ButtonCustom btnType={ButtonType.Close} onClick={onClose} />
             </div>
             <h2 style={{ fontWeight: "bold" }}>Stock Reference</h2>
           <div className="form-group row ms-4">
             <div className="col-12">
-              <label className="row">Name</label>
-              <input type="text" className="row form-control" placeholder="Name" ref={inputName} />              
+                <label className="row">Name</label>
+                <TextInput placeHolder={'Name'} onChangeValue={(x: string) => inputName = x} ></TextInput>                
             </div>
           </div>
           <div className="form-group row mt-2 ms-4">
             <div className="col-12">
-              <label className="row">Code</label>
-              <input type="text" className="row form-control" placeholder="Code" ref={inputCode} />              
+                <label className="row">Code</label>
+                <TextInput placeHolder={'Code'} onChangeValue={(x: string) => inputCode = x} ></TextInput>        
             </div>
           </div>
           <div className="form-group row mt-3 ms-1">
-            <div className="ms-3 col-5">
-              <button className="btn btn-info row" onClick={()=>checkIfCodeIsAvailable()}>Check Availability</button>             
+                <div className="ms-1 col-5">
+                    <ButtonCustom btnType={ButtonType.Info} text={'Check'} onClick={() => { checkIfCodeIsAvailable() } } />  
             </div>          
             <div className="col-2">              
                 {showSpinner && <div className="row"><Loading /></div>}
                 {isStockCodeAvailable == true && <span className="row bi bi-file-earmark-check" style={{"fontSize":"35px"}} title="Available"/>}
                 {isStockCodeAvailable == false && <span className="row bi bi-file-earmark-x" style={{ "fontSize": "35px" }} title="No Available" />}                  
                 </div>
-                <div className="col-4 ms-2">
-                    <button className="col-2 btn btn-success"
-                        style={{ "width": "100px", "height": "40px" }}
-                        onClick={() => { saveStockReference(); }}>
-                        Add
-                    </button>
+                <div className="col-4 ms-1">
+                    <ButtonCustom btnType={ButtonType.Add} onClick={() => { saveStockReference() }} />  
                 </div>
             </div>
             <div className="form-group row mt-2 ms-4 mb-3">
@@ -173,7 +164,7 @@ export function StockReferenceModal({ onClose }:Props) {
                             <span>{value.code}</span>
                           </td>
                               <td style={{ "width": "50px" }}>
-                            <button className="btn btn-danger"  onClick={()=>{deleteStockRef(value.id)}} ><i className="bi bi-trash3"></i></button>
+                                  <ButtonCustom btnType={ButtonType.Delete} onClick={() => { deleteStockRef(value.id) }}/>
                           </td>
                         </tr>
                       );

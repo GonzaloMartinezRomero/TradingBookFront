@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { Currency } from "../../../domain/currency.model";
@@ -8,6 +8,8 @@ import { getCurrencies } from "../../../services/currency.service";
 import { addDeposit } from "../../../services/deposit.service";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
+import { NumberDecimalInput } from "../../util/number-decimal.input.component";
+import { ButtonCustom, ButtonType } from "../../util/button.component";
 
 interface Props {
   onClose: any,
@@ -23,8 +25,8 @@ export function NewDepositModal({ onClose, onCloseAndReload, platformDestinyId }
   const[errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
    
   var currencySelectedId: number = 0;
-  const inputDeposit = useRef<HTMLInputElement>(null);
-  const inputFee = useRef<HTMLInputElement>(null);
+  var inputDeposit: number = 0;
+    var inputFee: number = 0;
 
   useEffect(() => {    
       getCurrencies().then(value => setCurrencies(value)).catch(err => setErrorModal({ isOpen: true, msg: err }));
@@ -35,8 +37,8 @@ export function NewDepositModal({ onClose, onCloseAndReload, platformDestinyId }
 
     const newDepositParsed: NewDeposit =
     {
-      deposit: (inputDeposit.current?.value ?? "0") as unknown as number,
-      fee: (inputFee.current?.value ?? "0") as unknown as number,
+        deposit: inputDeposit,
+        fee: inputFee,
       currencyId: currencySelectedId,
       platformId: platformDestinyId
     }
@@ -50,21 +52,19 @@ export function NewDepositModal({ onClose, onCloseAndReload, platformDestinyId }
       {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={() => setErrorModal({ isOpen: false })} />}
       {createPortal(
         <div className="add-deposit-modal">
-          <div className="d-flex flex-row-reverse">
-            <button className="btn btn-secondary p-1 m-1" style={{ "width": "32px", "height": "33px" }} onClick={onClose}>
-              <i className="bi-x" />
-            </button>
+           <div className="d-flex flex-row-reverse">
+               <ButtonCustom btnType={ButtonType.Close} onClick={onClose} />
           </div>
           <h1>New Deposit</h1>
           <div className="m-3">         
                 <div className="form-group row">
                     <div className="col-6">
-                        <label className="row ms-1">Deposit</label>
-                        <input type="number" className="form-control" placeholder="Deposit" defaultValue={0} ref={inputDeposit} />
+                          <label className="row ms-1">Deposit</label>
+                          <NumberDecimalInput onChangeValue={(val: number) => { inputDeposit = val; }}></NumberDecimalInput>
                     </div>
                     <div className="col-6">
                           <label className="row ms-1">Fee</label>
-                        <input type="number" className="form-control" placeholder="Fee" defaultValue={0} ref={inputFee} />
+                          <NumberDecimalInput onChangeValue={(val: number) => { inputFee = val; }}></NumberDecimalInput>
                     </div>
                 </div>
                 <div className="row">            
@@ -75,9 +75,9 @@ export function NewDepositModal({ onClose, onCloseAndReload, platformDestinyId }
             </div>          
           </div>
           <div className="form-group row mt-2">
-            <div className="form-group col-12">
-              <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }} onClick={() => newDeposit()}>Add</button>
-            </div>
+                  <div className="form-group col-12">
+                      <ButtonCustom btnType={ButtonType.Add} onClick={() => newDeposit()}/>
+                  </div>
           </div>
         </div>
         ,

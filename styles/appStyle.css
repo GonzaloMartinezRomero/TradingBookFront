@@ -40,13 +40,13 @@
     position: absolute;
     height: 250px;
     width: 450px;
-    top: 40%;
-    left: 40%;  
+    top: 20%;
+    left: 35%;
     text-align: center;
-    color: black;  
-  }
+    color: black;
+}
 
-  .yes-no-modal {
+.yes-no-modal {
     display: inline-table;
     justify-content: space-evenly;
     align-items: center;
@@ -54,14 +54,14 @@
     background-color: rgb(240, 230, 230);
     border: 1px solid rgb(22, 18, 18);
     border-radius: 12px;
-    position:  fixed;
+    position: absolute;
     height: 200px;
     width: 470px;
     top: 20%;
-    left: 35%;      
+    left: 35%;
     text-align: center;
-    color: black;  
-  }
+    color: black;
+}
 
 .container-separator {
     border:1px solid black

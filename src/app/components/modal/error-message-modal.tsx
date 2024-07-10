@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { createPortal } from "react-dom";
 
 export interface ErrorModalProps{
@@ -9,6 +10,8 @@ export interface ErrorModalProps{
 export function ErrorMessageModal({ msg, onClose }:ErrorModalProps) {
   
   const message:string = msg?.toString() ?? "No Message";
+
+    useEffect(() => { window.scrollTo(0, 0); }, []);
 
     return (
       createPortal(

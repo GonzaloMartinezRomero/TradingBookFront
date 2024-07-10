@@ -1,14 +1,15 @@
 import { useEffect, useState } from "react";
 import { MonetaryAmount } from "../util/monetaryAmount";
 
-import { NewDepositModal } from "./modal/newDeposit.modal";
+import { NewDepositModal } from "./modal/new-deposit.modal";
 
-import { PlatformModal } from "./modal/platform.modal";
+import { DepositType } from "../../domain/deposit/deposit-type";
 import { Deposit } from "../../domain/deposit/deposit.model";
 import { deleteDeposit, getDeposits } from "../../services/deposit.service";
 import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message-modal";
+import { InformationMessageModal, InformationModalProps } from "../modal/information-message-modal";
 import { YesNoMessageModal } from "../modal/yes-no-message-modal";
-import { DepositType } from "../../domain/deposit/deposit-type";
+import { ButtonCustom, ButtonType } from "../util/button.component";
 
 interface DeleteModalProp{
     isOpen:boolean;
@@ -21,11 +22,11 @@ interface Props {
 
 export function Deposit({ depositType }: Props) {
    
-const [deposits,setDeposits] = useState<Deposit[]>();
-const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
-const [openDepositModal, setOpenDepositModal] = useState(false);
-const [openPlatformModal, setOpenPlatformModal] = useState(false);
-const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<DeleteModalProp>({isOpen:false,depositId:0});
+    const [deposits, setDeposits] = useState<Deposit[]>();
+    const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
+    const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
+    const [openDepositModal, setOpenDepositModal] = useState(false);    
+    const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<DeleteModalProp>({isOpen:false,depositId:0});
 
 useEffect(()=>{
     loadDeposits(depositType);
@@ -36,9 +37,13 @@ function loadDeposits(type: DepositType){
     .catch(err=>setErrorModal({isOpen:true,msg:err}));
 }
 
-function deleteSelectedDeposit(id:number){
-    deleteDeposit(id).then(x => loadDeposits(depositType))
-                     .catch(err=>setErrorModal({isOpen:true,msg:err}));   
+    function deleteSelectedDeposit(id: number) {
+        deleteDeposit(id).then(x =>
+        {
+            loadDeposits(depositType);
+            setInformationModal({ isOpen: true, msg:'Delete deposit successfully!' })
+        })
+        .catch(err => setErrorModal({ isOpen: true, msg: err }));   
 }
 
 return(
@@ -48,9 +53,10 @@ return(
         {openDepositModal && <NewDepositModal platformDestinyId={depositType}
                                                onClose={() => setOpenDepositModal(false)} 
                                                onCloseAndReload={()=>{
-                                                                     setOpenDepositModal(false);
-                                                                     loadDeposits(depositType);
-                                                                }}/>}      
+                setOpenDepositModal(false);
+                loadDeposits(depositType);
+                setInformationModal({ isOpen: true, msg: 'Deposit added successfully' });
+            }} />}      
 
         {openDeleteConfirmationModal.isOpen && <YesNoMessageModal msg="Do you want remove this deposit?" 
                                                         onYesResponse={()=>{
@@ -59,16 +65,11 @@ return(
                                                         }} 
                                                         onNoResponse={()=>{setOpenDeleteConfirmationModal({isOpen:false,depositId:0})}}/>}    
 
-        {openPlatformModal && <PlatformModal onClose={()=>setOpenPlatformModal(false)}/>}
+        {informationModal.isOpen && <InformationMessageModal msg={informationModal.msg} onClose={() => setInformationModal({ isOpen: false }) } />}
 
         <div className="row mt-2 mb-2">
             <div className="col-3">
-                <button type="button" className="btn btn-success" style={{ "width": "150px" }} onClick={() => {
-                    setOpenDepositModal(true);                   
-                }}>
-                    <span className="me-1">Add</span>
-                    <i className="bi bi-plus-circle"></i>
-                </button>  
+                <ButtonCustom btnType={ButtonType.Add} onClick={() => { setOpenDepositModal(true); }} />
             </div>
         </div>
         <table className="mt-1 table-header" style={{"width":"100%"}}>
@@ -101,11 +102,8 @@ return(
                     <td>
                         {value.currency}
                     </td>
-                    
                     <td>
-                        <button className="btn btn-danger" onClick={()=>{setOpenDeleteConfirmationModal({isOpen:true,depositId:value.id})}}>
-                                            <i className="bi bi-trash"></i>
-                                        </button>
+                        <ButtonCustom btnType={ButtonType.Delete} onClick={() => { setOpenDeleteConfirmationModal({ isOpen: true, depositId: value.id }); }} />
                     </td>
                 </tr>
                 </>);

@@ -1,14 +1,15 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
+import { Currency } from "../../../../domain/currency.model";
+import { StockReference } from "../../../../domain/stocks/stock-reference.model";
+import { StockWatchSave } from "../../../../domain/stocks/stock-watch-save.model";
+import { getCurrencies } from "../../../../services/currency.service";
+import { addStockWatchReference } from "../../../../services/stock-watch.service";
+import { getStockReferences } from "../../../../services/stock.service";
 import { ErrorMessageModal, ErrorModalProps } from "../../../modal/error-message-modal";
 import { DropDownInput, DropDownValue } from "../../../util/dropdown.input.component";
-import { StockReference } from "../../../../domain/stocks/stock-reference.model";
-import { Currency } from "../../../../domain/currency.model";
-import { getCurrencies } from "../../../../services/currency.service";
-import { getStockReferences } from "../../../../services/stock.service";
-import { StockWatchSave } from "../../../../domain/stocks/stock-watch-save.model";
-import { addStockWatchReference } from "../../../../services/stock-watch.service";
-import { DecimalInput } from "../../../util/decimal.input.component";
+import { NumberDecimalInput } from "../../../util/number-decimal.input.component";
+import { ButtonCustom, ButtonType } from "../../../util/button.component";
 
 interface Props{
     onClose: any,
@@ -54,10 +55,8 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
     { createPortal(
        
         <div className="new-stock-watch-modal">
-        <div className="d-flex flex-row-reverse">
-          <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
-            <i className="bi-x"/>
-          </button>
+            <div className="d-flex flex-row-reverse">
+                <ButtonCustom btnType={ButtonType.Close} onClick={onClose} />          
           </div>
           <h1>Add Stock Watch</h1>
             <div className="m-4">
@@ -74,13 +73,13 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
                 <div className="form-group row mt-3" style={{ "textAlign": "left" }}>
                     <div className="col-4">
                         <label>Target</label>
-                        <DecimalInput onChangeValue={(value: number) => { stockTarget = value; }} />
+                        <NumberDecimalInput onChangeValue={(value: number) => { stockTarget = value; }} />
                     </div>
                 </div>
           </div>       
           <div className="form-group row mt-2">            
             <div className="form-group col-12">
-              <button className="btn btn-success" style={{ "width": "100px", "height": "50px" }} onClick={()=>addStockWatch()}>Add</button>
+                <ButtonCustom btnType={ButtonType.Add} onClick={() => { addStockWatch(); }} />
             </div>
           </div>
         </div>,document.body)}

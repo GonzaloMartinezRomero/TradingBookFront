@@ -6,31 +6,31 @@
     background-color: rgb(240, 230, 230);
     border: 1px solid rgb(22, 18, 18);
     border-radius: 12px;
-    position:  absolute;
+    position: absolute;
     height: 560px;
     width: 730px;
     top: 20%;
-    left: 30%;  
+    left: 30%;
     bottom: 70px;
     text-align: center;
-    color: black;    
+    color: black;
 }
 
 .operation-stock-modal {
-  display: inline-table;
-  justify-content: space-evenly;
-  align-items: center;
-  box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px;
-  background-color: rgb(240, 230, 230);
-  border: 1px solid rgb(22, 18, 18);
-  border-radius: 12px;
-  position:  absolute;
-  height: 320px;
-  width: 480px;
-  top: 20%;
-  left: 35%;  
-  text-align: center;
-  color: black;    
+    display: inline-table;
+    justify-content: space-evenly;
+    align-items: center;
+    box-shadow: rgba(100, 100, 111, 0.3) 0px 7px 29px 0px;
+    background-color: rgb(240, 230, 230);
+    border: 1px solid rgb(22, 18, 18);
+    border-radius: 12px;
+    position: absolute;
+    height: 320px;
+    width: 480px;
+    top: 20%;
+    left: 30%;
+    text-align: center;
+    color: black;
 }
 
 .new-stock-reference-modal {
@@ -41,11 +41,11 @@
     background-color: rgb(240, 230, 230);
     border: 1px solid rgb(22, 18, 18);
     border-radius: 15px;
-    position: fixed;
+    position: absolute;
     height: 100px;
     width: 100px;
-    top: 10%;
-    left: 35%;
+    top: 20%;
+    left: 30%;
     text-align: center;
     color: black;
 }
@@ -58,11 +58,11 @@
     background-color: rgb(240, 230, 230);
     border: 1px solid rgb(22, 18, 18);
     border-radius: 12px;
-    position: fixed;
+    position: absolute;
     height: 560px;
     width: 450px;
-    top: 10%;
-    left: 35%;
+    top: 20%;
+    left: 30%;
     text-align: center;
     color: black;
 }

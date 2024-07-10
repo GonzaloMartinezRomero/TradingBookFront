@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message-modal";
 import { createPortal } from "react-dom";
-import { DecimalInput } from "./decimal.input.component";
+import { NumberDecimalInput } from "../util/number-decimal.input.component";
+import { ButtonCustom, ButtonType } from "../util/button.component";
+
 
 export interface MarketLimitModalValue {    
     stopLoss: number;
@@ -26,28 +28,22 @@ export function MarketLimitModal({ onClose, stopLoss, sellLimit, onUpdateAndClos
             {createPortal(
                 <div className="market-limit-modal">
                     <div className="d-flex flex-row-reverse">
-                        <button className="btn btn-secondary p-1 m-1" style={{ "width": "32px", "height": "33px" }} onClick={onClose}>
-                            <i className="bi-x" />
-                        </button>
+                        <ButtonCustom btnType={ButtonType.Close} onClick={onClose}/>                        
                     </div>
                     <h3 className="mt-4">Market Limit</h3>
                     <div className="form-group row ms-3">
                         <div className="col-5" style={{ "textAlign": "left" }}>
                             <label>Stop Loss</label>
-                            <DecimalInput placeHolder={"Stop Loss"} initialValue={stopLoss} onChangeValue={(stopLossInput:number) => marketLimitChanged.stopLoss=stopLossInput}></DecimalInput>
+                            <NumberDecimalInput placeHolder={"Stop Loss"} initialValue={stopLoss} onChangeValue={(stopLossInput:number) => marketLimitChanged.stopLoss=stopLossInput}></NumberDecimalInput>
                         </div>
                         <div className="col-5 ms-4" style={{ "textAlign": "left" }}>
                             <label>Sell Limit</label>
-                            <DecimalInput placeHolder={"Sell Limit"} initialValue={sellLimit} onChangeValue={(sellLimit: number) => marketLimitChanged.sellLimit = sellLimit}></DecimalInput>
+                            <NumberDecimalInput placeHolder={"Sell Limit"} initialValue={sellLimit} onChangeValue={(sellLimit: number) => marketLimitChanged.sellLimit = sellLimit}></NumberDecimalInput>
                         </div>
                     </div>
                     <div className="form-group row mt-4">
                         <div className="form-group col-12">
-                            <button className="btn btn-success"
-                                style={{ "width": "100px", "height": "40px" }}
-                                onClick={() => { onUpdateAndClose.call(marketLimitChanged, marketLimitChanged);}}>
-                                Update
-                            </button>
+                            <ButtonCustom btnType={ButtonType.Update} onClick={() => { onUpdateAndClose.call(marketLimitChanged, marketLimitChanged); }} />    
                         </div>
                     </div>
                 </div>, document.body)}

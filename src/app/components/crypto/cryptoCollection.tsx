@@ -13,11 +13,13 @@ import { deleteCrypto, getCryptos, updateCryptoMarketLimit } from "../../service
 import { CurrencyModal } from "../modal/currency-modal";
 import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message-modal";
 import { YesNoMessageModal } from "../modal/yes-no-message-modal";
-import { MarketLimitModal, MarketLimitModalValue } from "../util/MarketLimit.Modal";
+
+
 import { CryptoWatchList } from "./cryptoWatchList";
 import { CryptoReferenceModal } from "./modal/cryptoReference.modal";
 import { NewCryptoModal } from "./modal/newCrypto.modal";
 import { OperationCryptoModal } from "./modal/operationsCrypto.modal";
+import { MarketLimitModal, MarketLimitModalValue } from "../modal/market-limit.modal";
 
 interface OperationModalProps{
     isOpen:boolean;

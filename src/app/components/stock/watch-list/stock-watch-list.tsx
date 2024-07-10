@@ -8,7 +8,8 @@ import { MonetaryAmount } from "../../util/monetaryAmount";
 import { PercentageIndicator } from "../../util/percentageIndicator";
 import { MarketOperation } from "../../util/marketOperation";
 import { StockChartLink } from "../../util/referenceUrl";
-
+import { InformationMessageModal, InformationModalProps } from "../../modal/information-message-modal";
+import { ButtonCustom, ButtonType } from "../../util/button.component";
 
 interface DeleteStockWatchModalProp{
     isOpen:boolean;
@@ -20,7 +21,8 @@ export function StockWatchList(){
     const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<DeleteStockWatchModalProp>({isOpen:false});
     const [openStockWatchListModal, setOpenStockWatchListModal] = useState<boolean>(false);
     const [stockWatchCollection,setStockWatchCollection] = useState<StockWatch[]>();
-    const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
+    const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
+    const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
 
     useEffect(()=>{
         loadStockWatch()
@@ -50,12 +52,11 @@ export function StockWatchList(){
                                                                   }} 
                                                                   onNoResponse={()=>{setOpenDeleteConfirmationModal({isOpen:false})}}/>}
 
+        {informationModal.isOpen && <InformationMessageModal msg={'Stock view added successfuly'} onClose={() => informationModal.isOpen = false} />}
+
         <div className="row mt-2 mb-2">
             <div className="col-1">
-                <button type="button" className="btn btn-success" style={{"width":"150px"}} onClick={()=>{setOpenStockWatchListModal(true)}}>
-                    <span className="me-1">Add</span>
-                    <i className="bi bi-plus-circle"></i>
-                </button>  
+                <ButtonCustom btnType={ButtonType.Add} onClick={() => { setOpenStockWatchListModal(true); }} />
             </div>          
         </div>     
         <table className="mt-1 table-header" style={{ "width": "100%" }}>
@@ -98,11 +99,9 @@ export function StockWatchList(){
                     <td>
                         <StockChartLink url={value.chartReferenceUrl} />
                     </td>
-                    <td>
-                        <button className="btn btn-danger" onClick={()=>{setOpenDeleteConfirmationModal({isOpen:true,stockWatchId:value.id})}}>
-                                            <i className="bi bi-trash"></i>
-                                        </button>
-                    </td>
+                        <td>
+                            <ButtonCustom btnType={ButtonType.Delete} onClick={() => { setOpenDeleteConfirmationModal({ isOpen: true, stockWatchId: value.id }); }} />
+                        </td>
                     </tr>
                     </>);
                 })} 
