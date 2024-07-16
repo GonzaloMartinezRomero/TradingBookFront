@@ -172,7 +172,7 @@ export function StockActive() {
                                          <ButtonCustom btnType={ButtonType.Market} onClick={() => {
                                              setOpenMarketLimits({ isOpen: true, stockId: value.id, sellLimit: value.sellLimit, stopLoss: value.stopLoss });
                                          } }/> 
-                                        </td>
+                                     </td>
                                      <td>
                                          <ButtonCustom btnType={ButtonType.Sell} onClick={() => {
                                              setSellStockModal({ isOpen: true, stockId: value.id });
@@ -191,7 +191,6 @@ export function StockActive() {
                     }
                 </tbody>
             </table>
-                   
         </>
     );
 }

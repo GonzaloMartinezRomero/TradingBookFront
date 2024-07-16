@@ -3,12 +3,13 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { CryptoCurrencyReference } from "../../../domain/crypto/crypto-currency.model";
 import { Currency } from "../../../domain/currency.model";
-import { getCryptoCurrenciesReference, saveCrypto } from "../../../services/crypto.service";
+import { getCryptoReference, saveCrypto } from "../../../services/crypto.service";
 import { getCurrencies } from "../../../services/currency.service";
 import { NewCrypto } from "../../../domain/crypto/new-crypto.model";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
 import { NumberDecimalInput } from "../../util/number-decimal.input.component";
+import { ButtonCustom, ButtonType } from "../../util/button.component";
 
 
 interface Props{
@@ -20,15 +21,13 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
   
   const [cryptoCurrencyReferenceCollection, setCryptoCurrencyReferenceCollection] = useState<CryptoCurrencyReference[]>(); 
   const [currencies,setCurrencies] = useState<Currency[]>();
-    const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
-
-    const currencyOptions: DropDownValue[] | undefined = currencies?.map((currencyAux) => { return { value: currencyAux.id, label: currencyAux.name } as DropDownValue });
-    const cryptoCurrencyOptions: DropDownValue[] | undefined = cryptoCurrencyReferenceCollection?.map((cryptoCurrencyAux) => { return { value: cryptoCurrencyAux.id, label: cryptoCurrencyAux.name } as DropDownValue });
-
+  const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
+  const currencyOptions: DropDownValue[] | undefined = currencies?.map((currencyAux) => { return { value: currencyAux.id, label: currencyAux.name } as DropDownValue });
+  const cryptoCurrencyOptions: DropDownValue[] | undefined = cryptoCurrencyReferenceCollection?.map((cryptoCurrencyAux) => { return { value: cryptoCurrencyAux.id, label: cryptoCurrencyAux.name } as DropDownValue });
   const newCrypto: NewCrypto = {} as NewCrypto;
 
   useEffect(()=>{
-    getCryptoCurrenciesReference().then(value=>setCryptoCurrencyReferenceCollection(value));    
+    getCryptoReference().then(value=>setCryptoCurrencyReferenceCollection(value));    
     getCurrencies().then(value=>setCurrencies(value));
   },
   []);
@@ -54,11 +53,11 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
                 <div className="row" style={{ "textAlign": "left" }}>
             <div className="col-4">
                <label>Currency From</label>
-               <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => newCrypto.currencyFromId = valueSelected.value}></DropDownInput>
+                  <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => newCrypto.currencyFromId = valueSelected.value}></DropDownInput>
               </div>
               <div className="col-4">
-                    <label>Currency To</label>
-                    <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => newCrypto.currencyToId = valueSelected.value}></DropDownInput>
+                 <label>Currency To</label>
+                 <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => newCrypto.currencyToId = valueSelected.value}></DropDownInput>
               </div>
               <div className="col-4">
                     <label>Pair</label>
@@ -67,14 +66,12 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
             </div>
                 <div className="row mt-3" style={{ "textAlign": "left" }}>
             <div className="col-4">
-                        <label>Crypto Price</label>
-                        <NumberDecimalInput onChangeValue={(value: number) => { newCrypto.cryptoPrice = value; }} />    
-                
+                   <label>Crypto Price</label>
+                   <NumberDecimalInput onChangeValue={(value: number) => { newCrypto.cryptoPrice = value; }} />                    
               </div>    
               <div className="col-4">
-                        <label>Exchange Amount</label>
-                        <NumberDecimalInput onChangeValue={(value: number) => { newCrypto.exchangedAmount = value; }} />    
-                  
+                   <label>Exchange Amount</label>
+                   <NumberDecimalInput onChangeValue={(value: number) => { newCrypto.exchangedAmount = value; }} />    
                 </div>               
               </div>
                 <div className="row mt-3" style={{ "textAlign": "left" }}>
@@ -103,7 +100,7 @@ export function NewCryptoModal({ onClose, onCloseAndReload }:Props) {
           </div>
             <div className="row mt-2" style={{ "textAlign": "center" }}>
                 <div className="col-12">
-                    <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }} onClick={() => addCrypto()}>Add</button>            
+                    <ButtonCustom btnType={ButtonType.Add} onClick={() => addCrypto()} />
                 </div>
           </div>
         </div>

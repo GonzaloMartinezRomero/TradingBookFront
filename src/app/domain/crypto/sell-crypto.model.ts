@@ -1,4 +1,4 @@
-export interface SellCrypto{
+export interface SellCryptoDto{
     cryptoCurrencyId: number|undefined;
     returnPrice: number;
     returnAmount: number;

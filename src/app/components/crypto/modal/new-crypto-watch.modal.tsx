@@ -4,10 +4,11 @@ import { createPortal } from "react-dom";
 import { CryptoCurrencyReference } from "../../../domain/crypto/crypto-currency.model";
 import { CryptoWatchSave } from "../../../domain/crypto/crypto-watch-save.model";
 import { addCryptoWatch } from "../../../services/crypto-watch.service";
-import { getCryptoCurrenciesReference } from "../../../services/crypto.service";
+import { getCryptoReference } from "../../../services/crypto.service";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
 import { NumberDecimalInput } from "../../util/number-decimal.input.component";
+import { ButtonCustom, ButtonType } from "../../util/button.component";
 
 
 interface Props{
@@ -27,7 +28,7 @@ export function CryptoWatchListModal({ onClose, onCloseAndReload }:Props) {
     
 
   useEffect(()=>{
-    getCryptoCurrenciesReference().then(value=>setCryptoCurrencyReferenceCollection(value))
+    getCryptoReference().then(value=>setCryptoCurrencyReferenceCollection(value))
                                   .catch(err=>setErrorModal({isOpen:true,msg:err}));
   },[]);
   
@@ -48,28 +49,25 @@ export function CryptoWatchListModal({ onClose, onCloseAndReload }:Props) {
     { createPortal(
        
         <div className="new-crypto-watch-modal">
-        <div className="d-flex flex-row-reverse">
-          <button className="btn btn-secondary p-1 m-1" style={{"width":"32px","height":"33px"}} onClick={onClose}>
-            <i className="bi-x"/>
-          </button>
+            <div className="d-flex flex-row-reverse">
+                <ButtonCustom btnType={ButtonType.Close} onClick={ onClose }/>
           </div>
           <h1>Add Crypto Watch</h1>
             <div className="m-4">
                 <div className="form-group row" style={{ "textAlign":"left"}}>
             <div className="col-6">
-                        <label>Crypto Pair</label>
-                        <DropDownInput values={cryptoCurrencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => cryptoCurrencyId = valueSelected.value}></DropDownInput>
-             
+                <label>Crypto Pair</label>
+                <DropDownInput values={cryptoCurrencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => cryptoCurrencyId = valueSelected.value}></DropDownInput>
               </div>
               <div className="col-6">
-                        <label>Target</label>
-                        <NumberDecimalInput onChangeValue={(val: number) => { cryptoTarget = val; }}></NumberDecimalInput>
+                <label>Target</label>
+                <NumberDecimalInput onChangeValue={(val: number) => { cryptoTarget = val; }}></NumberDecimalInput>
               </div>
             </div>          
           </div>       
           <div className="form-group row mt-2">            
-            <div className="form-group col-12">
-              <button className="btn btn-success" style={{ "width": "130px", "height": "50px" }} onClick={()=>addNewCryptoWatch()}>Add</button>
+                <div className="form-group col-12">
+                <ButtonCustom btnType={ButtonType.Add} onClick={() => addNewCryptoWatch()} />              
             </div>
           </div>
         </div>,document.body)}

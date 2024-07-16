@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { PercentageIndicator } from "../util/percentageIndicator";
 
 import { MonetaryAmount } from "../util/monetaryAmount";
-import { CryptoWatchListModal } from "./modal/cryptoWatchListModal";
+import { CryptoWatchListModal } from "./modal/new-crypto-watch.modal";
 import { MarketOperation } from "../util/marketOperation";
 import { CryptoWatch } from "../../domain/crypto/crypto-watch.model";
 import { deleteCryptokWatch, getCryptoWatchs } from "../../services/crypto-watch.service";

@@ -1,6 +1,6 @@
 "use client";
 import { useEffect, useState } from "react";
-import { CryptoCollection } from "./components/crypto/cryptoCollection";
+import { CryptoCollection } from "./components/crypto/crypto-collection";
 import { StockCollection } from "./components/stock/stock-collection";
 
 enum TradingPage{  

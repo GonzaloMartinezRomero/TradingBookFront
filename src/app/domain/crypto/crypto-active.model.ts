@@ -1,4 +1,4 @@
-export interface CryptoCurrency{
+export interface CryptoActiveDto{
     id: number,
     cryptoCurrencyFrom: string,
     cryptoCurrencyTo: string,
@@ -11,18 +11,9 @@ export interface CryptoCurrency{
     exchangedAmount: number,
     currentPrice?: number,
     currentDiffPercentage?: number,
-    estimatedReturnPrice:number,
+    estimatedReturnPrice: number,
+    estimatedEarn: number,
     recomendedAction: string,
-    isSelled: boolean,
-    returnPrice: number,
-    returnDiffPricePercentage: number,
-    sellDate: string,
-    returnAmount: number,
-    returnFee: number,
-    returnAmountWithFee: number,
-    returnEarn: number,
-    estimatedEarn: number;
-    returnDiffAmountEarnedPercentage: number,
     stopLoss: number,
     sellLimit: number
 }

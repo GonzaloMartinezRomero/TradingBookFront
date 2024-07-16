@@ -2,11 +2,13 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { CryptoCurrencyReference } from "../../../domain/crypto/crypto-currency.model";
-import { checkIfCryptoRefIsAvailable, deleteCryptoCurrencyReference, getCryptoCurrenciesReference, saveCryptoCurrencyReference } from "../../../services/crypto.service";
+import { checkIfCryptoRefIsAvailable, deleteCryptoReference, getCryptoReference, saveCryptoReference } from "../../../services/crypto.service";
 
 import { Loading } from "@nextui-org/react";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 import { InformationMessageModal, InformationModalProps } from "../../modal/information-message-modal";
+import { TextInput } from "../../util/text.input.component";
+import { ButtonCustom, ButtonType } from "../../util/button.component";
 
 interface Props{
     onClose: any    
@@ -16,12 +18,14 @@ export function CryptoReferenceModal({ onClose }:Props) {
 
     const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
     const [showSpinner, setShowSpinner] = useState<boolean>(false);
-  const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
-  const [cryptoCurrencyReferenceCollection,setCryptoCurrencyReferenceCollection] = useState<CryptoCurrencyReference[]>();
+    const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
+    const [cryptoCurrencyReferenceCollection,setCryptoCurrencyReferenceCollection] = useState<CryptoCurrencyReference[]>();
     const [cryptoReference, setCryptoReference] = useState<CryptoCurrencyReference[]>([]);
     const [isCryptoCodeAvailable, setIsCryptoCodeAvailable] = useState<boolean | undefined>(undefined);
-  const inputName = useRef<HTMLInputElement>(null);
-  const inputCode = useRef<HTMLInputElement>(null);
+
+    var inputName: string = '';
+    var inputCode: string = '';
+
     const cryptoFindCode = useRef<HTMLInputElement>(null);
 
   useEffect(()=>{
@@ -31,8 +35,8 @@ export function CryptoReferenceModal({ onClose }:Props) {
 
   function saveCryptoReference(){
 
-    const name = inputName.current?.value as string;
-    const code = inputCode.current?.value as string;
+      const name = inputName;
+      const code = inputCode;
 
     const cryptoRef:CryptoCurrencyReference = {
       id:0,
@@ -40,7 +44,7 @@ export function CryptoReferenceModal({ onClose }:Props) {
       name:name
     };
 
-      saveCryptoCurrencyReference(cryptoRef).then((value) =>
+      saveCryptoReference(cryptoRef).then((value) =>
       {
           setInformationModal({ isOpen: true, msg: "Crypto added successfully!" });
           updateCryptoCurrencies();
@@ -50,31 +54,30 @@ export function CryptoReferenceModal({ onClose }:Props) {
   function checkIfCodeIsAvailable(){
       setShowSpinner(true);
       setIsCryptoCodeAvailable(undefined);
-      const code = inputCode.current?.value as string;
-    checkIfCryptoRefIsAvailable(code).then(response=>setIsCryptoCodeAvailable(response))
+
+      checkIfCryptoRefIsAvailable(inputCode).then(response => setIsCryptoCodeAvailable(response))
         .catch(err => setErrorModal({ isOpen: true, msg: err }))
         .finally(() => setShowSpinner(false));
   }
    
   function updateCryptoCurrencies(){
-      getCryptoCurrenciesReference().then(value => {
+      getCryptoReference().then(value => {
           setCryptoCurrencyReferenceCollection(value);
           setCryptoReference(value);
       }).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
   function deleteCryptoRef(id:number){
-    deleteCryptoCurrencyReference(id).then((value)=>updateCryptoCurrencies())
+    deleteCryptoReference(id).then((value)=>updateCryptoCurrencies())
                                     .catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
-    function updateFilter() {
-        const cryptoCode = cryptoFindCode.current?.value as string;
-
-        if (cryptoCode?.length > 0) {
+    function updateFilter(value:string) {
+       
+        if (value?.length > 0) {
             const cryptoFiltered: CryptoCurrencyReference[] = cryptoReference?.filter(x => {
                 const valueUpper = x.code.toUpperCase();
-                return valueUpper.includes(cryptoCode.toUpperCase());
+                return valueUpper.includes(value.toUpperCase());
 
             }) ?? [];
             setCryptoCurrencyReferenceCollection(cryptoFiltered);
@@ -98,18 +101,18 @@ export function CryptoReferenceModal({ onClose }:Props) {
             <div className="form-group row ms-4">
                 <div className="col-12">
                     <label className="row">Name</label>
-                    <input type="text" className="row form-control" placeholder="Name" ref={inputName} />
+                    <TextInput placeHolder={'Code'} initialValue={inputCode} onChangeValue={(val: string) => { inputName = val; }} />
                 </div>
             </div>
             <div className="form-group row mt-2 ms-4">
                 <div className="col-12">
                     <label className="row">Code</label>
-                    <input type="text" className="row form-control" placeholder="Code" ref={inputCode} />
+                    <TextInput placeHolder={'Code'} initialValue={inputCode} onChangeValue={(val: string) => { inputCode = val; }}/>                    
                 </div>
             </div>
             <div className="form-group row mt-3 ms-1">
-                <div className="ms-3 col-5">
-                    <button className="btn btn-info row" onClick={() => checkIfCodeIsAvailable()}>Check Availability</button>
+                <div className="col-5">
+                    <ButtonCustom btnType={ButtonType.Info} text={'Is Available?'} onClick={() => checkIfCodeIsAvailable()} />
                 </div>
                 <div className="col-2">
                     {showSpinner && <div className="row"><Loading /></div>}
@@ -117,17 +120,13 @@ export function CryptoReferenceModal({ onClose }:Props) {
                     {isCryptoCodeAvailable == false && <span className="row bi bi-file-earmark-x" style={{ "fontSize": "35px" }} title="No Available" />}
                 </div>
                 <div className="col-4 ms-2">
-                    <button className="col-2 btn btn-success"
-                        style={{ "width": "100px", "height": "40px" }}
-                        onClick={() => { saveCryptoReference(); }}>
-                        Add
-                    </button>
+                    <ButtonCustom btnType={ButtonType.Add} onClick={() => saveCryptoReference() }/>
                 </div>
             </div>
             <div className="form-group row mt-2 ms-4 mb-3">
                 <div className="col-12">
                     <label className="row">Search code</label>
-                    <input type="text" className="row form-control" placeholder="Insert code..." ref={cryptoFindCode} onChange={(e) => { updateFilter(); }} />
+                    <TextInput placeHolder={'Insert code...'} onChangeValue={(val: string) => updateFilter(val)}/>
                 </div>
             </div>
             <div className="m-1">
@@ -151,7 +150,7 @@ export function CryptoReferenceModal({ onClose }:Props) {
                                             <span>{value.code}</span>
                                         </td>
                                         <td style={{ "width": "50px" }}>
-                                            <button className="btn btn-danger" onClick={() => { deleteCryptoRef(value.id) }} ><i className="bi bi-trash3"></i></button>
+                                            <ButtonCustom btnType={ButtonType.Delete} onClick={() => { deleteCryptoRef(value.id) } }/>
                                         </td>
                                     </tr>
                                 );

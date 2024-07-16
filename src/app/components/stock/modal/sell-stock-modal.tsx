@@ -1,11 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { SellStock } from "../../../domain/stocks/sell-stock.model";
 import { Stock } from "../../../domain/stocks/stock.model";
 import { getStockById, sellStock } from "../../../services/stock.service";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
-import { NumberDecimalInput } from "../../util/number-decimal.input.component";
 import { ButtonCustom, ButtonType } from "../../util/button.component";
+import { NumberDecimalInput } from "../../util/number-decimal.input.component";
 
 interface Props{
     stockId: number,
@@ -52,7 +52,7 @@ export function SellStockModal({ stockId, onClose, onStockUpdateAndClose }:Props
     <>
     {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
     { createPortal(
-        <div className="operation-stock-modal">
+        <div className="sell-stock-modal">
             <div className="d-flex flex-row-reverse">
                 <ButtonCustom btnType={ButtonType.Close} onClick={onClose} />   
           </div>

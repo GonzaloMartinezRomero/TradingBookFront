@@ -1,56 +1,64 @@
+import { CryptoActiveDto } from "../domain/crypto/crypto-active.model";
+import { CryptoBaseDto } from "../domain/crypto/crypto-base.model";
 import { CryptoCurrencyReference } from "../domain/crypto/crypto-currency.model";
-import { CryptoCurrency } from "../domain/crypto/crypto.model";
+import { CryptoSelledDto } from "../domain/crypto/crypto-selled.model";
 import { NewCrypto } from "../domain/crypto/new-crypto.model";
-import { SellCrypto } from "../domain/crypto/sell-crypto.model";
+import { SellCryptoDto } from "../domain/crypto/sell-crypto.model";
 import { MarketLimit } from "../domain/market-limit.model";
 import { get, patch, post, remove } from "./http-client.service";
 
-export function getCryptos():Promise<CryptoCurrency[]>{
+export function getActiveCryptos():Promise<CryptoActiveDto[]>{
 
-    return get<CryptoCurrency[]>("CryptoCurrency");
+    return get<CryptoActiveDto[]>("Crypto/Active");
 }
 
-export function getCryptoById(id:number):Promise<CryptoCurrency>{
+export function getSelledCryptos(): Promise<CryptoSelledDto[]> {
 
-    return get<CryptoCurrency>(`CryptoCurrency/${id}`);
+    return get<CryptoSelledDto[]>("Crypto/Selled");
+}
+
+
+export function getCryptoById(id: number): Promise<CryptoBaseDto>{
+
+    return get<CryptoBaseDto>(`Crypto/${id}`);
 }
 
 export function saveCrypto(newCrypto:NewCrypto):Promise<any>{
 
-    return post<any>(`CryptoCurrency`,newCrypto);
+    return post<any>(`Crypto`,newCrypto);
 }
 
 export function deleteCrypto(id:number):Promise<boolean>{
  
-    return remove(`CryptoCurrency/${id}`);
+    return remove(`Crypto/${id}`);
 }
 
-export function deleteCryptoCurrencyReference(id:number):Promise<boolean>{
+export function deleteCryptoReference(id:number):Promise<boolean>{
  
-    return remove(`CryptoCurrencyReference/${id}`);
+    return remove(`CryptoReference/${id}`);
 }
 
-export function sellCryptoCurrency(sellCrypto:SellCrypto):Promise<any>{
+export function sellCrypto(sellCrypto:SellCryptoDto):Promise<any>{
 
-    return patch<any>("CryptoCurrency/Sell",sellCrypto);
+    return patch<any>("Crypto/Sell",sellCrypto);
 }
 
 export function checkIfCryptoRefIsAvailable(code:string):Promise<boolean>{
 
-    return get<boolean>(`CryptoCurrencyReference/CheckIfReferenceIsAvailable?referenceCode=${code}`);
+    return get<boolean>(`CryptoReference/CheckIfReferenceIsAvailable?referenceCode=${code}`);
 }
 
 export function updateCryptoMarketLimit(marketLimit:MarketLimit):Promise<any>{
 
-    return patch<any>("CryptoCurrency/MarketLimit",marketLimit);
+    return patch<any>("Crypto/MarketLimit",marketLimit);
 }
 
-export function saveCryptoCurrencyReference(cryptoReference:CryptoCurrencyReference):Promise<any>{
+export function saveCryptoReference(cryptoReference:CryptoCurrencyReference):Promise<any>{
 
-    return post<any>(`CryptoCurrencyReference`,cryptoReference);
+    return post<any>(`CryptoReference`,cryptoReference);
 }
 
-export function getCryptoCurrenciesReference():Promise<CryptoCurrencyReference[]>{
+export function getCryptoReference():Promise<CryptoCurrencyReference[]>{
 
-    return get<CryptoCurrencyReference[]>(`CryptoCurrencyReference`);
+    return get<CryptoCurrencyReference[]>(`CryptoReference`);
 }
