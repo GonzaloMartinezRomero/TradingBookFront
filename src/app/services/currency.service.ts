@@ -17,5 +17,5 @@ export function addCurrency(currency: Currency):Promise<Currency>{
 
 export function checkIfCurrencyCodeIsAvailable(code:string):Promise<boolean>{
 
-    return get<boolean>(`Currency/CheckIfCurrencyCodeExists?currencyCode=${code}`);
+    return get<boolean>(`Currency/IsAvailable?currencyCode=${code}`);
 }

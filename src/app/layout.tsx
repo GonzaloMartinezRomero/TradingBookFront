@@ -1,7 +1,6 @@
 "use client";
 import 'bootstrap/dist/css/bootstrap.css';
-import '../../styles/cryptoStyles.css';
-import '../../styles/stockStyles.css';
+import '../../styles/modal.style.css';
 import '../../styles/depositStyles.css';
 import '../../styles/appStyle.css';
 import '../../styles/MarketLimitModal.css';

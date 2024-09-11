@@ -1,4 +1,6 @@
-import { useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 
 interface Props {
     placeHolder?: string
@@ -9,9 +11,15 @@ interface Props {
 export function TextInput(props: Props) {
 
     const [inputValue, setInputValue] = useState<string>('');
-    
+
+    useEffect(() => { setInputValue(''); }, []);
+
     return (<>
-        <input type="text" className="row form-control" placeholder={props.placeHolder} defaultValue={props.initialValue} onChange={(event: any) => {
+        <input type="text"
+            className="row form-control"
+            placeholder={props.placeHolder}
+            defaultValue={props.initialValue}
+            onChange={(event: any) => {
                 setInputValue(event.target.value);
                 props.onChangeValue.call(event.target.value, event.target.value);
         }} />    

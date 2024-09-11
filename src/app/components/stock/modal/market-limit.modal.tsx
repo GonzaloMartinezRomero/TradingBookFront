@@ -1,8 +1,9 @@
 import { useState } from "react";
-import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message-modal";
+
 import { createPortal } from "react-dom";
-import { NumberDecimalInput } from "../util/number-decimal.input.component";
-import { ButtonCustom, ButtonType } from "../util/button.component";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message.modal";
+import { ButtonCustom, ButtonType } from "../../util/button.component";
+import { NumberDecimalInput } from "../../util/number-decimal.input.component";
 
 
 export interface MarketLimitModalValue {    

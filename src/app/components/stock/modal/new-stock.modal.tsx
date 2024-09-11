@@ -2,13 +2,15 @@ import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Currency } from "../../../domain/currency.model";
 import { NewStock } from "../../../domain/stocks/new-stock.model";
-import { StockReference } from "../../../domain/stocks/stock-reference.model";
+
 import { getCurrencies } from "../../../services/currency.service";
-import { getStockReferences, saveStock } from "../../../services/stock.service";
-import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
+import { getStockTicks, saveStock } from "../../../services/stock.service";
+
 import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
 import { NumberDecimalInput } from "../../util/number-decimal.input.component";
 import { ButtonCustom, ButtonType } from "../../util/button.component";
+import { StockTick } from "../../../domain/stockTick/stock-tick.model";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message.modal";
 
 interface Props{
     onClose: any,
@@ -19,7 +21,7 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
   
   const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
   const [currencyCollection,setCurrencyCollection] = useState<Currency[]>();
-  const [stockReferenceCollection,setStockReferenceCollection] = useState<StockReference[]>();
+  const [stockReferenceCollection,setStockReferenceCollection] = useState<StockTick[]>();
 
   const newStock: NewStock = {} as NewStock;
   
@@ -28,7 +30,7 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
  
   useEffect(()=>{
     getCurrencies().then(value=>setCurrencyCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
-    getStockReferences().then(value=>setStockReferenceCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
+    getStockTicks().then(value=>setStockReferenceCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
   },
   []);
   

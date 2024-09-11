@@ -1,35 +1,30 @@
-import { useState } from "react";
-import { MarketOperation } from "../util/marketOperation";
-import { MonetaryAmount } from "../util/monetaryAmount";
-import { PercentageIndicator } from "../util/percentageIndicator";
+"use client";
 
-
+import { useEffect, useState } from "react";
 
 import { deleteStock, getActiveStocks, updateStockMarketLimit } from "../../services/stock.service";
 
 import { MarketLimit } from '../../domain/market-limit.model';
-import { StockActiveDto } from "../../domain/stocks/stock-active-dto";
-import { ErrorMessageModal, ErrorModalProps } from '../modal/error-message-modal';
-import { YesNoMessageModal } from '../modal/yes-no-message-modal';
 
 import { DateFormat } from "../util/date.component";
-import { StockChartLink } from "../util/referenceUrl";
+
 import { TextFormat } from "../util/text.component";
 
+import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message.modal";
+import { YesNoMessageModal } from "../modal/yes-no-message.modal";
 import { ButtonCustom, ButtonType } from "../util/button.component";
-import { MarketLimitModal, MarketLimitModalValue } from "../modal/market-limit.modal";
-import { SellStockModal } from "./modal/sell-stock-modal";
+import { MarketOperation } from "../util/market-operation.component";
+import { MonetaryAmount } from "../util/monetary-amount.component";
+import { PercentageIndicator } from "../util/percentage-indicator.component";
+import { StockChartLink } from "../util/reference-url.component";
+import { MarketLimitModal, MarketLimitModalValue } from "./modal/market-limit.modal";
+import { SellStockModal } from "./modal/sell-stock.modal";
+import { StockActiveDto } from "../../domain/stocks/stock-active-dto.model";
+import { StockMarketLimitProps } from "../../domain/stocks/stock-market-limit-props.model";
 
 interface StockOperationModalProps {
     isOpen: boolean;
     stockId: number;
-}
-
-interface StockMarketLimitProps {
-    isOpen: boolean;
-    stockId?: number;
-    stopLoss?: number;
-    sellLimit?: number;
 }
 
 export function StockActive() {
@@ -39,11 +34,16 @@ export function StockActive() {
     const [openMarketLimits, setOpenMarketLimits] = useState<StockMarketLimitProps>({ isOpen: false });
     const [stockCollection, setStockCollection] = useState<StockActiveDto[]>([]);
     const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<StockOperationModalProps>({ isOpen: false, stockId: 0 });
-      
-    function updateStocks(forceUpdate:boolean = false) {
+
+    useEffect(() => {
+        updateStocks();
+    },[])
+
+    function updateStocks() {
+
         getActiveStocks().then(value =>
         {
-            if (forceUpdate || (stockCollection.length !== value.length))
+            if (stockCollection.length !== value.length)
                 setStockCollection(value);
 
         }).catch(err => setErrorModal({ isOpen: true, msg: err }));
@@ -51,9 +51,7 @@ export function StockActive() {
 
     function deleteSelectedStock(stockId: number) {
         deleteStock(stockId).then(x => updateStocks()).catch(err => setErrorModal({ isOpen: true, msg: err }));
-    }
-
-    updateStocks();
+    }    
 
     return (
         <>
@@ -70,7 +68,7 @@ export function StockActive() {
                 onClose={() => setSellStockModal({ isOpen: false, stockId: 0 })}
                 onStockUpdateAndClose={() => {
                     setSellStockModal({ isOpen: false, stockId: 0 });
-                    updateStocks(true);
+                    updateStocks();
                 }} />}
 
             {openMarketLimits.isOpen && <MarketLimitModal stopLoss={openMarketLimits.stopLoss ?? 0}
@@ -80,7 +78,7 @@ export function StockActive() {
                     updateStockMarketLimit({ stockId: openMarketLimits.stockId, sellLimit: marketLimit.sellLimit, stopLoss: marketLimit.stopLoss } as MarketLimit)
                         .then(() => {
                             setOpenMarketLimits({ isOpen: false });
-                            updateStocks(true);
+                            updateStocks();
                         });
                 }} />}
                           
@@ -124,7 +122,7 @@ export function StockActive() {
                                 <>
                                     <tr className="table-items">
                                      <td>
-                                         <TextFormat text={value.stockReference?.name}/>
+                                         <TextFormat text={value.stockTick?.name} />
                                         </td>
                                         <td>
                                             <MonetaryAmount amount={value.price} />

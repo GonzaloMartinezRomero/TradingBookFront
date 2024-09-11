@@ -1,18 +1,19 @@
+"use client";
+
 import { Switch } from '@nextui-org/react';
 import { useState } from "react";
 
-import { CurrencyModal } from "../modal/currency-modal";
-
-import { ErrorMessageModal, ErrorModalProps } from '../modal/error-message-modal';
 import { StockActive } from './stock-active';
 
-import { NewStockModal } from './modal/new-stock-modal';
-import { StockReferenceModal } from './modal/stock-reference-modal';
 import { StockSelled } from './stock-selled';
-import { StockWatchList } from './watch-list/stock-watch-list';
-import { Deposit } from '../deposit/deposit';
-import { DepositType } from '../../domain/deposit/deposit-type';
 import { ButtonCustom, ButtonType } from '../util/button.component';
+import { ErrorMessageModal, ErrorModalProps } from '../modal/error-message.modal';
+import { NewStockModal } from './modal/new-stock.modal';
+import { StockReferenceModal } from '../stockTick/stock-tick.modal';
+import { CurrencyModal } from '../currency/currency.modal';
+import { StockWatchList } from '../stockWatch/stock-watch-list.component';
+import { Deposit } from '../deposit/deposit.component';
+import { DepositType } from '../../domain/deposit/deposit-type.model';
 
 export function StockCollection() {
 
@@ -69,7 +70,7 @@ export function StockCollection() {
                         <div className="row container-separator" />
                         <Deposit depositType={DepositType.Stock} ></Deposit>
                     </div>
-                    </div>
+                </div>
             </div>
         </>);
 }

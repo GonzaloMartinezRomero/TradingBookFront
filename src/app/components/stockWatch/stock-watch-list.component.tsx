@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
-import { StockWatch } from "../../../domain/stocks/stock-watch.model";
-import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
-import { deleteStockWatch, getStockWatchs } from "../../../services/stock-watch.service";
-import { StockWatchListModal } from "./modal/stock-watch-list-modal";
-import { YesNoMessageModal } from "../../modal/yes-no-message-modal";
-import { MonetaryAmount } from "../../util/monetaryAmount";
-import { PercentageIndicator } from "../../util/percentageIndicator";
-import { MarketOperation } from "../../util/marketOperation";
-import { StockChartLink } from "../../util/referenceUrl";
-import { InformationMessageModal, InformationModalProps } from "../../modal/information-message-modal";
-import { ButtonCustom, ButtonType } from "../../util/button.component";
+import { StockWatch } from "../../domain/stockWatch/stock-watch.model";
+import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message.modal";
+import { InformationMessageModal, InformationModalProps } from "../modal/information-message.modal";
+import { deleteStockWatch, getStockWatchs } from "../../services/stock-watch.service";
+import { StockWatchListModal } from "./modal/stock-watch-list.modal";
+import { YesNoMessageModal } from "../modal/yes-no-message.modal";
+import { ButtonCustom, ButtonType } from "../util/button.component";
+import { MarketOperation } from "../util/market-operation.component";
+import { MonetaryAmount } from "../util/monetary-amount.component";
+import { PercentageIndicator } from "../util/percentage-indicator.component";
+import { StockChartLink } from "../util/reference-url.component";
+
 
 interface DeleteStockWatchModalProp{
     isOpen:boolean;

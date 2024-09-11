@@ -6,7 +6,7 @@ import { Currency } from "../../../domain/currency.model";
 import { NewDeposit } from "../../../domain/deposit/new-deposit.model";
 import { getCurrencies } from "../../../services/currency.service";
 import { addDeposit } from "../../../services/deposit.service";
-import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message.modal";
 import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
 import { NumberDecimalInput } from "../../util/number-decimal.input.component";
 import { ButtonCustom, ButtonType } from "../../util/button.component";

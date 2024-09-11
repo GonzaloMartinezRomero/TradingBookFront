@@ -1,9 +1,10 @@
 import { Currency } from "../currency.model";
-import { StockReference } from "./stock-reference.model";
+import { StockTick } from "../stockTick/stock-tick.model";
+
 
 export interface StockActiveDto {
     id: number;
-    stockReference: StockReference;
+    stockTick: StockTick;
     price: number;
     currency: Currency;
     buyDate: string;

@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useState } from "react";
-import { CryptoCollection } from "./components/crypto/crypto-collection";
 import { StockCollection } from "./components/stock/stock-collection";
 
 enum TradingPage{  
@@ -21,7 +20,6 @@ export default function Home() {
  
   useEffect(()=>{
     mapPages.set(TradingPage.Stock,<StockCollection/>);
-    mapPages.set(TradingPage.Crypto,<CryptoCollection/>);
   })
 
   return (   
@@ -37,12 +35,6 @@ export default function Home() {
                   {currenPage.page != TradingPage.Stock && <h3><i>Stocks</i></h3>}
                 </button>
                 </div>
-                <div className="col-1 mt-4">
-                <button className="nav-item nav-link ms-2" onClick={()=>{setCurrenPage({page:TradingPage.Crypto,content:mapPages.get(TradingPage.Crypto)})}}>
-                  {currenPage.page == TradingPage.Crypto && <h2><i><b>Crypto</b></i></h2>}
-                  {currenPage.page != TradingPage.Crypto && <h3><i>Crypto</i></h3>}
-                </button>           
-              </div>
             </div>           
           </div>       
       <div className='m-2 mt-3'>

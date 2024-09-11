@@ -1,11 +1,13 @@
+'use client'
+
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { SellStock } from "../../../domain/stocks/sell-stock.model";
 import { Stock } from "../../../domain/stocks/stock.model";
 import { getStockById, sellStock } from "../../../services/stock.service";
-import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
 import { ButtonCustom, ButtonType } from "../../util/button.component";
 import { NumberDecimalInput } from "../../util/number-decimal.input.component";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message.modal";
 
 interface Props{
     stockId: number,

@@ -1,16 +1,19 @@
+"use client";
+
 import { useEffect, useState } from "react";
-import { MonetaryAmount } from "../util/monetaryAmount";
-import { PercentageIndicator } from "../util/percentageIndicator";
 
 
 import { getSelledStocks } from "../../services/stock.service";
 
 
-import { StockSelledDto } from "../../domain/stocks/stock-selled-dto";
-import { ErrorMessageModal, ErrorModalProps } from '../modal/error-message-modal';
+
 import { DateFormat } from "../util/date.component";
-import { StockChartLink } from "../util/referenceUrl";
 import { TextFormat } from "../util/text.component";
+import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message.modal";
+import { MonetaryAmount } from "../util/monetary-amount.component";
+import { PercentageIndicator } from "../util/percentage-indicator.component";
+import { StockChartLink } from "../util/reference-url.component";
+import { StockSelledDto } from "../../domain/stocks/stock-selled-dto.model";
 
 export function StockSelled() {
 
@@ -61,7 +64,7 @@ export function StockSelled() {
                             <>
                                 <tr className="table-items">
                                     <td>
-                                        <TextFormat text={value.stockReference?.name}/>                                        
+                                        <TextFormat text={value.stockTick?.name} />                                        
                                     </td>
                                     <td>
                                         <MonetaryAmount amount={value.price} />

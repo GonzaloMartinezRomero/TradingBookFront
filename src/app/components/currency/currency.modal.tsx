@@ -1,10 +1,14 @@
-import { useEffect, useRef, useState } from "react";
+"use client";
+
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { ErrorMessageModal, ErrorModalProps } from "./error-message-modal";
+
 import { Currency } from "../../domain/currency.model";
 import { addCurrency, checkIfCurrencyCodeIsAvailable, deleteCurrency, getCurrencies } from "../../services/currency.service";
-import { TextInput } from "../util/text.input.component";
+import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message.modal";
 import { ButtonCustom, ButtonType } from "../util/button.component";
+import { TextInput } from "../util/text.input.component";
+import { InformationMessageModal, InformationModalProps } from "../modal/information-message.modal";
 
 
 interface Props{
@@ -13,20 +17,25 @@ interface Props{
 
 export function CurrencyModal({ onClose }:Props) {
   
-  const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
+    const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
+    const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
 
   const [currencyCollection,setCurrencyCollection] = useState<Currency[]>();
   const [isCurrencyCodeAvailable,setIsCurrencyCodeAvailable] = useState<boolean | undefined>(undefined);
 
-    var inputName: string = '';
-  var inputCode: string = '';
+    const [inputName, setInputName] = useState<string>('');
+    const [inputCode, setInputCode] = useState<string>('');
+
+    console.log("INPUT CODE");
+    console.log(inputCode);
 
     useEffect(() => {       
     loadCurrencies();
   },[]);
 
   function checkIfCurrencyIsAvailable(){
-      checkIfCurrencyCodeIsAvailable(inputCode).then(response => setIsCurrencyCodeAvailable(response)).catch(err => setErrorModal({ isOpen: true, msg: err }));
+      checkIfCurrencyCodeIsAvailable(inputCode).then(response => setIsCurrencyCodeAvailable(response))
+                                               .catch(err => setErrorModal({ isOpen: true, msg: err }));
   }
 
   function deleteCurrencyById(id:number){
@@ -46,17 +55,18 @@ export function CurrencyModal({ onClose }:Props) {
   }
   
   function addNewCurrency(){
-
-    
   
     const currency:Currency = {
       id:0,
-        code: inputCode,
+      code: inputCode,
       name:inputName
     };
 
-    addCurrency(currency).then(x=>{loadCurrencies();})
-                         .catch(err=>setErrorModal({isOpen:true,msg:err}));
+      addCurrency(currency).then(x =>
+      {   
+          loadCurrencies();
+          setInformationModal({ isOpen:true });
+      }).catch(err=>setErrorModal({isOpen:true,msg:err}));
   }
 
   function loadCurrencies(){
@@ -64,7 +74,8 @@ export function CurrencyModal({ onClose }:Props) {
   }
 
   return (<>
-  {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={()=>setErrorModal({isOpen:false})} />}
+      {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={() => setErrorModal({ isOpen: false })} />}
+      {informationModal.isOpen && <InformationMessageModal msg={'Currency added successfuly'} onClose={() => setInformationModal({ isOpen:false })} />}
   {createPortal(      
       <div className="currency-modal">
           <div className="d-flex flex-row-reverse">
@@ -74,13 +85,13 @@ export function CurrencyModal({ onClose }:Props) {
           <div className="form-group row ms-4">
             <div className="col-10">
                   <label className="row">Name</label>
-                  <TextInput placeHolder={'Name'} onChangeValue={(x: string) => inputName = x} ></TextInput>        
+                  <TextInput placeHolder={'Name'} initialValue={''} onChangeValue={(x: string) => setInputName(x)} ></TextInput>        
             </div>
           </div>
           <div className="form-group row mt-2 ms-4">
             <div className="col-10">
                   <label className="row">Code</label>
-                  <TextInput placeHolder={'Code'} onChangeValue={(x:string)=> inputCode = x } ></TextInput>
+                  <TextInput placeHolder={'Code'} initialValue={''} onChangeValue={(x: string) => setInputCode(x) } ></TextInput>
             </div>
           </div>    
           <div className="form-group row mt-3 ms-1">

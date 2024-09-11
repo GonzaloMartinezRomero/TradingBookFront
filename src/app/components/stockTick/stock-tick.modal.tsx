@@ -1,13 +1,16 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { StockReference } from "../../../domain/stocks/stock-reference.model";
-import { addStockReference, checkIfStockCodeIsAvailable, deleteStockReference, getStockReferences } from "../../../services/stock.service";
 
 import { Loading } from "@nextui-org/react";
-import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message-modal";
-import { InformationMessageModal, InformationModalProps } from "../../modal/information-message-modal";
-import { TextInput } from "../../util/text.input.component";
-import { ButtonCustom, ButtonType } from "../../util/button.component";
+
+import { StockTick } from "../../domain/stockTick/stock-tick.model";
+
+import { addStockReference, getStockTicks } from "../../services/stock.service";
+import { deleteStockTick, isStockTickAvailable } from "../../services/stock-tick.service";
+import { ButtonCustom, ButtonType } from "../util/button.component";
+import { TextInput } from "../util/text.input.component";
+import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message.modal";
+import { InformationMessageModal, InformationModalProps } from "../modal/information-message.modal";
 
 interface Props{
     onClose: any    
@@ -18,17 +21,17 @@ export function StockReferenceModal({ onClose }:Props) {
   const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
   const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
-  const [stockReferenceCollection, setStockReferenceCollection] = useState<StockReference[]>();
+  const [stockReferenceCollection, setStockReferenceCollection] = useState<StockTick[]>();
   const [isStockCodeAvailable,setIsStockCodeAvailable] = useState<boolean | undefined>(undefined);
   const stockFindCode = useRef<HTMLInputElement>(null);
-  const [stocksReference, setStocksReference] = useState<StockReference[]>([]);
+  const [stocksReference, setStocksReference] = useState<StockTick[]>([]);
 
   var inputName: string = '';
   var inputCode: string = '';
 
-  function saveStockReference(){
+  function saveStockTick(){
 
-    const stockRef:StockReference = {
+    const stockRef:StockTick = {
       id:0,
         code: inputCode,
         name: inputName
@@ -36,7 +39,7 @@ export function StockReferenceModal({ onClose }:Props) {
 
     addStockReference(stockRef).then(value=>
     {      
-        const stockCollectionAux: StockReference[] = [];
+        const stockCollectionAux: StockTick[] = [];
         stockReferenceCollection?.forEach(value=>stockCollectionAux.push(value));
         stockCollectionAux?.push(value);
 
@@ -47,11 +50,11 @@ export function StockReferenceModal({ onClose }:Props) {
     }).catch(err => setErrorModal({ isOpen: true, msg: err }));
   }
 
-  function deleteStockRef(id:number){
+  function deleteTick(id:number){
 
-    deleteStockReference(id).then(value => {
+      deleteStockTick(id).then(value => {
 
-        const stockCollectionAux: StockReference[] = [];
+        const stockCollectionAux: StockTick[] = [];
         stockReferenceCollection?.forEach(x=>
           {
             if(x.id !== id)
@@ -63,7 +66,7 @@ export function StockReferenceModal({ onClose }:Props) {
     }
 
   useEffect(()=>{
-      getStockReferences().then(value =>
+      getStockTicks().then(value =>
       {
           setStocksReference(value);
           setStockReferenceCollection(value);
@@ -75,7 +78,7 @@ export function StockReferenceModal({ onClose }:Props) {
       setShowSpinner(true);
       setIsStockCodeAvailable(undefined);
 
-      checkIfStockCodeIsAvailable(inputCode)
+      isStockTickAvailable(inputCode)
           .then(response => {
             setIsStockCodeAvailable(response);
            })
@@ -87,7 +90,7 @@ export function StockReferenceModal({ onClose }:Props) {
         const stockCode = stockFindCode.current?.value as string;
 
         if (stockCode?.length > 0) {
-            const stocksFiltered: StockReference[] = stocksReference?.filter(x =>
+            const stocksFiltered: StockTick[] = stocksReference?.filter(x =>
             {
                 const valueUpper = x.code.toUpperCase();
                 return valueUpper.includes(stockCode.toUpperCase());
@@ -134,7 +137,7 @@ export function StockReferenceModal({ onClose }:Props) {
                 {isStockCodeAvailable == false && <span className="row bi bi-file-earmark-x" style={{ "fontSize": "35px" }} title="No Available" />}                  
                 </div>
                 <div className="col-4 ms-1">
-                    <ButtonCustom btnType={ButtonType.Add} onClick={() => { saveStockReference() }} />  
+                    <ButtonCustom btnType={ButtonType.Add} onClick={() => { saveStockTick() }} />  
                 </div>
             </div>
             <div className="form-group row mt-2 ms-4 mb-3">
@@ -164,7 +167,7 @@ export function StockReferenceModal({ onClose }:Props) {
                             <span>{value.code}</span>
                           </td>
                               <td style={{ "width": "50px" }}>
-                                  <ButtonCustom btnType={ButtonType.Delete} onClick={() => { deleteStockRef(value.id) }}/>
+                                  <ButtonCustom btnType={ButtonType.Delete} onClick={() => { deleteTick(value.id) }}/>
                           </td>
                         </tr>
                       );

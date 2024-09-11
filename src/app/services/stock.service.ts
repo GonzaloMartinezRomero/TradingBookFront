@@ -1,17 +1,16 @@
 import { MarketLimit } from "../domain/market-limit.model";
+import { StockTick } from "../domain/stockTick/stock-tick.model";
 import { NewStock } from "../domain/stocks/new-stock.model";
 import { SellStock } from "../domain/stocks/sell-stock.model";
-import { StockActiveDto } from "../domain/stocks/stock-active-dto";
-
-import { StockReference } from "../domain/stocks/stock-reference.model";
-import { StockSelledDto } from "../domain/stocks/stock-selled-dto";
+import { StockActiveDto } from "../domain/stocks/stock-active-dto.model";
+import { StockSelledDto } from "../domain/stocks/stock-selled-dto.model";
 
 import { Stock } from "../domain/stocks/stock.model";
 import { get, patch, post, remove } from "./http-client.service";
 
-export function getStockReferences():Promise<StockReference[]>{
+export function getStockTicks():Promise<StockTick[]>{
 
-    return get<StockReference[]>("StockReference");
+    return get<StockTick[]>("StockTick");
 }
 
 export function deleteStock(stockId:number):Promise<boolean>{
@@ -19,9 +18,9 @@ export function deleteStock(stockId:number):Promise<boolean>{
     return remove(`Stock/${stockId}`);
 }
 
-export function addStockReference(stockReference: StockReference):Promise<StockReference>{
+export function addStockReference(stockReference: StockTick):Promise<StockTick>{
 
-    return post<StockReference>("StockReference",stockReference);
+    return post<StockTick>("StockReference",stockReference);
 }
 
 export function deleteStockReference(id:number): Promise<boolean>{

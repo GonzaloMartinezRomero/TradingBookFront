@@ -1,4 +1,5 @@
-import { DepositType } from "../domain/deposit/deposit-type";
+
+import { DepositType } from "../domain/deposit/deposit-type.model";
 import { Deposit } from "../domain/deposit/deposit.model";
 import { NewDeposit } from "../domain/deposit/new-deposit.model";
 import { get, post, remove } from "./http-client.service";

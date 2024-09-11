@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
-import { Currency } from "../../../../domain/currency.model";
-import { StockReference } from "../../../../domain/stocks/stock-reference.model";
-import { StockWatchSave } from "../../../../domain/stocks/stock-watch-save.model";
-import { getCurrencies } from "../../../../services/currency.service";
-import { addStockWatchReference } from "../../../../services/stock-watch.service";
-import { getStockReferences } from "../../../../services/stock.service";
-import { ErrorMessageModal, ErrorModalProps } from "../../../modal/error-message-modal";
-import { DropDownInput, DropDownValue } from "../../../util/dropdown.input.component";
-import { NumberDecimalInput } from "../../../util/number-decimal.input.component";
-import { ButtonCustom, ButtonType } from "../../../util/button.component";
+import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message.modal";
+import { StockTick } from "../../../domain/stockTick/stock-tick.model";
+import { Currency } from "../../../domain/currency.model";
+import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
+import { getCurrencies } from "../../../services/currency.service";
+import { getStockTicks } from "../../../services/stock.service";
+import { StockWatchSave } from "../../../domain/stockWatch/stock-watch-save.model";
+import { addStockWatchReference } from "../../../services/stock-watch.service";
+import { ButtonCustom, ButtonType } from "../../util/button.component";
+import { NumberDecimalInput } from "../../util/number-decimal.input.component";
+
 
 interface Props{
     onClose: any,
@@ -21,7 +22,7 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
   const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
 
   const [currencyCollection,setCurrencyCollection] = useState<Currency[]>();
-  const [stockReferenceCollection,setStockReferenceCollection] = useState<StockReference[]>();
+  const [stockReferenceCollection,setStockReferenceCollection] = useState<StockTick[]>();
 
     const stockReferenceOptions: DropDownValue[] | undefined = stockReferenceCollection?.map((val) => { return { value: val.id, label: val.name } as DropDownValue });
     const currencyOptions: DropDownValue[] | undefined = currencyCollection?.map((currencyAux) => { return { value: currencyAux.id, label: currencyAux.name } as DropDownValue });
@@ -32,7 +33,7 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
 
   useEffect(()=>{
     getCurrencies().then(value=>setCurrencyCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
-      getStockReferences().then(value => setStockReferenceCollection(value)).catch(err => setErrorModal({ isOpen: true, msg: err }));
+      getStockTicks().then(value => setStockReferenceCollection(value)).catch(err => setErrorModal({ isOpen: true, msg: err }));
       window.scrollTo(0, 0);
   },
   []);
