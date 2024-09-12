@@ -2,27 +2,22 @@
 
 import { useEffect, useState } from "react";
 
-
 import { getSelledStocks } from "../../services/stock.service";
 
-
-
-import { DateFormat } from "../util/date.component";
-import { TextFormat } from "../util/text.component";
+import { StockSelledDto } from "../../domain/stocks/stock-selled-dto.model";
 import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message.modal";
+import { DateFormat } from "../util/date.component";
 import { MonetaryAmount } from "../util/monetary-amount.component";
 import { PercentageIndicator } from "../util/percentage-indicator.component";
 import { StockChartLink } from "../util/reference-url.component";
-import { StockSelledDto } from "../../domain/stocks/stock-selled-dto.model";
+import { TextFormat } from "../util/text.component";
 
 export function StockSelled() {
 
     const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
     const [stockCollection, setStockCollection] = useState<StockSelledDto[]>([]);
 
-    useEffect(() => {      
-        updateStocks();
-    },[]);
+    useEffect(() => { updateStocks(); });
 
     function updateStocks() {
         getSelledStocks().then(value => setStockCollection(value)).catch(err => setErrorModal({ isOpen: true, msg: err }));

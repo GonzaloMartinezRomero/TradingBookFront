@@ -5,8 +5,7 @@ import { Loading } from "@nextui-org/react";
 
 import { StockTick } from "../../domain/stockTick/stock-tick.model";
 
-import { addStockReference, getStockTicks } from "../../services/stock.service";
-import { deleteStockTick, isStockTickAvailable } from "../../services/stock-tick.service";
+import { deleteStockTick, getStockTicks, isStockTickAvailable, saveStockTick } from "../../services/stock-tick.service";
 import { ButtonCustom, ButtonType } from "../util/button.component";
 import { TextInput } from "../util/text.input.component";
 import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message.modal";
@@ -16,36 +15,42 @@ interface Props{
     onClose: any    
 }
 
-export function StockReferenceModal({ onClose }:Props) {
+export function StockTickModal({ onClose }:Props) {
 
   const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
   const [showSpinner, setShowSpinner] = useState<boolean>(false);
   const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
-  const [stockReferenceCollection, setStockReferenceCollection] = useState<StockTick[]>();
-  const [isStockCodeAvailable,setIsStockCodeAvailable] = useState<boolean | undefined>(undefined);
-  const stockFindCode = useRef<HTMLInputElement>(null);
-  const [stocksReference, setStocksReference] = useState<StockTick[]>([]);
+  const [stockTickCollection, setStockTickCollection] = useState<StockTick[]>();
+  const [stockTickBaseCollection, setStockTickBaseCollection] = useState<StockTick[]>();
+  const [isStockCodeAvailable, setIsStockCodeAvailable] = useState<boolean | undefined>(undefined);
+  const [stockFindCode, setStockFindCode] = useState<string | undefined>(undefined);
 
-  var inputName: string = '';
-  var inputCode: string = '';
+    const [inputName, setInputName] = useState<string>('');
+    const [inputCode, setInputCode] = useState<string>('');
 
-  function saveStockTick(){
+    useEffect(() => {
+        loadStockTicks();
+    }, []);
 
-    const stockRef:StockTick = {
+    function loadStockTicks() {
+        getStockTicks().then(value => {
+            setStockTickCollection(value);
+            setStockTickBaseCollection(value);
+        }).catch(err => setErrorModal({ isOpen: true, msg: err }));
+    }
+
+  function saveTick(){
+
+    const stockTickInput:StockTick = {
       id:0,
         code: inputCode,
         name: inputName
     };
 
-    addStockReference(stockRef).then(value=>
-    {      
-        const stockCollectionAux: StockTick[] = [];
-        stockReferenceCollection?.forEach(value=>stockCollectionAux.push(value));
-        stockCollectionAux?.push(value);
-
-        setStockReferenceCollection(stockCollectionAux);
-
-        setInformationModal({ isOpen: true, msg:"Stock added successfully!" });
+      saveStockTick(stockTickInput).then(value=>
+      {
+          loadStockTicks();
+          setInformationModal({ isOpen: true, msg:"Stock added successfully!" });
 
     }).catch(err => setErrorModal({ isOpen: true, msg: err }));
   }
@@ -53,26 +58,9 @@ export function StockReferenceModal({ onClose }:Props) {
   function deleteTick(id:number){
 
       deleteStockTick(id).then(value => {
-
-        const stockCollectionAux: StockTick[] = [];
-        stockReferenceCollection?.forEach(x=>
-          {
-            if(x.id !== id)
-              stockCollectionAux.push(x);
-          });
-  
-          setStockReferenceCollection(stockCollectionAux);  
+          loadStockTicks();
     }).catch(err=>setErrorModal({isOpen:true,msg:err}));
     }
-
-  useEffect(()=>{
-      getStockTicks().then(value =>
-      {
-          setStocksReference(value);
-          setStockReferenceCollection(value);
-
-      }).catch(err => setErrorModal({ isOpen: true, msg: err }));
-  },[]);
 
   function checkIfCodeIsAvailable(){
       setShowSpinner(true);
@@ -87,44 +75,45 @@ export function StockReferenceModal({ onClose }:Props) {
   }
 
     function updateFilter() {
-        const stockCode = stockFindCode.current?.value as string;
 
-        if (stockCode?.length > 0) {
-            const stocksFiltered: StockTick[] = stocksReference?.filter(x =>
+        let stockCode:string = stockFindCode ?? '';
+
+        if (stockCode.length > 0) {
+            const stocksFiltered: StockTick[] = stockTickBaseCollection?.filter(x =>
             {
                 const valueUpper = x.code.toUpperCase();
                 return valueUpper.includes(stockCode.toUpperCase());
 
             }) ?? [];
-            setStockReferenceCollection(stocksFiltered);
+            setStockTickCollection(stocksFiltered);
         }
         else
         {   
-            setStockReferenceCollection(stocksReference);
+            setStockTickCollection(stockTickBaseCollection);
         }
     }
 
   return (
     <>
           {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={() => setErrorModal({ isOpen: false })} />}
-          {informationModal.isOpen && <InformationMessageModal msg={informationModal.msg} onClose={onClose} />}
+          {informationModal.isOpen && <InformationMessageModal msg={informationModal.msg} onClose={() => setInformationModal({ isOpen: false })} />}
     { createPortal(
      
         <div className="new-stock-reference-modal">
           <div className="d-flex flex-row-reverse">
                 <ButtonCustom btnType={ButtonType.Close} onClick={onClose} />
             </div>
-            <h2 style={{ fontWeight: "bold" }}>Stock Reference</h2>
+            <h2 style={{ fontWeight: "bold" }}>Stock Tick</h2>
           <div className="form-group row ms-4">
             <div className="col-12">
                 <label className="row">Name</label>
-                <TextInput placeHolder={'Name'} onChangeValue={(x: string) => inputName = x} ></TextInput>                
+                <TextInput placeHolder={'Name'} onChangeValue={(x: string) => setInputName(x)} ></TextInput>                
             </div>
           </div>
           <div className="form-group row mt-2 ms-4">
             <div className="col-12">
                 <label className="row">Code</label>
-                <TextInput placeHolder={'Code'} onChangeValue={(x: string) => inputCode = x} ></TextInput>        
+                    <TextInput placeHolder={'Code'} onChangeValue={(x: string) => setInputCode(x)} ></TextInput>        
             </div>
           </div>
           <div className="form-group row mt-3 ms-1">
@@ -137,13 +126,13 @@ export function StockReferenceModal({ onClose }:Props) {
                 {isStockCodeAvailable == false && <span className="row bi bi-file-earmark-x" style={{ "fontSize": "35px" }} title="No Available" />}                  
                 </div>
                 <div className="col-4 ms-1">
-                    <ButtonCustom btnType={ButtonType.Add} onClick={() => { saveStockTick() }} />  
+                    <ButtonCustom btnType={ButtonType.Add} onClick={() => { saveTick() }} />  
                 </div>
             </div>
             <div className="form-group row mt-2 ms-4 mb-3">
                 <div className="col-12">
-                    <label className="row">Search code</label>
-                    <input type="text" className="row form-control" placeholder="Insert code..." ref={stockFindCode} onChange={(e) => { updateFilter(); }} />          
+                    <label className="row">Find stock</label>
+                    <TextInput placeHolder={'Tick'} onChangeValue={(x: string) => { setStockFindCode(x); updateFilter(); }} ></TextInput>      
                 </div>
             </div>            
           <div className="m-1">                                  
@@ -157,7 +146,7 @@ export function StockReferenceModal({ onClose }:Props) {
                     </thead>
                     <tbody style={{"height": "200px", "width":"420px", "overflowY": "auto", "display": "block" }}>
                 {
-                  stockReferenceCollection?.map((value,index)=>{
+                  stockTickCollection?.map((value,index)=>{
                       return (
                         <tr>
                           <td style={{ "width": "200px" }}>

@@ -1,16 +1,19 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { Currency } from "../../../domain/currency.model";
 import { NewStock } from "../../../domain/stocks/new-stock.model";
 
 import { getCurrencies } from "../../../services/currency.service";
-import { getStockTicks, saveStock } from "../../../services/stock.service";
 
 import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
 import { NumberDecimalInput } from "../../util/number-decimal.input.component";
 import { ButtonCustom, ButtonType } from "../../util/button.component";
 import { StockTick } from "../../../domain/stockTick/stock-tick.model";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message.modal";
+import { getStockTicks } from "../../../services/stock-tick.service";
+import { saveStock } from "../../../services/stock.service";
 
 interface Props{
     onClose: any,
@@ -53,7 +56,7 @@ export function NewStockModal({ onClose, onCloseAndReload }:Props) {
                 <div className="row" style={{ "textAlign": "left" }}>
                     <div className="col-4">           
                         <label>Reference</label>
-                        <DropDownInput values={stockOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => newStock.stockReferenceId = valueSelected.value}></DropDownInput>
+                        <DropDownInput values={stockOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => newStock.stockTickId = valueSelected.value}></DropDownInput>
                 </div>
                     <div className="col-4">                      
                             <label>Price</label>

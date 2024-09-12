@@ -5,11 +5,11 @@ import { StockTick } from "../../../domain/stockTick/stock-tick.model";
 import { Currency } from "../../../domain/currency.model";
 import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
 import { getCurrencies } from "../../../services/currency.service";
-import { getStockTicks } from "../../../services/stock.service";
 import { StockWatchSave } from "../../../domain/stockWatch/stock-watch-save.model";
 import { addStockWatchReference } from "../../../services/stock-watch.service";
 import { ButtonCustom, ButtonType } from "../../util/button.component";
 import { NumberDecimalInput } from "../../util/number-decimal.input.component";
+import { getStockTicks } from "../../../services/stock-tick.service";
 
 
 interface Props{
@@ -27,9 +27,9 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
     const stockReferenceOptions: DropDownValue[] | undefined = stockReferenceCollection?.map((val) => { return { value: val.id, label: val.name } as DropDownValue });
     const currencyOptions: DropDownValue[] | undefined = currencyCollection?.map((currencyAux) => { return { value: currencyAux.id, label: currencyAux.name } as DropDownValue });
     
-    var stockTarget: number = 0;
-    var stockReferenceId: number = 0;
-    var currencyId: number = 0;
+    const [stockTarget, setStockTarget] = useState<number>(0);
+    const [stockTickId, setStockTick] = useState<number>(0);
+    const [currencyId, setCurrencyId] = useState<number>(0);
 
   useEffect(()=>{
     getCurrencies().then(value=>setCurrencyCollection(value)).catch(err=>setErrorModal({isOpen:true,msg:err}));
@@ -43,7 +43,7 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
     const newStockWatch:StockWatchSave =
     {
         currencyId: currencyId,
-        stockReferenceId: stockReferenceId,
+        stockTickId: stockTickId,
         target: stockTarget
     }
 
@@ -63,18 +63,18 @@ export function StockWatchListModal({ onClose, onCloseAndReload }:Props) {
             <div className="m-4">
                 <div className="form-group row" style={{ "textAlign":"left"}}>
             <div className="col-7">
-                 <label>Reference</label>
-                 <DropDownInput values={stockReferenceOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => stockReferenceId = valueSelected.value} ></DropDownInput>
+                        <label>Reference</label>
+                        <DropDownInput values={stockReferenceOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => setStockTick(valueSelected.value)} ></DropDownInput>
               </div>
               <div className="col-5">
                  <label>Currency</label>
-                 <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => currencyId = valueSelected.value} ></DropDownInput>
+                        <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => setCurrencyId(valueSelected.value)} ></DropDownInput>
               </div>        
                 </div>          
                 <div className="form-group row mt-3" style={{ "textAlign": "left" }}>
                     <div className="col-4">
                         <label>Target</label>
-                        <NumberDecimalInput onChangeValue={(value: number) => { stockTarget = value; }} />
+                        <NumberDecimalInput onChangeValue={(valueSelected: number) => { setStockTarget(valueSelected) }} />
                     </div>
                 </div>
           </div>       

@@ -9,7 +9,7 @@ import { StockSelled } from './stock-selled';
 import { ButtonCustom, ButtonType } from '../util/button.component';
 import { ErrorMessageModal, ErrorModalProps } from '../modal/error-message.modal';
 import { NewStockModal } from './modal/new-stock.modal';
-import { StockReferenceModal } from '../stockTick/stock-tick.modal';
+import { StockTickModal } from '../stockTick/stock-tick.modal';
 import { CurrencyModal } from '../currency/currency.modal';
 import { StockWatchList } from '../stockWatch/stock-watch-list.component';
 import { Deposit } from '../deposit/deposit.component';
@@ -22,7 +22,7 @@ export function StockCollection() {
     const [openNewStockReferenceModal, setOpenNewStockReferenceModal] = useState(false);
     const [openStockModal, setOpenNewStockModal] = useState(false);
     const [openNewCurrencyModal, setOpenNewCurrencyModal] = useState(false);
-
+   
     return (
         <>
             {errorModal.isOpen && <ErrorMessageModal msg={errorModal.msg} onClose={() => setErrorModal({ isOpen: false })} />}
@@ -31,7 +31,7 @@ export function StockCollection() {
                     setOpenNewStockModal(false);
                 }} />}
 
-            {openNewStockReferenceModal && <StockReferenceModal onClose={() => setOpenNewStockReferenceModal(false)} />}
+            {openNewStockReferenceModal && <StockTickModal onClose={() => setOpenNewStockReferenceModal(false)} />}
             {openNewCurrencyModal && <CurrencyModal onClose={() => setOpenNewCurrencyModal(false)} />}
             <div className="ms-2">
                 <h2 className="mt-4">Stocks</h2>
@@ -68,7 +68,7 @@ export function StockCollection() {
                     <div className="col-5 ms-3">
                         <h2 className="mt-4">Deposits</h2>
                         <div className="row container-separator" />
-                        <Deposit depositType={DepositType.Stock} ></Deposit>
+                        <Deposit></Deposit>
                     </div>
                 </div>
             </div>

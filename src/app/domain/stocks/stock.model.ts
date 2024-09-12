@@ -4,7 +4,7 @@ import { StockTick } from "../stockTick/stock-tick.model";
 
 export interface Stock{
     id: number;
-    stockReference:StockTick;
+    stockTick:StockTick;
     price:number;
     currency:Currency;
     buyDate:string;

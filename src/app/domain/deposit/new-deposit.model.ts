@@ -2,5 +2,5 @@ export interface NewDeposit{
     deposit: number;
     fee: number;    
     currencyId: number; 
-    platformId: number;
+    depositTypeId: number;
 }

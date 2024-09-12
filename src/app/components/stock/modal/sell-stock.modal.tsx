@@ -57,8 +57,8 @@ export function SellStockModal({ stockId, onClose, onStockUpdateAndClose }:Props
         <div className="sell-stock-modal">
             <div className="d-flex flex-row-reverse">
                 <ButtonCustom btnType={ButtonType.Close} onClick={onClose} />   
-          </div>
-          <h3>Sell {stock?.stockReference.name}</h3>
+            </div>
+            <h3>Sell {stock?.stockTick.name}</h3>
           <div className="form-group row ms-3">
             <div className="col-6 ">
                     <label className="row">Return</label>

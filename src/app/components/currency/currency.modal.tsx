@@ -17,17 +17,14 @@ interface Props{
 
 export function CurrencyModal({ onClose }:Props) {
   
-    const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
-    const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
+  const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
+  const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
 
   const [currencyCollection,setCurrencyCollection] = useState<Currency[]>();
   const [isCurrencyCodeAvailable,setIsCurrencyCodeAvailable] = useState<boolean | undefined>(undefined);
 
-    const [inputName, setInputName] = useState<string>('');
-    const [inputCode, setInputCode] = useState<string>('');
-
-    console.log("INPUT CODE");
-    console.log(inputCode);
+  const [inputName, setInputName] = useState<string>('');
+  const [inputCode, setInputCode] = useState<string>('');
 
     useEffect(() => {       
     loadCurrencies();

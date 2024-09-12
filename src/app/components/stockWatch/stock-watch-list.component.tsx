@@ -59,55 +59,57 @@ export function StockWatchList(){
             <div className="col-1">
                 <ButtonCustom btnType={ButtonType.Add} onClick={() => { setOpenStockWatchListModal(true); }} />
             </div>          
-        </div>     
-        <table className="mt-1 table-header" style={{ "width": "100%" }}>
-            <thead>
-                <tr className="text-center table-secondary table-group-divider" style={{ "fontStyle": "oblique" }}>
-                    <th>Stock</th>
-                    <th>Currency</th>
-                    <th>Target</th>
-                    <th>Current</th>
-                    <th>Gap %</th>              
-                    <th>Action</th>
-                    <th>Chart</th>
-                    <th></th>
-                </tr>
-            </thead>
-            <tbody className="text-center table-items" >                                                      
-                { stockWatchCollection!==undefined && stockWatchCollection?.map((value,index)=>{
-
-                    return(
-                    <>
-                        <tr>
-                    <td>
-                        {value.stock}
-                    </td>
-                    <td>
-                        {value.currency}
-                    </td>
-                    <td>
-                        <MonetaryAmount amount={value.target}/>
-                    </td>
-                    <td>
-                        <MonetaryAmount amount={value.current}/>
-                    </td>
-                    <td>
-                        <PercentageIndicator amount={value.diff}/>
-                    </td>                            
-                    <td>
-                        <MarketOperation operation={value.recomendedAction}/>
-                    </td>
-                    <td>
-                        <StockChartLink url={value.chartReferenceUrl} />
-                    </td>
-                        <td>
-                            <ButtonCustom btnType={ButtonType.Delete} onClick={() => { setOpenDeleteConfirmationModal({ isOpen: true, stockWatchId: value.id }); }} />
-                        </td>
+        </div>
+        <div className="content-scrollable">
+            <table className="mt-1 table-header" style={{ "width": "100%" }}>
+                <thead>
+                    <tr className="text-center table-secondary table-group-divider" style={{ "fontStyle": "oblique" }}>
+                        <th>Stock</th>
+                        <th>Currency</th>
+                        <th>Target</th>
+                        <th>Current</th>
+                        <th>Gap %</th>
+                        <th>Action</th>
+                        <th>Chart</th>
+                        <th></th>
                     </tr>
-                    </>);
-                })} 
-            </tbody>
+                </thead>
+                <tbody className="text-center table-items" >
+                    {stockWatchCollection !== undefined && stockWatchCollection?.map((value, index) => {
+
+                        return (
+                            <>
+                                <tr>
+                                    <td>
+                                        {value.stock}
+                                    </td>
+                                    <td>
+                                        {value.currency}
+                                    </td>
+                                    <td>
+                                        <MonetaryAmount amount={value.target} />
+                                    </td>
+                                    <td>
+                                        <MonetaryAmount amount={value.current} />
+                                    </td>
+                                    <td>
+                                        <PercentageIndicator amount={value.diff} />
+                                    </td>
+                                    <td>
+                                        <MarketOperation operation={value.recomendedAction} />
+                                    </td>
+                                    <td>
+                                        <StockChartLink url={value.chartReferenceUrl} />
+                                    </td>
+                                    <td>
+                                        <ButtonCustom btnType={ButtonType.Delete} onClick={() => { setOpenDeleteConfirmationModal({ isOpen: true, stockWatchId: value.id }); }} />
+                                    </td>
+                                </tr>
+                            </>);
+                    })}
+                </tbody>
             </table>
+        </div>
     </>)
 
 }

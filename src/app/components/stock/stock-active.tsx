@@ -35,9 +35,7 @@ export function StockActive() {
     const [stockCollection, setStockCollection] = useState<StockActiveDto[]>([]);
     const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<StockOperationModalProps>({ isOpen: false, stockId: 0 });
 
-    useEffect(() => {
-        updateStocks();
-    },[])
+    useEffect(() => { updateStocks(); });
 
     function updateStocks() {
 
@@ -51,7 +49,7 @@ export function StockActive() {
 
     function deleteSelectedStock(stockId: number) {
         deleteStock(stockId).then(x => updateStocks()).catch(err => setErrorModal({ isOpen: true, msg: err }));
-    }    
+    }       
 
     return (
         <>

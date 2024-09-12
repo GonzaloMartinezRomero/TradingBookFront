@@ -1,5 +1,5 @@
 export interface NewStock{
-    stockReferenceId: number;
+    stockTickId: number;
     price: number;
     currencyId: number;
     amount: number;

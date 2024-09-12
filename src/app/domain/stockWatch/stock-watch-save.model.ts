@@ -1,5 +1,5 @@
 export interface StockWatchSave{
-    stockReferenceId: number,
+    stockTickId: number,
     currencyId: number,
     target: number
 }

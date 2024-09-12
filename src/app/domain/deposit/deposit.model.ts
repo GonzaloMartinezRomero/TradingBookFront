@@ -1,5 +1,6 @@
 export interface Deposit{
-    id:number;
+    id: number;
+    depositType: string;
     deposit: number;
     fee: number;
     totalDeposit:number;
