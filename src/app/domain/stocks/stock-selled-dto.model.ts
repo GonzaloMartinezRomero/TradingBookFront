@@ -19,5 +19,6 @@ export interface StockSelledDto {
     returnEarn: number;
     returnDiffAmount: number;
     returnAmountWithFee: number;
+    dividends: number;
     chartReferenceUrl: string;
 }

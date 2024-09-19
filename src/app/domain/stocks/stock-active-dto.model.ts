@@ -19,5 +19,6 @@ export interface StockActiveDto {
     stopLoss: number;
     sellLimit: number;    
     sellDate: string;
+    dividends: number;
     chartReferenceUrl: string;
 }

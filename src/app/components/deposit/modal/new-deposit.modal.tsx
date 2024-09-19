@@ -10,7 +10,6 @@ import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message.mo
 import { DropDownInput, DropDownValue } from "../../util/dropdown.input.component";
 import { NumberDecimalInput } from "../../util/number-decimal.input.component";
 import { ButtonCustom, ButtonType } from "../../util/button.component";
-import { DepositType } from "../../../domain/deposit/deposit-type.model";
 
 interface Props {
   onClose: any,
@@ -21,15 +20,13 @@ export function NewDepositModal({ onClose, onCloseAndReload }: Props) {
      
   const [currencies, setCurrencies] = useState<Currency[]>();
     const currencyOptions: DropDownValue[] | undefined = currencies?.map((currencyAux) => { return { value: currencyAux.id, label: currencyAux.name } as DropDownValue });
-    const depositTypeOptions: DropDownValue[] = [{ value: DepositType.Invest, label: DepositType[DepositType.Invest] },
-                                                 { value: DepositType.Dividend, label: DepositType[DepositType.Dividend] }]
 
   const[errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
    
-  var currencySelectedId: number = 0;
-  var inputDeposit: number = 0;
-  var inputFee: number = 0;
-  var depositTypeId: number = 0;
+    const [currencySelectedId, setCurrencySelectedId] = useState<number>(0);
+    const [inputDeposit, setInputDeposit] = useState<number>(0);
+    const [inputFee, setInputFee] = useState<number>(0);
+  
 
   useEffect(() => {    
       getCurrencies().then(value => setCurrencies(value)).catch(err => setErrorModal({ isOpen: true, msg: err }));
@@ -42,8 +39,7 @@ export function NewDepositModal({ onClose, onCloseAndReload }: Props) {
     {
         deposit: inputDeposit,
         fee: inputFee,
-        currencyId: currencySelectedId,
-        depositTypeId: depositTypeId
+        currencyId: currencySelectedId
     }
 
     addDeposit(newDepositParsed).then(value => onCloseAndReload())
@@ -62,24 +58,19 @@ export function NewDepositModal({ onClose, onCloseAndReload }: Props) {
           <div className="m-3">         
                 <div className="form-group row">
                       <div className="col-6">
-                          <label className="row ms-1">Deposit Type</label>
-                          <DropDownInput values={depositTypeOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => depositTypeId = valueSelected.value} ></DropDownInput>
-                      </div>
-                      <div className="col-6">
                           <label className="row ms-1">Deposit</label>
-                          <NumberDecimalInput onChangeValue={(val: number) => { inputDeposit = val; }}></NumberDecimalInput>
+                          <NumberDecimalInput onChangeValue={(val: number) => { setInputDeposit(val); }}></NumberDecimalInput>
                     </div>
-                   
+                      <div className="col-6">
+                          <label className="row ms-1">Currency</label>
+                          <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => setCurrencySelectedId(valueSelected.value)} ></DropDownInput>
+                      </div>     
                 </div>
                   <div className="row">            
                       <div className="col-6">
                           <label className="row ms-1">Fee</label>
-                          <NumberDecimalInput onChangeValue={(val: number) => { inputFee = val; }}></NumberDecimalInput>
+                          <NumberDecimalInput onChangeValue={(val: number) => { setInputFee(val); }}></NumberDecimalInput>
                       </div>
-              <div className="col-6">
-                   <label className="row ms-1">Currency</label>
-                   <DropDownInput values={currencyOptions} onChangeSelectedValue={(valueSelected: DropDownValue) => currencySelectedId = valueSelected.value} ></DropDownInput>
-              </div>
             </div>          
           </div>
           <div className="form-group row mt-2">

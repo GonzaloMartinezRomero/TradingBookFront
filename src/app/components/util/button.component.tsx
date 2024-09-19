@@ -1,5 +1,6 @@
-import { CSSProperties } from "@nextui-org/react/types/theme";
-import { useEffect, useState } from "react";
+"use client";
+
+import { CSSProperties, useEffect, useState } from "react";
 
 export enum ButtonType {
     Delete,
@@ -8,7 +9,9 @@ export enum ButtonType {
     Add,
     Info,
     Close,
-    Update
+    Update,
+    Modify,
+    AddDividend
 }
 
 interface Props {
@@ -63,9 +66,20 @@ export function ButtonCustom(props: Props) {
                 setBtnIconClass('bi bi-sliders2-vertical');
                 break;
 
+
+            case ButtonType.Modify:
+                setBtnClass('btn btn-secondary');
+                setBtnIconClass('bi bi-nut');
+                break;
+
             case ButtonType.Sell:
                 setBtnClass('btn btn-warning');
                 setBtnIconClass('bi bi-box-arrow-up-right');               
+                break;
+
+            case ButtonType.AddDividend:
+                setBtnClass('btn btn-info');
+                setBtnIconClass('bi bi-plus-circle');
                 break;
 
             case ButtonType.Update:

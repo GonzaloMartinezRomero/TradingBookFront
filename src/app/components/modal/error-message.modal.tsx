@@ -8,8 +8,14 @@ export interface ErrorModalProps{
 }
 
 export function ErrorMessageModal({ msg, onClose }:ErrorModalProps) {
-  
-  const message:string = msg?.toString() ?? "No Message";
+
+    var message: any = "";
+
+    try {
+        message = JSON.parse(msg);
+    } catch (e) {
+        message = msg.toString();
+    }
 
     useEffect(() => { window.scrollTo(0, 0); }, []);
 

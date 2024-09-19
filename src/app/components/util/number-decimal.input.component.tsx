@@ -1,4 +1,7 @@
-import { useState } from "react";
+"use client";
+
+import { Input } from "@nextui-org/react";
+import { useEffect, useState } from "react";
 
 interface Props {
     placeHolder?: string
@@ -8,20 +11,30 @@ interface Props {
 
 export function NumberDecimalInput(props: Props) {
 
-    const [inputValue, setInputValue] = useState<number>(0.0);
-    
+    const [inputValue, setInputValue] = useState<number>(props.initialValue || 0);
+
+    useEffect(() =>
+    {
+        if (props.initialValue)
+            setInputValue(props.initialValue);
+
+    }, [props.initialValue]);
+
     return (<>
         <input type="number"
             className="form-control"
             placeholder={props.placeHolder ?? ""}
-            defaultValue={props.initialValue ?? 0.0}           
+            defaultValue={0}
+            value={inputValue}
             onChange={(event: any) => {
-                if (!Number.isNaN(event.target.valueAsNumber)) {                                
+                if (!Number.isNaN(event.target.valueAsNumber)) {
                     setInputValue(event.target.value);
                     props.onChangeValue.call(event.target.value, event.target.value);
                 } else {
                     event.target.value = inputValue;
-                }           
+                }
             }} />
     </>);
+  
+   
 }

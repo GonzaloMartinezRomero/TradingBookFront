@@ -1,3 +1,5 @@
+"use client";
+
 import { useEffect, useState } from "react";
 import { StockWatch } from "../../domain/stockWatch/stock-watch.model";
 import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message.modal";
@@ -12,15 +14,16 @@ import { PercentageIndicator } from "../util/percentage-indicator.component";
 import { StockChartLink } from "../util/reference-url.component";
 
 
-interface DeleteStockWatchModalProp{
+interface StockWatchModalProp{
     isOpen:boolean;
-    stockWatchId?:number;
+    stockWatchId?:number|null;
 }
 
 export function StockWatchList(){
 
-    const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<DeleteStockWatchModalProp>({isOpen:false});
+    const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<StockWatchModalProp>({ isOpen: false });
     const [openStockWatchListModal, setOpenStockWatchListModal] = useState<boolean>(false);
+    const [openModifyStockWatchListModal, setOpenModifyStockWatchListModal] = useState<StockWatchModalProp>({ isOpen: false });
     const [stockWatchCollection,setStockWatchCollection] = useState<StockWatch[]>();
     const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
     const [informationModal, setInformationModal] = useState<InformationModalProps>({ isOpen: false });
@@ -44,7 +47,15 @@ export function StockWatchList(){
         {openStockWatchListModal && <StockWatchListModal onClose={()=>setOpenStockWatchListModal(false)} 
                                                          onCloseAndReload={()=>{
                                                             loadStockWatch();
-                                                            setOpenStockWatchListModal(false);}}/>}
+                setOpenStockWatchListModal(false);
+            }} />}
+
+        {openModifyStockWatchListModal.isOpen && <StockWatchListModal onClose={() => setOpenModifyStockWatchListModal({ isOpen: false })}
+            onCloseAndReload={() => {
+                loadStockWatch();
+                setOpenModifyStockWatchListModal({ isOpen: false })
+            }}
+            id={openModifyStockWatchListModal.stockWatchId} />}
 
         {openDeleteConfirmationModal.isOpen && <YesNoMessageModal msg="Do you want remove this stock watcher?" 
                                                                   onYesResponse={()=>{
@@ -71,6 +82,8 @@ export function StockWatchList(){
                         <th>Gap %</th>
                         <th>Action</th>
                         <th>Chart</th>
+                        <th>Modify</th>
+                        <th>Delete</th>
                         <th></th>
                     </tr>
                 </thead>
@@ -100,6 +113,9 @@ export function StockWatchList(){
                                     </td>
                                     <td>
                                         <StockChartLink url={value.chartReferenceUrl} />
+                                    </td>
+                                    <td>
+                                        <ButtonCustom btnType={ButtonType.Modify} onClick={() => { setOpenModifyStockWatchListModal({ isOpen: true, stockWatchId: value.id }); }} />
                                     </td>
                                     <td>
                                         <ButtonCustom btnType={ButtonType.Delete} onClick={() => { setOpenDeleteConfirmationModal({ isOpen: true, stockWatchId: value.id }); }} />

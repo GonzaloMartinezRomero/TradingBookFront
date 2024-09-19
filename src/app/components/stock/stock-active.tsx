@@ -21,8 +21,11 @@ import { MarketLimitModal, MarketLimitModalValue } from "./modal/market-limit.mo
 import { SellStockModal } from "./modal/sell-stock.modal";
 import { StockActiveDto } from "../../domain/stocks/stock-active-dto.model";
 import { StockMarketLimitProps } from "../../domain/stocks/stock-market-limit-props.model";
+import { ModifyStockActiveModal } from "./modal/modify-stock-active.modal";
+import { DividendModal } from "./modal/dividend.modal";
 
-interface StockOperationModalProps {
+
+interface StockGenericModalProps {
     isOpen: boolean;
     stockId: number;
 }
@@ -30,19 +33,20 @@ interface StockOperationModalProps {
 export function StockActive() {
     
     const [errorModal, setErrorModal] = useState<ErrorModalProps>({ isOpen: false });
-    const [openSellStockModal, setSellStockModal] = useState<StockOperationModalProps>({ isOpen: false, stockId: 0 });
+    const [openSellStockModal, setSellStockModal] = useState<StockGenericModalProps>({ isOpen: false, stockId: 0 });
     const [openMarketLimits, setOpenMarketLimits] = useState<StockMarketLimitProps>({ isOpen: false });
+    const [openUpdateStockModal, setOpenUpdateStockModal] = useState<StockGenericModalProps>({ isOpen: false, stockId:0 });
+    const [openAddDividendModal, setOpenAddDividendModal] = useState<StockGenericModalProps>({ isOpen: false, stockId:0 });
     const [stockCollection, setStockCollection] = useState<StockActiveDto[]>([]);
-    const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<StockOperationModalProps>({ isOpen: false, stockId: 0 });
+    const [openDeleteConfirmationModal, setOpenDeleteConfirmationModal] = useState<StockGenericModalProps>({ isOpen: false, stockId: 0 });
 
-    useEffect(() => { updateStocks(); });
+    useEffect(() => { updateStocks(); }, []);
 
     function updateStocks() {
 
         getActiveStocks().then(value =>
-        {
-            if (stockCollection.length !== value.length)
-                setStockCollection(value);
+        {   
+            setStockCollection(value);
 
         }).catch(err => setErrorModal({ isOpen: true, msg: err }));
     }
@@ -79,7 +83,22 @@ export function StockActive() {
                             updateStocks();
                         });
                 }} />}
-                          
+
+            {openUpdateStockModal.isOpen && <ModifyStockActiveModal
+                onClose={() => setOpenUpdateStockModal({ isOpen: false, stockId: 0 })}
+                onCloseAndReload={() => {
+                    setOpenUpdateStockModal({ isOpen: false, stockId: 0 });
+                    updateStocks();
+                }}
+                stockId={openUpdateStockModal.stockId} />}
+
+            {openAddDividendModal.isOpen && <DividendModal
+                onClose={() => setOpenAddDividendModal({ isOpen: false, stockId: 0 })}
+                onUpdateAndClose={() => {
+                    setOpenAddDividendModal({ isOpen: false, stockId: 0 });
+                    updateStocks();
+                }}
+                stockId={openAddDividendModal.stockId} />}
                
             <table className="mt-1 table-header text-center" style={{ "width": "100%" }}>
                 <thead>
@@ -87,7 +106,7 @@ export function StockActive() {
                         <th colSpan={4} style={{ "borderRight": "1px solid black" }}>BUY INFORMATION</th>
                         <th colSpan={3} style={{ "borderRight": "1px solid black" }}>INVEST</th>
                         {
-                             <th colSpan={4} style={{ "borderRight": "1px solid black" }}>CURRENT STATE</th>
+                             <th colSpan={5} style={{ "borderRight": "1px solid black" }}>CURRENT STATE</th>
                         }
                         {
                             <th colSpan={3} style={{ "borderRight": "1px solid black" }}>STATUS</th>
@@ -104,13 +123,16 @@ export function StockActive() {
                         <th style={{ "borderLeft": "1px solid black" }}>Price</th>
                         <th>%</th>
                         <th>Estimated Return</th>
+                        <th>Dividend</th>
                         <th>Estimated Earn</th>
-                        <th>Stop Loss</th>
+                        <th style={{ "borderLeft": "1px solid black" }}>Stop Loss</th>
                         <th>Sell Limit</th>
                         <th>Action</th>
-                        <th>Chart</th>
-                        <th>Market</th>
+                        <th style={{ "borderLeft": "1px solid black" }}>Chart</th>
+                        <th>Market</th>                        
                         <th>Sell</th>
+                        <th>Modify</th>
+                        <th>Div</th>
                         <th>Delete</th>
                     </tr>
                 </thead>
@@ -148,11 +170,15 @@ export function StockActive() {
                                          </td>
                                          <td>
                                              <MonetaryAmount amount={value.estimatedReturnPrice} />
-                                         </td>
+                                     </td>
+                                     <td>
+                                         <MonetaryAmount amount={value.dividends} />
+                                     </td>
                                          <td>
                                             <MonetaryAmount amount={value.estimatedEarn} />
-                                         </td>
-                                         <td>
+                                     </td>
+                                     
+                                     <td style={{ "borderLeft": "1px solid black" }}>
                                              <MonetaryAmount amount={value.stopLoss} />
                                          </td>
                                          <td>
@@ -161,7 +187,7 @@ export function StockActive() {
                                          <td>
                                              <MarketOperation operation={value.recomendedAction} />
                                          </td>
-                                         <td>
+                                     <td style={{ "borderLeft": "1px solid black" }}>
                                              <StockChartLink url={value.chartReferenceUrl} />
                                          </td>
                                      <td>
@@ -173,7 +199,17 @@ export function StockActive() {
                                          <ButtonCustom btnType={ButtonType.Sell} onClick={() => {
                                              setSellStockModal({ isOpen: true, stockId: value.id });
                                          }} /> 
-                                        </td>
+                                     </td>
+                                     <td>
+                                         <ButtonCustom btnType={ButtonType.Modify} onClick={() => {
+                                             setOpenUpdateStockModal({ isOpen: true, stockId: value.id });
+                                         }} />
+                                     </td>
+                                     <td>
+                                         <ButtonCustom btnType={ButtonType.AddDividend} onClick={() => {
+                                             setOpenAddDividendModal({ isOpen: true, stockId: value.id });
+                                         }} />
+                                     </td>
                                      <td>
                                          <ButtonCustom btnType={ButtonType.Delete} onClick={() => {
                                              setOpenDeleteConfirmationModal({ isOpen: true, stockId: value.id });

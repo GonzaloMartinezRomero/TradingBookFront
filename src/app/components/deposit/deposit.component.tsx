@@ -74,7 +74,6 @@ return(
                 <thead>
                     <tr className="text-center table-secondary table-group-divider" style={{ "fontStyle": "oblique" }}>
                         <th>Date</th>
-                        <th>Type</th>
                         <th>Deposit</th>
                         <th>Fee</th>
                         <th>Total Deposit</th>
@@ -88,9 +87,6 @@ return(
                             <tr>
                                 <td>
                                     {value.depositDate}
-                                </td>
-                                <td>
-                                    <TextFormat text={value.depositType} />
                                 </td>
                                 <td>
                                     <MonetaryAmount amount={value.deposit} />

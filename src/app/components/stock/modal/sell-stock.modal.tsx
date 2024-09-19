@@ -3,11 +3,11 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { SellStock } from "../../../domain/stocks/sell-stock.model";
-import { Stock } from "../../../domain/stocks/stock.model";
 import { getStockById, sellStock } from "../../../services/stock.service";
 import { ButtonCustom, ButtonType } from "../../util/button.component";
 import { NumberDecimalInput } from "../../util/number-decimal.input.component";
 import { ErrorMessageModal, ErrorModalProps } from "../../modal/error-message.modal";
+import { StockFind } from "../../../domain/stocks/stock-find.model";
 
 interface Props{
     stockId: number,
@@ -26,7 +26,7 @@ export function SellStockModal({ stockId, onClose, onStockUpdateAndClose }:Props
 
   const [errorModal,setErrorModal] = useState<ErrorModalProps>({isOpen:false});
 
-  const [stock,setStock] = useState<Stock>();
+  const [stock,setStock] = useState<StockFind>();
 
   var inputReturn: number = 0;
   var inputFee:number = 0;
@@ -58,7 +58,7 @@ export function SellStockModal({ stockId, onClose, onStockUpdateAndClose }:Props
             <div className="d-flex flex-row-reverse">
                 <ButtonCustom btnType={ButtonType.Close} onClick={onClose} />   
             </div>
-            <h3>Sell {stock?.stockTick.name}</h3>
+            <h3>Sell</h3>
           <div className="form-group row ms-3">
             <div className="col-6 ">
                     <label className="row">Return</label>

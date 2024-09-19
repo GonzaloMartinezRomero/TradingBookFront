@@ -5,15 +5,14 @@ import { useState } from "react";
 
 import { StockActive } from './stock-active';
 
-import { StockSelled } from './stock-selled';
-import { ButtonCustom, ButtonType } from '../util/button.component';
-import { ErrorMessageModal, ErrorModalProps } from '../modal/error-message.modal';
-import { NewStockModal } from './modal/new-stock.modal';
-import { StockTickModal } from '../stockTick/stock-tick.modal';
 import { CurrencyModal } from '../currency/currency.modal';
-import { StockWatchList } from '../stockWatch/stock-watch-list.component';
 import { Deposit } from '../deposit/deposit.component';
-import { DepositType } from '../../domain/deposit/deposit-type.model';
+import { ErrorMessageModal, ErrorModalProps } from '../modal/error-message.modal';
+import { StockTickModal } from '../stockTick/stock-tick.modal';
+import { StockWatchList } from '../stockWatch/stock-watch-list.component';
+import { ButtonCustom, ButtonType } from '../util/button.component';
+import { NewStockModal } from './modal/new-stock.modal';
+import { StockSelled } from './stock-selled';
 
 export function StockCollection() {
 
@@ -54,7 +53,7 @@ export function StockCollection() {
                     </div>
                 </div>
                 <div className="row">
-                    <div className="col-11 mt-1">
+                    <div className="col-12 mt-1 me-3">
                         {showSelledStocks && <StockSelled />}
                         {!showSelledStocks && <StockActive />}
                     </div>
