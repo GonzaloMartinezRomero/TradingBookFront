@@ -67,7 +67,9 @@ export function StockCollection() {
                     <div className="col-5 ms-3">
                         <h2 className="mt-4">Deposits</h2>
                         <div className="row container-separator" />
-                        <Deposit></Deposit>
+                        <div className="mt-4">
+                            <Deposit></Deposit>
+                        </div>
                     </div>
                 </div>
             </div>

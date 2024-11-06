@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 
 import { Loading } from "@nextui-org/react";
@@ -6,10 +6,10 @@ import { Loading } from "@nextui-org/react";
 import { StockTick } from "../../domain/stockTick/stock-tick.model";
 
 import { deleteStockTick, getStockTicks, isStockTickAvailable, saveStockTick } from "../../services/stock-tick.service";
-import { ButtonCustom, ButtonType } from "../util/button.component";
-import { TextInput } from "../util/text.input.component";
 import { ErrorMessageModal, ErrorModalProps } from "../modal/error-message.modal";
 import { InformationMessageModal, InformationModalProps } from "../modal/information-message.modal";
+import { ButtonCustom, ButtonType } from "../util/button.component";
+import { TextInput } from "../util/text.input.component";
 
 interface Props{
     onClose: any    
