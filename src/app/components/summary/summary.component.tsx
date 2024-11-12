@@ -58,11 +58,11 @@ export function Summary() {
                     })}
                     xAxis={[
                         {
-                            data: ['Deposits','Earnings','Stocks Active'],
+                            data: ['Deposits','Earnings','Stocks Amount Invested','Stocks Active'],
                             scaleType: 'band',
                             colorMap: {
                                 type: 'ordinal',
-                                colors: ['#7b7f82e5', '#38d737d6','#532f64e5']
+                                colors: ['#7b7f82e5', '#38d737d6','#f1a9c7','#532f64e5']
                             },
                         },
                     ]}
@@ -70,6 +70,7 @@ export function Summary() {
                         {
                             data: [summary?.deposits ?? 0,                              
                                 summary?.earnStocksSelled ?? 0,
+                                summary?.stockActiveInvestedAmount ?? 0,
                                 summary?.returnStocksActive ?? 0],
                             valueFormatter: (v) => (v === null ? '' : currencyFormatter(v)),
                            
