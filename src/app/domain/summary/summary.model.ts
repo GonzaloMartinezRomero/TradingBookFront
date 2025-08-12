@@ -3,4 +3,5 @@ export interface SummaryDto {
     earnStocksSelled: number;
     returnStocksActive: number;
     stockActiveInvestedAmount: number;
+    amountNoInvested:number;
 }
